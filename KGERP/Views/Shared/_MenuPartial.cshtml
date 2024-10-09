@@ -1,0 +1,79 @@
+﻿@model IList<KGERP.Service.ServiceModel.CompanyModel>
+    @using KGERP.TreeViewModel;
+
+    <link href="~/Scripts/TreeView/dist/themes/default/style.css" rel="stylesheet" />
+    <div class="form-body" style="margin-left: -7px;margin-top: 10px;">
+        <div class="m-2" style=" margin-bottom: 5px; margin-top: 5px; margin-left: 10px; margin-right: 5px;">
+        <input type="text" placeholder="Search for..." autocomplete="off" class="form-control" id="search">
+        </div>
+        <div id="jstree">
+            
+            @(Html.TreeView(Model).EmptyContent("<b style='font-family:Arial;font-weight:bold;font-size:20px;color:#F52029'>KRISHIBID GROUP</b>").Children(m => m.Company1).HtmlAttributes(new { id = "tree" }).ChildrenHtmlAttributes(new { @class = "subItem" }).ItemText(m => m.Name).ItemTemplate(
+       @<text>
+
+           @{
+                       if (item.LayerNo == 3)
+                       {
+                            <a href="@("/"+item.Controller+"/"+item.Action+"?companyId="+item.CompanyId+item.Param+"&")'" onclick="location.href='@("/"+item.Controller+"/"+item.Action+"?companyId="+item.CompanyId+item.Param)'">
+                                 @item.ShortName
+                            </a>
+                       }
+                       else
+                       {
+                            @item.ShortName
+                       }
+
+
+           }
+       </text>)
+
+            )
+        </div>
+    </div>
+
+
+
+
+    <script type="text/javascript">
+        $(function () {
+            var selectedData;
+            var $proceduresTree = $('#procedures-tree');
+            $('#jstree').jstree({
+                "core": {
+                    "multiple": true,
+                    "check_callback": false,
+                    'themes': {
+                        "responsive": true,
+                        'variant': 'medium',
+                        'stripes': false,
+                        'dots': true,
+                    }
+                },
+                "plugins": ["search", "state"],
+                "search": {
+                    "case_sensitive": false,
+                    "show_only_matches": true
+                },
+                "types": {
+                    "default": {
+                        "icon": "glyphicon glyphicon-minus-sign"
+                    },
+                    "demo": {
+                        "icon": "glyphicon glyphicon-plus-sign"
+                    }
+
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $("#search").keyup(function () {
+                var searchString = $(this).val();
+                //console.log(searchString);
+                $('#jstree').jstree('search', searchString);
+            });
+        });
+
+    </script>
+
+

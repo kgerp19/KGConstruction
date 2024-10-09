@@ -1,0 +1,89 @@
+﻿
+@model KGERP.Service.ServiceModel.EmployeeVm
+@{
+    ViewBag.Title = "Employee Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <span style="font-size:20px;font-weight:bold">Current Employee List</span>
+</div>
+<div class="row">
+    <hr style="border-color:#ff0000; padding:0px;margin-top: 5px;margin-bottom: 5px; border-width: 2px;" />
+    <table id="KgErpDataTable" class="table table-striped" style="width:100%">
+        <thead>
+            <tr style="background-color:#4CAF50;color:#FFFFFF">
+                <th>SL</th>
+                <th>KG ID</th>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Grade Name</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th nowrap>Join Date</th>
+                <th>Mobile No</th>
+                <th>Email</th>
+                <th>PABX</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        @{int sl = 0;
+        }
+        <tbody>
+            @foreach (var item in Model.DataList)
+            {
+                <tr>
+                    <td style="width:10px;">
+                        @(++sl)
+                    </td>
+                    <td>@item.EmployeeId</td>
+                    <td>@item.EmployeeName</td>
+                    <td>@item.GradeCode</td>
+                    <td>@item.GradeName</td>
+                    <td>@item.DepartmentName</td>
+                    <td>@item.DesignationName</td>
+                    <td>@item.JoiningDate</td>
+                    <td>@item.MobileNo</td>
+                    <td>@item.OfficeEmail</td>
+                    <td>@item.PABX</td>
+                    <td>@item.Remarks</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@*<link href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet" />*@
+<link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/cssjqryUi")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,498 @@
+﻿@model KGERP.Services.Procurement.VMPromtionalOfferDetail
+@using KGERP.Utility;
+
+
+@{
+    ViewData["Title"] = "Promtional Offer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    int sl = 0;
+
+}
+
+<style type="text/css">
+
+    input, select, textarea {
+        max-width: 100%;
+    }
+</style>
+
+<section class="content-header">
+    <h1>
+        <span>
+            Promotional Offer
+        </span>
+
+
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+        <li class="active">Purchase Order</li>
+    </ol>
+</section>
+@using (Html.BeginForm("PromtionalOfferDetail", "Procurement", FormMethod.Post, new { id = "PromtionalOfferDetailFromId", @class = "formValidator" }))
+{
+    <section class="content">
+        <div class="row">
+            <div class="box">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.PromtionalOfferId, new { id = "hidPromtionalOfferId" })
+
+                @Html.HiddenFor(model => model.PromotionType, new { id = "hidPromotionType" })
+                @Html.HiddenFor(model => model.PromtionalOfferDetailId, new { id = "hidPromtionalOfferDetailId" })
+
+                @Html.HiddenFor(model => model.ActionId, new { id = "ActionId" })
+                @Html.HiddenFor(model => model.CompanyId, new { id = "CompanyId" })
+
+                <div class="box-danger">
+
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        @if (Model.PromtionalOfferId > 0)
+                        {
+
+                            <table class="table">
+                                <tr>
+                                    <th style="width:12%">
+                                        Promo Code
+                                    </th>
+                                    <th style="width:1%">:</th>
+                                    <td style="width:20%">
+                                        <label class="col-form-label">@Model.PromoCode</label>
+                                    </td>
+                                    <th>
+                                        Promo Type
+                                    </th>
+                                    <th>:</th>
+                                    <td>@Model.PromotionTypeName</td>
+                                </tr>
+                                <tr>
+
+
+                                    <th style="width:12%">From Date</th>
+                                    <th style="width:1%">:</th>
+                                    <td style="width:20%">@Model.FromDate.ToShortDateString()</td>
+
+                                    <th style="width:12%">To Date</th>
+                                    <th style="width:2%">:</th>
+                                    <td style="width:20%">@Model.ToDate.ToShortDateString()</td>
+                                </tr>
+
+
+                                <tr>
+
+                                    <th>Created By</th>
+                                    <th>:</th>
+                                    <td>@Model.CreatedBy</td>
+                                    <th>Created Date</th>
+                                    <th>:</th>
+                                    <td>@Model.CreatedDate</td>
+                                </tr>
+
+
+                            </table>
+
+                        }
+                        <div class="box-body">
+
+                            @if (Model.PromtionalOfferId == 0)
+                            {
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Promo Code</label>
+                                            @Html.EditorFor(model => model.PromoCode, new { htmlAttributes = new { id = "txtPromoCode", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.PromoCode, "", new { @class = "text-danger" })
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>From Date</label>
+                                            <input name="FromDate" asp-for="FromDate" type="text" value="@DateTime.Today.ToString("yyyy-MM-dd")" required="required" class="datePicker form-control" id="txtFromDate" placeholder="From Date" autocomplete="off">
+                                            @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>To Date</label>
+                                            <input name="ToDate" asp-for="ToDate" type="text" value="@DateTime.Today.ToString("yyyy-MM-dd")" required="required" class="datePicker form-control" id="txtToDate" placeholder="To Date" autocomplete="off">
+                                            @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Promotion Type</label>
+                                            @Html.DropDownListFor(model => model.PromtionType, Model.PromtionTypeList as SelectList, "==Select Promtion Type==", new { id = "ddlPromtionType", @class = "form-control ddlReset", style = "width:100%", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.PromtionType, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            }
+                            <div class="row" style="display:none;" id="divFreeProduct">
+                                <div class="col-md-7">
+                                    <div class="form-group" style="padding:0px">
+                                        <label for="message-text" class="col-form-label">Raw Item:</label>
+
+                                        @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Product Name", @id = "txtProductName" } })
+
+                                        @Html.HiddenFor(model => model.ProductId, new { id = "ddlRProductFK" })
+                                        @Html.ValidationMessageFor(model => model.ProductId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label>Promo Quantity</label>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(model => model.PromoQuantity, new { id = "txtPromoQuantity", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Promo Quantity", required = "Required" })
+                                            @Html.ValidationMessageFor(model => model.PromoQuantity, "", new { @class = "text-danger" })
+
+                                            <div class="input-group-addon">
+                                                <span class="txtUnitName"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="row" style="display:none;" id="divPromoAmount">
+                                <div class="col-md-7">
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label>Promo Amount</label>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(model => model.PromoAmount, new { id = "txtPromoAmount", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Promo Quantity", required = "Required" })
+                                            @Html.ValidationMessageFor(model => model.PromoAmount, "", new { @class = "text-danger" })
+
+                                            <div class="input-group-addon">
+                                                <span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <div class="row">
+                                <div class="col-md-8">
+
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    @if (!Model.IsSumitted)
+                                    {
+                                        <button type="submit" id="poCreateBtn" class="btn btn-primary btn-block">
+                                            <i class='fa fa-plus'></i>
+                                            @if (Model.PromtionalOfferId > 0)
+                                            {
+                                                <span id="forEditSpan">Add Item In Promotion</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Declare Promotion</span>
+                                            }
+                                        </button>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Body Will by Start Here-->
+                        @{
+                            if (Model.PromtionalOfferId > 0)
+                            {
+
+
+                                <div class="table-responsive col-md-12  text-nowrap">
+                                    <table id="KgErpDataTable" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th style="padding:5px;">SL</th>
+                                                @if (Model.PromtionType == (int)PromotionTypeEnum.FreeProduct)
+                                                {
+                                                    <th style="padding:5px;text-align:left;">Product</th>
+                                                    <th style="padding:5px;text-align:center;">Quantity</th>
+                                                }
+                                                else
+                                                {
+                                                    <th style="padding: 5px; text-align: center;">Amount</th>
+
+                                                }
+                                                <th style="padding:5px;text-align:center;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.DataListSlave)
+                                            {
+
+                                                <tr>
+                                                    <td style="padding:5px">@(++sl)</td>
+
+                                                    @if (Model.PromtionType == (int)PromotionTypeEnum.FreeProduct)
+                                                    {
+                                                        <td style="padding:5px;text-align:left;">@item.ProductName</td>
+                                                        <td style="padding:5px;text-align:center;">@String.Format("{0:0.000}", item.PromoQuantity) @item.UnitName</td>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <td style="padding:5px;text-align:center;">@String.Format("{0:0.000}", item.PromoAmount)</td>
+                                                    }
+                                                    @if (!Model.IsSumitted)
+                                                    {
+                                                        <td style="padding:5px;text-align:center;">
+                                                            <a  onclick=" makeEditble('@item.PromtionalOfferDetailId','@item.PromoAmount','@item.PromoQuantity','@item.ProductName','@item.ProductId');" class="linkPointer" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></a>
+
+                                                            <a  onclick="makeDeletale(@item.PromtionalOfferDetailId)" class="linkPointer" data-toggle="modal" data-target="#deletePromtionalOfferDetailsDeleteModal" title="Delete" data-placement="top"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
+                                                        </td>
+                                                    }
+
+                                                </tr>
+                                            }
+                                        </tbody>
+
+
+                                    </table>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div class="box-footer">
+                        <div class="row">
+                            <div class="col-md-8">
+
+                            </div>
+                            <div class="col-lg-4 col-md-4">
+                                @if (!Model.IsSumitted && Model.PromtionalOfferId > 0)
+                                {
+                                    <button type="button" id="poCreateBtnSub" data-toggle="modal" data-target="#PromtionalOfferDetailsSubmitedModal" class="btn btn-primary btn-block">
+                                        <i class='fa fa-plus'></i>
+                                        <span>Submit</span>
+                                    </button>
+                                }
+                                else if (Model.IsSumitted && Model.PromtionalOfferId > 0)
+                                {
+                                    <span class="btn btn-success btn-block">Already Submited</span>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+
+@using (Html.BeginForm("PromtionalOfferDetailsDelete", "Procurement", FormMethod.Post, new { id = "deletePromtionalOfferDetailsDeleteFormId", @class = "formValidator" }))
+{
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal fade" id="deletePromtionalOfferDetailsDeleteModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                        &times;
+                    </button>
+                    <h5 class="modal-title"><b>Delete PO Item</b></h5>
+                </div>
+                <div class="modal-body">
+                    @Html.HiddenFor(model => model.PromtionalOfferDetailId, new { id = "hidDeletePromtionalOfferDetailId" })
+                    @Html.HiddenFor(model => model.CompanyFK, new { id = "deleteCompanyFK" })
+
+                    @Html.HiddenFor(model => model.ActionId, new { id = "deleteActionId" })
+
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div style="text-align:center">
+                        <h3>Are you sure to Delete this PO Item?</h3>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-3">
+                        <button type="button" onclick="resetProcurementPurchaseRequisitionSlaveForm()" class="btn btn-warning fa fa-close" data-dismiss="modal">&nbsp;NO</button>
+                    </div>
+                    <div class="col-md-9">
+                        <button type="submit" id="btnsave" style="width:100%" class="btn btn-primary fa fa-remove">&nbsp; Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("PromtionalOfferDetailsSubmited", "Procurement", FormMethod.Post, new { id = "PromtionalOfferDetailsSubmitedFormId", @class = "formValidator" }))
+{
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal fade" id="PromtionalOfferDetailsSubmitedModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                        &times;
+                    </button>
+                    <h5 class="modal-title"><b>Submit Offer</b></h5>
+                </div>
+                <div class="modal-body">
+                    @Html.HiddenFor(model => model.PromtionalOfferId, new { id = "hidSubmitedPromtionalOfferId" })
+                    @Html.HiddenFor(model => model.CompanyId, new { id = "SubmitCompanyId" })
+
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div style="text-align:center">
+                        <h3>Are you sure to Submit Offer?</h3>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-3">
+                        <button type="button" onclick="resetProcurementPurchaseRequisitionSlaveForm()" class="btn btn-warning fa fa-close" data-dismiss="modal">&nbsp;NO</button>
+                    </div>
+                    <div class="col-md-9">
+                        <button type="submit" id="btnsave" style="width:100%" class="btn btn-primary fa fa-remove">&nbsp; Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section scripts {
+
+    <script type="text/javascript">
+
+        function makeDeletale(PromtionalOfferDetailId) {
+            $('#hidDeletePromtionalOfferDetailId').val(PromtionalOfferDetailId);
+            $('#deleteCompanyFK').val('@Model.CompanyId');
+            $('#deleteActionId').val(3);
+        }
+
+
+        $(document).ready(function () {
+            $('.formValidator').bootstrapValidator();
+
+
+            var promtionTypeValue = $('#hidPromotionType').val();
+            if (promtionTypeValue == "FreeProduct") {
+                    $("#divFreeProduct").show();
+                    $("#divPromoAmount").hide();
+                }
+            if (promtionTypeValue == "PromoAmount") {
+                $("#divFreeProduct").hide();
+                $("#divPromoAmount").show();
+            }
+
+
+            $("#txtProductName").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url:"@Url.Action("AutoCompleteProductGet", "Configuration")",
+                        data: { companyId: "@Model.CompanyId", prefix: request.term, productType : "F" },
+                        dataType: "json",
+                        type: "get",
+                        cache: true,
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                           
+                        },
+                        failure: function (response) {
+                        
+                        }
+                    });
+                },
+
+            select: function (e, i) {
+                console.log(i.item.val);
+                 $("#ddlRProductFK").val(i.item.val);
+                $('.txtUnitName').text(i.item.unit);
+                $('#txtPromoQuantity').focus();
+
+                },
+                minLength: 1,
+                cache: true
+
+            }).focus(function () {
+                $(this).autocomplete("search");
+            });
+
+
+
+            $("#ddlPromtionType").change(function () {
+                var promtionType = $('#ddlPromtionType').val();
+                if (Number(promtionType) == @((int)PromotionTypeEnum.FreeProduct)) {
+                    $("#divFreeProduct").show();
+                    $("#divPromoAmount").hide();
+                }
+                 if (Number(promtionType) == @((int)PromotionTypeEnum.PromoAmount)) {
+                     $("#divFreeProduct").hide();
+                     $("#divPromoAmount").show();
+                }
+
+            });
+
+
+
+            $("#ddlSupplierPaymentMethodEnumFK").change(function () {
+                var paymethod = $("#ddlSupplierPaymentMethodEnumFK").val();
+                if (paymethod === "@((int)VendorsPaymentMethodEnum.LC)") {
+                    $("#piReletedDivId").show();
+                }
+                else {
+                    $("#piReletedDivId").hide();
+                }
+
+            })
+
+
+        });
+        function makeEditble(rowId,productAmount,productQty,productName,productId) {
+            $("#ActionId").val(2);
+            $("#hidPromtionalOfferDetailId").val(rowId);
+            $("#txtPromoAmount").val(productAmount);
+            $("#forEditSpan").text('Update Offer Item');
+            $("#txtPromoQuantity").val(productQty);
+            $("#txtProductName").val(productName);
+            $("#ddlRProductFK").val(productId);
+           
+        }
+
+        function makeSubmitble(rowId) {
+                // console.log(rowId);
+                $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("SingleProcurementPurchaseOrder", "Procurement")",
+                        datatype: "Json",
+                        data: { id: rowId },
+                        success: function (data) {
+                            console.log(data);
+                            $('#submitOrDraftPOCIDText').text(data.CID);
+
+                            if (data.Status == 0) {
+                                $('.submitOrDraftText').text("Make Submit");
+                            }
+                            else {
+                                $('.submitOrDraftText').text("Make Draft");
+
+                            }
+                        }
+                 });
+            $('#hidsubmitProcurementPurchaseOrderId').val(rowId);
+            }
+    </script>
+}
