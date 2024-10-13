@@ -167,6 +167,42 @@ namespace Pos.App.Controllers
             return RedirectToAction(nameof(AccountingCostCenter), new { companyId = model.CompanyFK });
         }
 
+        public async Task<ActionResult> CostCenterType(int companyId)
+        {
+            VMUserMenu vmUserMenu;
+            vmUserMenu = await Task.Run(() => _service.CostCenterTypeGet(companyId));
+
+            return View(vmUserMenu);
+        }
+        [HttpPost]
+        public async Task<ActionResult> CostCenterType(VMUserMenu model)
+        {
+
+            if (model.ActionEum == ActionEnum.Add)
+            {
+                //Add 
+                await _service.CostCenterTypeAdd(model);
+            }
+            else if (model.ActionEum == ActionEnum.Edit)
+            {
+                //Edit
+                await _service.CostCenterTypeEdit(model);
+            }
+            else if (model.ActionEum == ActionEnum.Delete)
+            {
+                //Delete
+                await _service.CostCenterTypeDelete(model.ID);
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+            return RedirectToAction(nameof(CostCenterType), new { companyId = model.CompanyFK });
+        }
+
+
+
+
         #region User Menu
         public async Task<ActionResult> UserMenu(int companyId)
         {

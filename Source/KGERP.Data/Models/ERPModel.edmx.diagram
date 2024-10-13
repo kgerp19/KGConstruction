@@ -518,6 +518,7 @@
         <AssociationConnector Association="ERPModel.FK_Store_Vendor" />
         <AssociationConnector Association="ERPModel.FK_VendorOffer_Vendor" />
         <EntityTypeShape EntityType="ERPModel.PromtionalOffer" Width="1.5" PointX="54.375" PointY="43.75" />
+        <EntityTypeShape EntityType="ERPModel.Accounting_CostCenterType" Width="1.5" PointX="28.375" PointY="35.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

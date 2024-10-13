@@ -238,6 +238,75 @@ namespace KGERP.Service.Implementation
         //    return result;
         //}
         //#endregion
+        public async Task<VMUserMenu> CostCenterTypeGet(int companyId)
+        {
+            VMUserMenu vmUserMenu = new VMUserMenu();
+            vmUserMenu.CompanyFK = companyId;
+            vmUserMenu.DataList = (from t1 in _db.Accounting_CostCenterType
+                                   join t2 in _db.Companies on t1.CompanyId equals t2.CompanyId
+                                   where t1.CompanyId == companyId && t1.IsActive
+                                   select new VMUserMenu
+                                   {
+                                       ID = t1.CostCenterTypeId,
+                                       Name = t1.Name,
+                                       CompanyName = t2.Name,
+                                       CompanyFK = t1.CompanyId
+                                   }).OrderByDescending(x => x.ID).AsEnumerable();
+            return vmUserMenu;
+        }
+        public async Task<int> CostCenterTypeAdd(VMUserMenu vmUserMenu)
+        {
+            var result = -1;
+
+
+            Accounting_CostCenterType costCenter = new Accounting_CostCenterType
+            {
+
+                Name = vmUserMenu.Name,
+
+                CompanyId = vmUserMenu.CompanyFK.Value,
+                CreatedBy = System.Web.HttpContext.Current.User.Identity.Name,
+                CreatedDate = DateTime.Now,
+                IsActive = true
+            };
+            _db.Accounting_CostCenterType.Add(costCenter);
+            if (await _db.SaveChangesAsync() > 0)
+            {
+                result = costCenter.CostCenterTypeId;
+            }
+            return result;
+        }
+        public async Task<int> CostCenterTypeEdit(VMUserMenu vmUserMenu)
+        {
+            var result = -1;
+            Accounting_CostCenterType costCenter = _db.Accounting_CostCenterType.Find(vmUserMenu.ID);
+            costCenter.Name = vmUserMenu.Name;
+
+            costCenter.ModifiedBy = System.Web.HttpContext.Current.User.Identity.Name;
+
+
+            if (await _db.SaveChangesAsync() > 0)
+            {
+                result = costCenter.CostCenterTypeId;
+            }
+            return result;
+        }
+        public async Task<int> CostCenterTypeDelete(int id)
+        {
+            int result = -1;
+            if (id != 0)
+            {
+                Accounting_CostCenterType costCenter = _db.Accounting_CostCenterType.Find(id);
+                costCenter.IsActive = false;
+                if (await _db.SaveChangesAsync() > 0)
+                {
+                    result = costCenter.CostCenterTypeId;
+                }
+            }
+            return result;
+        }
+
+
         public async Task<VMUserMenu> AccountingCostCenterGet(int companyId)
         {
             VMUserMenu vmUserMenu = new VMUserMenu();
@@ -254,6 +323,9 @@ namespace KGERP.Service.Implementation
                                    }).OrderByDescending(x => x.ID).AsEnumerable();
             return vmUserMenu;
         }
+
+
+
 
         public async Task<int> AccountingCostCenterAdd(VMUserMenu vmUserMenu)
         {

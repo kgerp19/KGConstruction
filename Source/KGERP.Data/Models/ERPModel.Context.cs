@@ -361,6 +361,7 @@ namespace KGERP.Data.Models
         public virtual DbSet<Upazila> Upazilas { get; set; }
         public virtual DbSet<Vendor> Vendors { get; set; }
         public virtual DbSet<PromtionalOffer> PromtionalOffers { get; set; }
+        public virtual DbSet<Accounting_CostCenterType> Accounting_CostCenterType { get; set; }
     
         public virtual ObjectResult<GetEmployeeListForTeam_Result> GetEmployeeListForTeam(Nullable<int> companyId)
         {

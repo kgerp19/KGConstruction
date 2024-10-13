@@ -37,6 +37,19 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="Status" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="Accounting_CostCenterType">
+          <Key>
+            <PropertyRef Name="CostCenterTypeId" />
+          </Key>
+          <Property Name="CostCenterTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CompanyId" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="ModifiedDate" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Accounting_Signatory">
           <Key>
             <PropertyRef Name="SignatoryId" />
@@ -473,7 +486,7 @@
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.dbo.Attendance_Shadow' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.dbo.Attendance_Shadow' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Attendance_Shadow">
           <Key>
             <PropertyRef Name="Id" />
@@ -517,7 +530,7 @@ warning 6002: The table/view 'KGISSDB.dbo.Attendance_Shadow' does not have a pri
           <Property Name="ModifiedDate" Type="smalldatetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.dbo.AttendanceType' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.dbo.AttendanceType' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="AttendanceType">
           <Key>
             <PropertyRef Name="EmployeeId" />
@@ -1448,7 +1461,7 @@ warning 6002: The table/view 'KGISSDB.dbo.AttendanceType' does not have a primar
           <Property Name="VendorId" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.dbo.Employee_Audit' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.dbo.Employee_Audit' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Employee_Audit">
           <Key>
             <PropertyRef Name="ChangId" />
@@ -1547,7 +1560,7 @@ warning 6002: The table/view 'KGISSDB.dbo.Employee_Audit' does not have a primar
           <Property Name="ManagerId" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.dbo.EmployeeLeaveDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.dbo.EmployeeLeaveDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="EmployeeLeaveDetail">
           <Key>
             <PropertyRef Name="sl_number" />
@@ -3033,7 +3046,7 @@ warning 6002: The table/view 'KGISSDB.dbo.EmployeeLeaveDetail' does not have a p
           <Property Name="EDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.dbo.ProcessAttenendance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.dbo.ProcessAttenendance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ProcessAttenendance">
           <Key>
             <PropertyRef Name="EmployeeId" />
@@ -3737,7 +3750,7 @@ warning 6002: The table/view 'KGISSDB.dbo.ProcessAttenendance' does not have a p
           <Property Name="CompanyId" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.dbo.ServerConfig' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.dbo.ServerConfig' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ServerConfig">
           <Key>
             <PropertyRef Name="Id" />
@@ -4545,7 +4558,7 @@ warning 6002: The table/view 'KGISSDB.dbo.ServerConfig' does not have a primary 
           <Property Name="RowNo" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.Erp.ConvertedProductDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.Erp.ConvertedProductDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ConvertedProductDetail">
           <Key>
             <PropertyRef Name="Qty" />
@@ -4785,7 +4798,7 @@ warning 6002: The table/view 'KGISSDB.Erp.ConvertedProductDetail' does not have 
           <Property Name="COGS" Type="decimal" Precision="18" Scale="3" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.Erp.FormulaHistory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.Erp.FormulaHistory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="FormulaHistory">
           <Key>
             <PropertyRef Name="Id" />
@@ -5955,7 +5968,7 @@ warning 6002: The table/view 'KGISSDB.Erp.FormulaHistory' does not have a primar
           <Property Name="TPPrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.Erp.RequisitionItemDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.Erp.RequisitionItemDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="RequisitionItemDetail">
           <Key>
             <PropertyRef Name="RequistionItemDetailId" />
@@ -6492,7 +6505,7 @@ warning 6002: The table/view 'KGISSDB.Erp.RequisitionItemDetail' does not have a
           <Property Name="HeadGLId" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.Kmcsl.ShereMember' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.Kmcsl.ShereMember' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ShereMember">
           <Key>
             <PropertyRef Name="MemberID" />
@@ -6559,7 +6572,7 @@ warning 6002: The table/view 'KGISSDB.Kmcsl.ShereMember' does not have a primary
           <Property Name="SecendVershon" Type="float" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.dbo.vwFTPFileInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.dbo.vwFTPFileInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vwFTPFileInfo">
           <Key>
             <PropertyRef Name="docid" />
@@ -6582,7 +6595,7 @@ warning 6002: The table/view 'KGISSDB.dbo.vwFTPFileInfo' does not have a primary
           <Property Name="RecDate" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.dbo.vwKGRECustomer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.dbo.vwKGRECustomer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vwKGRECustomer">
           <Key>
             <PropertyRef Name="ClientId" />
@@ -6619,7 +6632,7 @@ warning 6002: The table/view 'KGISSDB.dbo.vwKGRECustomer' does not have a primar
           <Property Name="EmployeeId" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.dbo.vwSMSList' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.dbo.vwSMSList' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vwSMSList">
           <Key>
             <PropertyRef Name="Id" />
@@ -6647,7 +6660,7 @@ warning 6002: The table/view 'KGISSDB.dbo.vwSMSList' does not have a primary key
           <Property Name="CompanyName" Type="varchar" MaxLength="200" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.dbo.vwTeamInfoList' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamInfoList' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vwTeamInfoList">
           <Key>
             <PropertyRef Name="Id" />
@@ -6677,7 +6690,7 @@ warning 6002: The table/view 'KGISSDB.dbo.vwTeamInfoList' does not have a primar
           <Property Name="CompanyName" Type="varchar" MaxLength="200" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'KGISSDB.dbo.vwTeamLeaderList' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vwTeamLeaderList">
           <Key>
             <PropertyRef Name="Id" />
@@ -8578,6 +8591,7 @@ warning 6002: The table/view 'KGISSDB.dbo.vwTeamLeaderList' does not have a prim
         <EntityContainer Name="ERPModelStoreContainer">
           <EntitySet Name="Accounting_ChequeInfo" EntityType="Self.Accounting_ChequeInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Accounting_CostCenter" EntityType="Self.Accounting_CostCenter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Accounting_CostCenterType" EntityType="Self.Accounting_CostCenterType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Accounting_Signatory" EntityType="Self.Accounting_Signatory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AdminPolicy" EntityType="Self.AdminPolicy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AdminSetUp" EntityType="Self.AdminSetUp" Schema="dbo" store:Type="Tables" />
@@ -10870,6 +10884,7 @@ warning 6002: The table/view 'KGISSDB.dbo.vwTeamLeaderList' does not have a prim
             <End Role="VendorOffer" EntitySet="VendorOffers" />
           </AssociationSet>
           <EntitySet Name="PromtionalOffers" EntityType="ERPModel.PromtionalOffer" />
+          <EntitySet Name="Accounting_CostCenterType" EntityType="ERPModel.Accounting_CostCenterType" />
           </EntityContainer>
         <ComplexType Name="GetEmployeeListForTeam_Result">
           <Property Type="Int64" Name="Id" Nullable="false" />
@@ -20012,6 +20027,19 @@ warning 6002: The table/view 'KGISSDB.dbo.vwTeamLeaderList' does not have a prim
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="Accounting_CostCenterType">
+          <Key>
+            <PropertyRef Name="CostCenterTypeId" />
+          </Key>
+          <Property Name="CostCenterTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -26921,6 +26949,20 @@ warning 6002: The table/view 'KGISSDB.dbo.vwTeamLeaderList' does not have a prim
                 <ScalarProperty Name="FromDate" ColumnName="FromDate" />
                 <ScalarProperty Name="PromoCode" ColumnName="PromoCode" />
                 <ScalarProperty Name="PromtionalOfferId" ColumnName="PromtionalOfferId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Accounting_CostCenterType">
+            <EntityTypeMapping TypeName="ERPModel.Accounting_CostCenterType">
+              <MappingFragment StoreEntitySet="Accounting_CostCenterType">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CostCenterTypeId" ColumnName="CostCenterTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
