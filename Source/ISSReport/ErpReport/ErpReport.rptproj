@@ -52,8 +52,7 @@
     <DataSet Include="DetailsDSet.rsd" />
   </ItemGroup>
   <ItemGroup>
-    <DataSource Include="ISSDataSource.rds" />
-    <DataSource Include="TestDataSource.rds" />
+    <DataSource Include="KGCDataSource.rds" />
   </ItemGroup>
   <ItemGroup>
     <Report Include="Absent_Hr_Check_Report.rdl" />
