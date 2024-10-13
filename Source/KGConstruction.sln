@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.10.35013.160
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32228.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KGERP", "KGERP\KGERP.csproj", "{BA5D1A32-10F8-42C2-948C-63D0E159BB54}"
 EndProject
@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KGERP.Utility", "KGERP.Util
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KGERP.Service", "KGERP.Service\KGERP.Service.csproj", "{62BBB4A6-B865-4D3F-8E6C-2A26BB365DCB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSReport", "ISSReport", "{5122E030-8105-414E-84ED-3A90D5885E42}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KGCReport", "KGCReport", "{5122E030-8105-414E-84ED-3A90D5885E42}"
 EndProject
 Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "ErpReport", "ISSReport\ErpReport\ErpReport.rptproj", "{7958EAEC-63A0-4FF9-8BBB-064269DF64F7}"
 EndProject
