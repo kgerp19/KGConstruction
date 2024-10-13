@@ -49,10 +49,10 @@ namespace KGERP.Data.Models
         public bool IsSeen { get; set; }
         public string Remark { get; set; }
     
-        public virtual OrderMaster OrderMaster { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDeliverDetail> OrderDeliverDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SaleReturn> SaleReturns { get; set; }
+        public virtual OrderMaster OrderMaster { get; set; }
     }
 }

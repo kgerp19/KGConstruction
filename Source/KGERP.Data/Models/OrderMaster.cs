@@ -18,11 +18,12 @@ namespace KGERP.Data.Models
         public OrderMaster()
         {
             this.EMIs = new HashSet<EMI>();
-            this.OrderDetails = new HashSet<OrderDetail>();
             this.OrderDelivers = new HashSet<OrderDeliver>();
+            this.OrderDetails = new HashSet<OrderDetail>();
         }
     
         public long OrderMasterId { get; set; }
+        public long CostCenterId { get; set; }
         public Nullable<int> CompanyId { get; set; }
         public int DemandId { get; set; }
         public string ProductType { get; set; }
@@ -60,9 +61,9 @@ namespace KGERP.Data.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EMI> EMIs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDeliver> OrderDelivers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual Vendor Vendor { get; set; }
     }
 }

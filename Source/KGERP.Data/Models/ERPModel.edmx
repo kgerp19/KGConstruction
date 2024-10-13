@@ -27,7 +27,8 @@
           <Key>
             <PropertyRef Name="CostCenterId" />
           </Key>
-          <Property Name="CostCenterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CostCenterId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CostCenterTypeId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CompanyId" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -41,7 +42,7 @@
           <Key>
             <PropertyRef Name="CostCenterTypeId" />
           </Key>
-          <Property Name="CostCenterTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CostCenterTypeId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CompanyId" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -4067,7 +4068,7 @@ warning 6002: The table/view 'KGConstructionDB.dbo.ServerConfig' does not have a
           <Property Name="ChqNo" Type="varchar" MaxLength="50" />
           <Property Name="ChqName" Type="varchar" MaxLength="255" />
           <Property Name="ChqDate" Type="date" />
-          <Property Name="Accounting_CostCenterFk" Type="int" />
+          <Property Name="Accounting_CostCenterFk" Type="bigint" />
           <Property Name="Narration" Type="nvarchar(max)" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
           <Property Name="CreateDate" Type="datetime" />
@@ -5315,6 +5316,7 @@ warning 6002: The table/view 'KGConstructionDB.Erp.FormulaHistory' does not have
             <PropertyRef Name="OrderMasterId" />
           </Key>
           <Property Name="OrderMasterId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CostCenterId" Type="bigint" Nullable="false" />
           <Property Name="CompanyId" Type="int" />
           <Property Name="DemandId" Type="int" Nullable="false" />
           <Property Name="ProductType" Type="char" MaxLength="1" Nullable="false" />
@@ -9843,7 +9845,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Parameter Name="CompanyId" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="Accounting_ChequeInfo" EntityType="ERPModel.Accounting_ChequeInfo" />
-          <EntitySet Name="Accounting_CostCenter" EntityType="ERPModel.Accounting_CostCenter" />
           <EntitySet Name="Accounting_Signatory" EntityType="ERPModel.Accounting_Signatory" />
           <EntitySet Name="AdminPolicies" EntityType="ERPModel.AdminPolicy" />
           <EntitySet Name="AdminSetUps" EntityType="ERPModel.AdminSetUp" />
@@ -9993,7 +9994,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <EntitySet Name="UserPermissions" EntityType="ERPModel.UserPermission" />
           <EntitySet Name="VehicleRequisitions" EntityType="ERPModel.VehicleRequisition" />
           <EntitySet Name="VendorProfessions" EntityType="ERPModel.VendorProfession" />
-          <EntitySet Name="Vouchers" EntityType="ERPModel.Voucher" />
           <EntitySet Name="VoucherMaps" EntityType="ERPModel.VoucherMap" />
           <EntitySet Name="VoucherTypes" EntityType="ERPModel.VoucherType" />
           <EntitySet Name="YearlyHolidays" EntityType="ERPModel.YearlyHoliday" />
@@ -10310,10 +10310,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             <End Role="Region" EntitySet="Regions" />
             <End Role="Territory" EntitySet="Territories" />
           </AssociationSet>
-          <AssociationSet Name="FK_Voucher_VoucherType" Association="ERPModel.FK_Voucher_VoucherType">
-            <End Role="VoucherType" EntitySet="VoucherTypes" />
-            <End Role="Voucher" EntitySet="Vouchers" />
-          </AssociationSet>
           <AssociationSet Name="FK_BookingInstallmentSchedule_CustomerGroupInfo" Association="ERPModel.FK_BookingInstallmentSchedule_CustomerGroupInfo">
             <End Role="CustomerGroupInfo" EntitySet="CustomerGroupInfoes" />
             <End Role="BookingInstallmentSchedule" EntitySet="BookingInstallmentSchedules" />
@@ -10448,10 +10444,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <EntitySet Name="RecruitmentRequisitionApprovals" EntityType="ERPModel.RecruitmentRequisitionApproval" />
           <EntitySet Name="VoucherDetails" EntityType="ERPModel.VoucherDetail" />
           <EntitySet Name="VendorOffers" EntityType="ERPModel.VendorOffer" />
-          <AssociationSet Name="FK_VoucherDetail_Voucher" Association="ERPModel.FK_VoucherDetail_Voucher">
-            <End Role="Voucher" EntitySet="Vouchers" />
-            <End Role="VoucherDetail" EntitySet="VoucherDetails" />
-          </AssociationSet>
           <EntitySet Name="PaymentMasters" EntityType="ERPModel.PaymentMaster" />
           <EntitySet Name="PRoll_AttendanceModifiedLog" EntityType="ERPModel.PRoll_AttendanceModifiedLog" />
           <EntitySet Name="OrderMasterSignatories" EntityType="ERPModel.OrderMasterSignatory" />
@@ -10763,20 +10755,7 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             <End Role="PurchaseReturn" EntitySet="PurchaseReturns" />
             <End Role="PurchaseReturnDetail" EntitySet="PurchaseReturnDetails" />
           </AssociationSet>
-          <EntitySet Name="OrderMasters" EntityType="ERPModel.OrderMaster" />
-          <AssociationSet Name="FK_OrderMaster_Company" Association="ERPModel.FK_OrderMaster_Company">
-            <End Role="Company" EntitySet="Companies" />
-            <End Role="OrderMaster" EntitySet="OrderMasters" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EMI_OrderMaster" Association="ERPModel.FK_EMI_OrderMaster">
-            <End Role="OrderMaster" EntitySet="OrderMasters" />
-            <End Role="EMI" EntitySet="EMIs" />
-          </AssociationSet>
           <EntitySet Name="OrderDetails" EntityType="ERPModel.OrderDetail" />
-          <AssociationSet Name="FK_OrderDetail_OrderMaster" Association="ERPModel.FK_OrderDetail_OrderMaster">
-            <End Role="OrderMaster" EntitySet="OrderMasters" />
-            <End Role="OrderDetail" EntitySet="OrderDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Product" Association="ERPModel.FK_OrderDetail_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
@@ -10802,10 +10781,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           </AssociationSet>
           <EntitySet Name="Prod_Reference" EntityType="ERPModel.Prod_Reference" />
           <EntitySet Name="OrderDelivers" EntityType="ERPModel.OrderDeliver" />
-          <AssociationSet Name="FK_OrderDeliver_OrderMaster" Association="ERPModel.FK_OrderDeliver_OrderMaster">
-            <End Role="OrderMaster" EntitySet="OrderMasters" />
-            <End Role="OrderDeliver" EntitySet="OrderDelivers" />
-          </AssociationSet>
           <AssociationSet Name="FK_OrderDeliverDetail_OrderDeliver" Association="ERPModel.FK_OrderDeliverDetail_OrderDeliver">
             <End Role="OrderDeliver" EntitySet="OrderDelivers" />
             <End Role="OrderDeliverDetail" EntitySet="OrderDeliverDetails" />
@@ -10855,10 +10830,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             <End Role="MaterialReceiveDetail" EntitySet="MaterialReceiveDetails" />
             <End Role="MaterialReceiveDetail1" EntitySet="MaterialReceiveDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK_OrderMaster_Supplier" Association="ERPModel.FK_OrderMaster_Supplier">
-            <End Role="Vendor" EntitySet="Vendors" />
-            <End Role="OrderMaster" EntitySet="OrderMasters" />
-          </AssociationSet>
           <AssociationSet Name="FK_Payment_Vendor" Association="ERPModel.FK_Payment_Vendor">
             <End Role="Vendor" EntitySet="Vendors" />
             <End Role="Payment" EntitySet="Payments" />
@@ -10884,7 +10855,38 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             <End Role="VendorOffer" EntitySet="VendorOffers" />
           </AssociationSet>
           <EntitySet Name="PromtionalOffers" EntityType="ERPModel.PromtionalOffer" />
+          <EntitySet Name="Accounting_CostCenter" EntityType="ERPModel.Accounting_CostCenter" />
           <EntitySet Name="Accounting_CostCenterType" EntityType="ERPModel.Accounting_CostCenterType" />
+          <EntitySet Name="Vouchers" EntityType="ERPModel.Voucher" />
+          <EntitySet Name="OrderMasters" EntityType="ERPModel.OrderMaster" />
+          <AssociationSet Name="FK_OrderMaster_Company" Association="ERPModel.FK_OrderMaster_Company">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="OrderMaster" EntitySet="OrderMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Voucher_VoucherType" Association="ERPModel.FK_Voucher_VoucherType">
+            <End Role="VoucherType" EntitySet="VoucherTypes" />
+            <End Role="Voucher" EntitySet="Vouchers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VoucherDetail_Voucher" Association="ERPModel.FK_VoucherDetail_Voucher">
+            <End Role="Voucher" EntitySet="Vouchers" />
+            <End Role="VoucherDetail" EntitySet="VoucherDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EMI_OrderMaster" Association="ERPModel.FK_EMI_OrderMaster">
+            <End Role="OrderMaster" EntitySet="OrderMasters" />
+            <End Role="EMI" EntitySet="EMIs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDeliver_OrderMaster" Association="ERPModel.FK_OrderDeliver_OrderMaster">
+            <End Role="OrderMaster" EntitySet="OrderMasters" />
+            <End Role="OrderDeliver" EntitySet="OrderDelivers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_OrderMaster" Association="ERPModel.FK_OrderDetail_OrderMaster">
+            <End Role="OrderMaster" EntitySet="OrderMasters" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderMaster_Supplier" Association="ERPModel.FK_OrderMaster_Supplier">
+            <End Role="Vendor" EntitySet="Vendors" />
+            <End Role="OrderMaster" EntitySet="OrderMasters" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="GetEmployeeListForTeam_Result">
           <Property Type="Int64" Name="Id" Nullable="false" />
@@ -10911,20 +10913,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Accounting_Signatory" Relationship="ERPModel.FK_Accounting_ChequeInfo_Accounting_Signatory" FromRole="Accounting_ChequeInfo" ToRole="Accounting_Signatory" />
           <NavigationProperty Name="BankBranch" Relationship="ERPModel.FK_Accounting_ChequeInfo_BankBranch" FromRole="Accounting_ChequeInfo" ToRole="BankBranch" />
-        </EntityType>
-        <EntityType Name="Accounting_CostCenter">
-          <Key>
-            <PropertyRef Name="CostCenterId" />
-          </Key>
-          <Property Name="CostCenterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyId" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="Status" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Accounting_Signatory">
           <Key>
@@ -13811,37 +13799,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityType Name="Voucher">
-          <Key>
-            <PropertyRef Name="VoucherId" />
-          </Key>
-          <Property Name="VoucherId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CompanyId" Type="Int32" />
-          <Property Name="VoucherTypeId" Type="Int32" />
-          <Property Name="VoucherNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="VoucherDate" Type="DateTime" Precision="0" />
-          <Property Name="ChqNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ChqName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="ChqDate" Type="DateTime" Precision="0" />
-          <Property Name="Accounting_CostCenterFk" Type="Int32" />
-          <Property Name="Narration" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreateDate" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="VoucherStatus" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="VirtualHeadId" Type="Int32" />
-          <Property Name="IsStock" Type="Boolean" Nullable="false" />
-          <Property Name="IsSubmit" Type="Boolean" Nullable="false" />
-          <Property Name="IsIntegrated" Type="Boolean" Nullable="false" />
-          <Property Name="TotalAmount" Type="Double" Nullable="false" />
-          <NavigationProperty Name="VoucherType" Relationship="ERPModel.FK_Voucher_VoucherType" FromRole="Voucher" ToRole="VoucherType" />
-          <NavigationProperty Name="VoucherDetails" Relationship="ERPModel.FK_VoucherDetail_Voucher" FromRole="Voucher" ToRole="VoucherDetail" />
-          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
-          <Property Name="ApprovedBy" Type="Int64" Nullable="false" />
-          <Property Name="ApprovedDate" Type="DateTime" Precision="3" />
-        </EntityType>
         <EntityType Name="VoucherMap">
           <Key>
             <PropertyRef Name="VoucherMapId" />
@@ -14226,8 +14183,8 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="ModifiedBy" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="EmiDetails" Relationship="ERPModel.FK_EmiDetail_EMI1" FromRole="EMI" ToRole="EmiDetail" />
-          <NavigationProperty Name="OrderMaster" Relationship="ERPModel.FK_EMI_OrderMaster" FromRole="EMI" ToRole="OrderMaster" />
           <NavigationProperty Name="Vendor" Relationship="ERPModel.FK_EMI_Vendor" FromRole="EMI" ToRole="Vendor" />
+          <NavigationProperty Name="OrderMaster" Relationship="ERPModel.FK_EMI_OrderMaster" FromRole="EMI" ToRole="OrderMaster" />
         </EntityType>
         <EntityType Name="EmiDetail">
           <Key>
@@ -16074,18 +16031,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Voucher_VoucherType">
-          <End Type="ERPModel.VoucherType" Role="VoucherType" Multiplicity="0..1" />
-          <End Type="ERPModel.Voucher" Role="Voucher" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="VoucherType">
-              <PropertyRef Name="VoucherTypeId" />
-            </Principal>
-            <Dependent Role="Voucher">
-              <PropertyRef Name="VoucherTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_BookingInstallmentSchedule_CustomerGroupInfo">
           <End Type="ERPModel.CustomerGroupInfo" Role="CustomerGroupInfo" Multiplicity="1" />
           <End Type="ERPModel.BookingInstallmentSchedule" Role="BookingInstallmentSchedule" Multiplicity="*" />
@@ -16727,18 +16672,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Vendor" Relationship="ERPModel.FK_VendorOffer_Vendor" FromRole="VendorOffer" ToRole="Vendor" />
         </EntityType>
-        <Association Name="FK_VoucherDetail_Voucher">
-          <End Type="ERPModel.Voucher" Role="Voucher" Multiplicity="0..1" />
-          <End Type="ERPModel.VoucherDetail" Role="VoucherDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Voucher">
-              <PropertyRef Name="VoucherId" />
-            </Principal>
-            <Dependent Role="VoucherDetail">
-              <PropertyRef Name="VoucherId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="PaymentMaster">
           <Key>
             <PropertyRef Name="PaymentMasterId" />
@@ -19287,73 +19220,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="OrderMaster">
-          <Key>
-            <PropertyRef Name="OrderMasterId" />
-          </Key>
-          <Property Name="OrderMasterId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CompanyId" Type="Int32" />
-          <Property Name="DemandId" Type="Int32" Nullable="false" />
-          <Property Name="ProductType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="CustomerId" Type="Int32" />
-          <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="ExpectedDeliveryDate" Type="DateTime" Precision="0" />
-          <Property Name="OrderMonthYear" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
-          <Property Name="OrderNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="CustomerPONo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TotalAmount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="SalePersonId" Type="Int64" />
-          <Property Name="StockInfoId" Type="Int32" />
-          <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="GrandTotal" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="DiscountRate" Type="Decimal" Precision="10" Scale="2" />
-          <Property Name="DiscountAmount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="IsCash" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="Status" Type="Int32" Nullable="false" />
-          <Property Name="PaymentMethod" Type="Int32" Nullable="false" />
-          <Property Name="CourierNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FinalDestination" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="CourierCharge" Type="Double" Nullable="false" />
-          <Property Name="IsOpening" Type="Boolean" Nullable="false" />
-          <Property Name="CurrentPayable" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
-          <Property Name="IsService" Type="Boolean" Nullable="false" />
-          <Property Name="IsProductionComplete" Type="Boolean" />
-          <NavigationProperty Name="Company" Relationship="ERPModel.FK_OrderMaster_Company" FromRole="OrderMaster" ToRole="Company" />
-          <NavigationProperty Name="EMIs" Relationship="ERPModel.FK_EMI_OrderMaster" FromRole="OrderMaster" ToRole="EMI" />
-          <NavigationProperty Name="OrderDetails" Relationship="ERPModel.FK_OrderDetail_OrderMaster" FromRole="OrderMaster" ToRole="OrderDetail" />
-          <NavigationProperty Name="OrderDelivers" Relationship="ERPModel.FK_OrderDeliver_OrderMaster" FromRole="OrderMaster" ToRole="OrderDeliver" />
-          <NavigationProperty Name="Vendor" Relationship="ERPModel.FK_OrderMaster_Supplier" FromRole="OrderMaster" ToRole="Vendor" />
-        </EntityType>
-        <Association Name="FK_OrderMaster_Company">
-          <End Type="ERPModel.Company" Role="Company" Multiplicity="0..1" />
-          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Company">
-              <PropertyRef Name="CompanyId" />
-            </Principal>
-            <Dependent Role="OrderMaster">
-              <PropertyRef Name="CompanyId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_EMI_OrderMaster">
-          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="0..1" />
-          <End Type="ERPModel.EMI" Role="EMI" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderMaster">
-              <PropertyRef Name="OrderMasterId" />
-            </Principal>
-            <Dependent Role="EMI">
-              <PropertyRef Name="OrderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="OrderDetail">
           <Key>
             <PropertyRef Name="OrderDetailId" />
@@ -19398,21 +19264,9 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="IsVATInclude" Type="Boolean" Nullable="false" />
           <Property Name="ReelDirection" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="PouchDerection" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="OrderMaster" Relationship="ERPModel.FK_OrderDetail_OrderMaster" FromRole="OrderDetail" ToRole="OrderMaster" />
           <NavigationProperty Name="Product" Relationship="ERPModel.FK_OrderDetail_Product" FromRole="OrderDetail" ToRole="Product" />
+          <NavigationProperty Name="OrderMaster" Relationship="ERPModel.FK_OrderDetail_OrderMaster" FromRole="OrderDetail" ToRole="OrderMaster" />
         </EntityType>
-        <Association Name="FK_OrderDetail_OrderMaster">
-          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="0..1" />
-          <End Type="ERPModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderMaster">
-              <PropertyRef Name="OrderMasterId" />
-            </Principal>
-            <Dependent Role="OrderDetail">
-              <PropertyRef Name="OrderMasterId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrderDetail_Product">
           <End Type="ERPModel.Product" Role="Product" Multiplicity="1" />
           <End Type="ERPModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
@@ -19602,22 +19456,10 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="IsSubmitted" Type="Boolean" Nullable="false" />
           <Property Name="IsSeen" Type="Boolean" Nullable="false" />
           <Property Name="Remark" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="OrderMaster" Relationship="ERPModel.FK_OrderDeliver_OrderMaster" FromRole="OrderDeliver" ToRole="OrderMaster" />
           <NavigationProperty Name="OrderDeliverDetails" Relationship="ERPModel.FK_OrderDeliverDetail_OrderDeliver" FromRole="OrderDeliver" ToRole="OrderDeliverDetail" />
           <NavigationProperty Name="SaleReturns" Relationship="ERPModel.FK_SaleReturn_OrderDeliver" FromRole="OrderDeliver" ToRole="SaleReturn" />
+          <NavigationProperty Name="OrderMaster" Relationship="ERPModel.FK_OrderDeliver_OrderMaster" FromRole="OrderDeliver" ToRole="OrderMaster" />
         </EntityType>
-        <Association Name="FK_OrderDeliver_OrderMaster">
-          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="0..1" />
-          <End Type="ERPModel.OrderDeliver" Role="OrderDeliver" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderMaster">
-              <PropertyRef Name="OrderMasterId" />
-            </Principal>
-            <Dependent Role="OrderDeliver">
-              <PropertyRef Name="OrderMasterId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrderDeliverDetail_OrderDeliver">
           <End Type="ERPModel.OrderDeliver" Role="OrderDeliver" Multiplicity="0..1" />
           <End Type="ERPModel.OrderDeliverDetail" Role="OrderDeliverDetail" Multiplicity="*" />
@@ -19858,13 +19700,13 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <NavigationProperty Name="MonthlyTargets" Relationship="ERPModel.FK_MonthlyTarget_Vendor" FromRole="Vendor" ToRole="MonthlyTarget" />
           <NavigationProperty Name="EMIs" Relationship="ERPModel.FK_EMI_Vendor" FromRole="Vendor" ToRole="EMI" />
           <NavigationProperty Name="LCInfoes" Relationship="ERPModel.FK_LCInfo_Vendor" FromRole="Vendor" ToRole="LCInfo" />
-          <NavigationProperty Name="OrderMasters" Relationship="ERPModel.FK_OrderMaster_Supplier" FromRole="Vendor" ToRole="OrderMaster" />
           <NavigationProperty Name="Payments" Relationship="ERPModel.FK_Payment_Vendor" FromRole="Vendor" ToRole="Payment" />
           <NavigationProperty Name="PurchaseOrders" Relationship="ERPModel.FK_PurchaseOrder_Vendor" FromRole="Vendor" ToRole="PurchaseOrder" />
           <NavigationProperty Name="PurchaseReturns" Relationship="ERPModel.FK_PurchaseReturn_Vendor" FromRole="Vendor" ToRole="PurchaseReturn" />
           <NavigationProperty Name="SaleReturns" Relationship="ERPModel.FK_SaleReturn_Vendor" FromRole="Vendor" ToRole="SaleReturn" />
           <NavigationProperty Name="Stores" Relationship="ERPModel.FK_Store_Vendor" FromRole="Vendor" ToRole="Store" />
           <NavigationProperty Name="VendorOffers" Relationship="ERPModel.FK_VendorOffer_Vendor" FromRole="Vendor" ToRole="VendorOffer" />
+          <NavigationProperty Name="OrderMasters" Relationship="ERPModel.FK_OrderMaster_Supplier" FromRole="Vendor" ToRole="OrderMaster" />
         </EntityType>
         <Association Name="FK_Employee_Vendor">
           <End Type="ERPModel.Vendor" Role="Vendor" Multiplicity="0..1" />
@@ -19923,18 +19765,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             </Principal>
             <Dependent Role="MaterialReceiveDetail1">
               <PropertyRef Name="MaterialReceiveDetailId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderMaster_Supplier">
-          <End Type="ERPModel.Vendor" Role="Vendor" Multiplicity="0..1" />
-          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Vendor">
-              <PropertyRef Name="VendorId" />
-            </Principal>
-            <Dependent Role="OrderMaster">
-              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -20027,11 +19857,26 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="Accounting_CostCenter">
+          <Key>
+            <PropertyRef Name="CostCenterId" />
+          </Key>
+          <Property Name="CostCenterId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CostCenterTypeId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+        </EntityType>
         <EntityType Name="Accounting_CostCenterType">
           <Key>
             <PropertyRef Name="CostCenterTypeId" />
           </Key>
-          <Property Name="CostCenterTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CostCenterTypeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CompanyId" Type="Int32" Nullable="false" />
           <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -20040,6 +19885,165 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="ModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="Voucher">
+          <Key>
+            <PropertyRef Name="VoucherId" />
+          </Key>
+          <Property Name="VoucherId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyId" Type="Int32" />
+          <Property Name="VoucherTypeId" Type="Int32" />
+          <Property Name="VoucherNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="VoucherDate" Type="DateTime" Precision="0" />
+          <Property Name="ChqNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ChqName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ChqDate" Type="DateTime" Precision="0" />
+          <Property Name="Accounting_CostCenterFk" Type="Int64" />
+          <Property Name="Narration" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="VoucherStatus" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="VirtualHeadId" Type="Int32" />
+          <Property Name="IsStock" Type="Boolean" Nullable="false" />
+          <Property Name="IsSubmit" Type="Boolean" Nullable="false" />
+          <Property Name="IsIntegrated" Type="Boolean" Nullable="false" />
+          <Property Name="TotalAmount" Type="Double" Nullable="false" />
+          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+          <Property Name="ApprovedBy" Type="Int64" Nullable="false" />
+          <Property Name="ApprovedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="VoucherType" Relationship="ERPModel.FK_Voucher_VoucherType" FromRole="Voucher" ToRole="VoucherType" />
+          <NavigationProperty Name="VoucherDetails" Relationship="ERPModel.FK_VoucherDetail_Voucher" FromRole="Voucher" ToRole="VoucherDetail" />
+        </EntityType>
+        <EntityType Name="OrderMaster">
+          <Key>
+            <PropertyRef Name="OrderMasterId" />
+          </Key>
+          <Property Name="OrderMasterId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CostCenterId" Type="Int64" Nullable="false" />
+          <Property Name="CompanyId" Type="Int32" />
+          <Property Name="DemandId" Type="Int32" Nullable="false" />
+          <Property Name="ProductType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ExpectedDeliveryDate" Type="DateTime" Precision="0" />
+          <Property Name="OrderMonthYear" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="OrderNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CustomerPONo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TotalAmount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SalePersonId" Type="Int64" />
+          <Property Name="StockInfoId" Type="Int32" />
+          <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="GrandTotal" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="DiscountRate" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="DiscountAmount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="IsCash" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="PaymentMethod" Type="Int32" Nullable="false" />
+          <Property Name="CourierNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FinalDestination" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="CourierCharge" Type="Double" Nullable="false" />
+          <Property Name="IsOpening" Type="Boolean" Nullable="false" />
+          <Property Name="CurrentPayable" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <Property Name="IsService" Type="Boolean" Nullable="false" />
+          <Property Name="IsProductionComplete" Type="Boolean" />
+          <NavigationProperty Name="Company" Relationship="ERPModel.FK_OrderMaster_Company" FromRole="OrderMaster" ToRole="Company" />
+          <NavigationProperty Name="EMIs" Relationship="ERPModel.FK_EMI_OrderMaster" FromRole="OrderMaster" ToRole="EMI" />
+          <NavigationProperty Name="OrderDelivers" Relationship="ERPModel.FK_OrderDeliver_OrderMaster" FromRole="OrderMaster" ToRole="OrderDeliver" />
+          <NavigationProperty Name="OrderDetails" Relationship="ERPModel.FK_OrderDetail_OrderMaster" FromRole="OrderMaster" ToRole="OrderDetail" />
+          <NavigationProperty Name="Vendor" Relationship="ERPModel.FK_OrderMaster_Supplier" FromRole="OrderMaster" ToRole="Vendor" />
+        </EntityType>
+        <Association Name="FK_OrderMaster_Company">
+          <End Type="ERPModel.Company" Role="Company" Multiplicity="0..1" />
+          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="OrderMaster">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Voucher_VoucherType">
+          <End Type="ERPModel.VoucherType" Role="VoucherType" Multiplicity="0..1" />
+          <End Type="ERPModel.Voucher" Role="Voucher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VoucherType">
+              <PropertyRef Name="VoucherTypeId" />
+            </Principal>
+            <Dependent Role="Voucher">
+              <PropertyRef Name="VoucherTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VoucherDetail_Voucher">
+          <End Type="ERPModel.Voucher" Role="Voucher" Multiplicity="0..1" />
+          <End Type="ERPModel.VoucherDetail" Role="VoucherDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Voucher">
+              <PropertyRef Name="VoucherId" />
+            </Principal>
+            <Dependent Role="VoucherDetail">
+              <PropertyRef Name="VoucherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EMI_OrderMaster">
+          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="0..1" />
+          <End Type="ERPModel.EMI" Role="EMI" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderMaster">
+              <PropertyRef Name="OrderMasterId" />
+            </Principal>
+            <Dependent Role="EMI">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDeliver_OrderMaster">
+          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="0..1" />
+          <End Type="ERPModel.OrderDeliver" Role="OrderDeliver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderMaster">
+              <PropertyRef Name="OrderMasterId" />
+            </Principal>
+            <Dependent Role="OrderDeliver">
+              <PropertyRef Name="OrderMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_OrderMaster">
+          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="0..1" />
+          <End Type="ERPModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderMaster">
+              <PropertyRef Name="OrderMasterId" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderMaster_Supplier">
+          <End Type="ERPModel.Vendor" Role="Vendor" Multiplicity="0..1" />
+          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendor">
+              <PropertyRef Name="VendorId" />
+            </Principal>
+            <Dependent Role="OrderMaster">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -20072,21 +20076,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
                 <ScalarProperty Name="BankBranchId" ColumnName="BankBranchId" />
                 <ScalarProperty Name="ActChequeInfoId" ColumnName="ActChequeInfoId" />
                 <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Accounting_CostCenter">
-            <EntityTypeMapping TypeName="ERPModel.Accounting_CostCenter">
-              <MappingFragment StoreEntitySet="Accounting_CostCenter">
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="CostCenterId" ColumnName="CostCenterId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -22966,36 +22955,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ProfessionId" ColumnName="ProfessionId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Vouchers">
-            <EntityTypeMapping TypeName="ERPModel.Voucher">
-              <MappingFragment StoreEntitySet="Voucher">
-                <ScalarProperty Name="ApprovedDate" ColumnName="ApprovedDate" />
-                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
-                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
-                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
-                <ScalarProperty Name="IsIntegrated" ColumnName="IsIntegrated" />
-                <ScalarProperty Name="IsSubmit" ColumnName="IsSubmit" />
-                <ScalarProperty Name="IsStock" ColumnName="IsStock" />
-                <ScalarProperty Name="VirtualHeadId" ColumnName="VirtualHeadId" />
-                <ScalarProperty Name="VoucherStatus" ColumnName="VoucherStatus" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Narration" ColumnName="Narration" />
-                <ScalarProperty Name="Accounting_CostCenterFk" ColumnName="Accounting_CostCenterFk" />
-                <ScalarProperty Name="ChqDate" ColumnName="ChqDate" />
-                <ScalarProperty Name="ChqName" ColumnName="ChqName" />
-                <ScalarProperty Name="ChqNo" ColumnName="ChqNo" />
-                <ScalarProperty Name="VoucherDate" ColumnName="VoucherDate" />
-                <ScalarProperty Name="VoucherNo" ColumnName="VoucherNo" />
-                <ScalarProperty Name="VoucherTypeId" ColumnName="VoucherTypeId" />
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="VoucherId" ColumnName="VoucherId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -26553,45 +26512,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OrderMasters">
-            <EntityTypeMapping TypeName="ERPModel.OrderMaster">
-              <MappingFragment StoreEntitySet="OrderMaster">
-                <ScalarProperty Name="IsProductionComplete" ColumnName="IsProductionComplete" />
-                <ScalarProperty Name="IsService" ColumnName="IsService" />
-                <ScalarProperty Name="CurrentPayable" ColumnName="CurrentPayable" />
-                <ScalarProperty Name="IsOpening" ColumnName="IsOpening" />
-                <ScalarProperty Name="CourierCharge" ColumnName="CourierCharge" />
-                <ScalarProperty Name="FinalDestination" ColumnName="FinalDestination" />
-                <ScalarProperty Name="CourierNo" ColumnName="CourierNo" />
-                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IsCash" ColumnName="IsCash" />
-                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
-                <ScalarProperty Name="DiscountRate" ColumnName="DiscountRate" />
-                <ScalarProperty Name="GrandTotal" ColumnName="GrandTotal" />
-                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="StockInfoId" ColumnName="StockInfoId" />
-                <ScalarProperty Name="SalePersonId" ColumnName="SalePersonId" />
-                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
-                <ScalarProperty Name="CustomerPONo" ColumnName="CustomerPONo" />
-                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
-                <ScalarProperty Name="OrderMonthYear" ColumnName="OrderMonthYear" />
-                <ScalarProperty Name="ExpectedDeliveryDate" ColumnName="ExpectedDeliveryDate" />
-                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
-                <ScalarProperty Name="DemandId" ColumnName="DemandId" />
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="OrderMasterId" ColumnName="OrderMasterId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="OrderDetails">
             <EntityTypeMapping TypeName="ERPModel.OrderDetail">
               <MappingFragment StoreEntitySet="OrderDetail">
@@ -26952,6 +26872,22 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Accounting_CostCenter">
+            <EntityTypeMapping TypeName="ERPModel.Accounting_CostCenter">
+              <MappingFragment StoreEntitySet="Accounting_CostCenter">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CostCenterTypeId" ColumnName="CostCenterTypeId" />
+                <ScalarProperty Name="CostCenterId" ColumnName="CostCenterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Accounting_CostCenterType">
             <EntityTypeMapping TypeName="ERPModel.Accounting_CostCenterType">
               <MappingFragment StoreEntitySet="Accounting_CostCenterType">
@@ -26963,6 +26899,76 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
                 <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="CostCenterTypeId" ColumnName="CostCenterTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vouchers">
+            <EntityTypeMapping TypeName="ERPModel.Voucher">
+              <MappingFragment StoreEntitySet="Voucher">
+                <ScalarProperty Name="ApprovedDate" ColumnName="ApprovedDate" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="IsIntegrated" ColumnName="IsIntegrated" />
+                <ScalarProperty Name="IsSubmit" ColumnName="IsSubmit" />
+                <ScalarProperty Name="IsStock" ColumnName="IsStock" />
+                <ScalarProperty Name="VirtualHeadId" ColumnName="VirtualHeadId" />
+                <ScalarProperty Name="VoucherStatus" ColumnName="VoucherStatus" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Narration" ColumnName="Narration" />
+                <ScalarProperty Name="Accounting_CostCenterFk" ColumnName="Accounting_CostCenterFk" />
+                <ScalarProperty Name="ChqDate" ColumnName="ChqDate" />
+                <ScalarProperty Name="ChqName" ColumnName="ChqName" />
+                <ScalarProperty Name="ChqNo" ColumnName="ChqNo" />
+                <ScalarProperty Name="VoucherDate" ColumnName="VoucherDate" />
+                <ScalarProperty Name="VoucherNo" ColumnName="VoucherNo" />
+                <ScalarProperty Name="VoucherTypeId" ColumnName="VoucherTypeId" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="VoucherId" ColumnName="VoucherId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderMasters">
+            <EntityTypeMapping TypeName="ERPModel.OrderMaster">
+              <MappingFragment StoreEntitySet="OrderMaster">
+                <ScalarProperty Name="IsProductionComplete" ColumnName="IsProductionComplete" />
+                <ScalarProperty Name="IsService" ColumnName="IsService" />
+                <ScalarProperty Name="CurrentPayable" ColumnName="CurrentPayable" />
+                <ScalarProperty Name="IsOpening" ColumnName="IsOpening" />
+                <ScalarProperty Name="CourierCharge" ColumnName="CourierCharge" />
+                <ScalarProperty Name="FinalDestination" ColumnName="FinalDestination" />
+                <ScalarProperty Name="CourierNo" ColumnName="CourierNo" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsCash" ColumnName="IsCash" />
+                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+                <ScalarProperty Name="DiscountRate" ColumnName="DiscountRate" />
+                <ScalarProperty Name="GrandTotal" ColumnName="GrandTotal" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="StockInfoId" ColumnName="StockInfoId" />
+                <ScalarProperty Name="SalePersonId" ColumnName="SalePersonId" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="CustomerPONo" ColumnName="CustomerPONo" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="OrderMonthYear" ColumnName="OrderMonthYear" />
+                <ScalarProperty Name="ExpectedDeliveryDate" ColumnName="ExpectedDeliveryDate" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="DemandId" ColumnName="DemandId" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="CostCenterId" ColumnName="CostCenterId" />
+                <ScalarProperty Name="OrderMasterId" ColumnName="OrderMasterId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -28,7 +28,6 @@ namespace KGERP.Data.Models
         }
     
         public virtual DbSet<Accounting_ChequeInfo> Accounting_ChequeInfo { get; set; }
-        public virtual DbSet<Accounting_CostCenter> Accounting_CostCenter { get; set; }
         public virtual DbSet<Accounting_Signatory> Accounting_Signatory { get; set; }
         public virtual DbSet<AdminPolicy> AdminPolicies { get; set; }
         public virtual DbSet<AdminSetUp> AdminSetUps { get; set; }
@@ -178,7 +177,6 @@ namespace KGERP.Data.Models
         public virtual DbSet<UserPermission> UserPermissions { get; set; }
         public virtual DbSet<VehicleRequisition> VehicleRequisitions { get; set; }
         public virtual DbSet<VendorProfession> VendorProfessions { get; set; }
-        public virtual DbSet<Voucher> Vouchers { get; set; }
         public virtual DbSet<VoucherMap> VoucherMaps { get; set; }
         public virtual DbSet<VoucherType> VoucherTypes { get; set; }
         public virtual DbSet<YearlyHoliday> YearlyHolidays { get; set; }
@@ -348,7 +346,6 @@ namespace KGERP.Data.Models
         public virtual DbSet<IssueDetailInfo> IssueDetailInfoes { get; set; }
         public virtual DbSet<ProductBookingInfo> ProductBookingInfoes { get; set; }
         public virtual DbSet<PurchaseReturnDetail> PurchaseReturnDetails { get; set; }
-        public virtual DbSet<OrderMaster> OrderMasters { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
@@ -361,7 +358,10 @@ namespace KGERP.Data.Models
         public virtual DbSet<Upazila> Upazilas { get; set; }
         public virtual DbSet<Vendor> Vendors { get; set; }
         public virtual DbSet<PromtionalOffer> PromtionalOffers { get; set; }
+        public virtual DbSet<Accounting_CostCenter> Accounting_CostCenter { get; set; }
         public virtual DbSet<Accounting_CostCenterType> Accounting_CostCenterType { get; set; }
+        public virtual DbSet<Voucher> Vouchers { get; set; }
+        public virtual DbSet<OrderMaster> OrderMasters { get; set; }
     
         public virtual ObjectResult<GetEmployeeListForTeam_Result> GetEmployeeListForTeam(Nullable<int> companyId)
         {

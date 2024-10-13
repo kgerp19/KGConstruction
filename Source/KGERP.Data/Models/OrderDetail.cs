@@ -55,7 +55,7 @@ namespace KGERP.Data.Models
         public string ReelDirection { get; set; }
         public string PouchDerection { get; set; }
     
-        public virtual OrderMaster OrderMaster { get; set; }
         public virtual Product Product { get; set; }
+        public virtual OrderMaster OrderMaster { get; set; }
     }
 }

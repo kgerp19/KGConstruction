@@ -28,7 +28,7 @@ namespace KGERP.Data.Models
         public string ChqNo { get; set; }
         public string ChqName { get; set; }
         public Nullable<System.DateTime> ChqDate { get; set; }
-        public Nullable<int> Accounting_CostCenterFk { get; set; }
+        public Nullable<long> Accounting_CostCenterFk { get; set; }
         public string Narration { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
