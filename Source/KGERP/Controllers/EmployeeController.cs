@@ -730,7 +730,12 @@ namespace KGERP.Controllers
         }
 
 
-
+        [HttpPost]
+        public JsonResult VendorAutoCompleteByCompany(string prefix, int CompanyId)
+        {
+            var employee = employeeService.GetVendorAutoCompleteByCompany(prefix, CompanyId);
+            return Json(employee);
+        }
 
         [HttpGet]
         public JsonResult GetEmployeeInformation(long id)

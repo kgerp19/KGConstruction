@@ -3206,13 +3206,12 @@ namespace KGERP.Services.Procurement
         }
         //ENds Feed ProcurementSalesOrderDetailsGet -22 May 2022
 
-        public async Task<VMSalesOrderSlave> ProcurementSalesOrderDetailsGet(int companyId, int orderMasterId)
+        public async Task<VMSalesOrderSlave> ProcurementSalesOrderDetailsGet(int companyId)
         {
             VMSalesOrderSlave vmSalesOrderSlave = new VMSalesOrderSlave();
-            vmSalesOrderSlave = await Task.Run(() => (from t1 in _db.OrderMasters.Where(x => x.IsActive && x.OrderMasterId == orderMasterId && x.CompanyId == companyId)
+            vmSalesOrderSlave.DataListSlave = await Task.Run(() => (from t1 in _db.OrderMasters.Where(x => x.IsActive  && x.CompanyId == companyId)
                                                       join t2 in _db.Vendors on t1.CustomerId equals t2.VendorId
-                                                      join t4 in _db.SubZones on t2.SubZoneId equals t4.SubZoneId
-                                                      join t5 in _db.Zones on t4.ZoneId equals t5.ZoneId
+                                                   
                                                       join t6 in _db.StockInfoes on t1.StockInfoId equals t6.StockInfoId into t6_Join
                                                       from t6 in t6_Join.DefaultIfEmpty() 
                                                       join t8 in _db.Employees on t1.SalePersonId equals t8.Id into t8_Join
@@ -3222,7 +3221,7 @@ namespace KGERP.Services.Procurement
                                                           WareHouse = t6 != null ? t6.Name : "",                                                           
                                                           Propietor = t2.Propietor,
                                                           CreatedDate = t1.CreateDate,
-                                                         
+                                                         CustomerPONo=t1.CustomerPONo,
                                                           CustomerPhone = t2.Phone,
                                                           CustomerAddress = t2.Address,
                                                           CustomerEmail = t2.Email,
@@ -3237,12 +3236,6 @@ namespace KGERP.Services.Procurement
                                                           CustomerPaymentMethodEnumFK = t1.PaymentMethod,
                                                           ExpectedDeliveryDate = t1.ExpectedDeliveryDate,
                                                           CommonCustomerName = t2.Name,
-                                                          
-                                                          ZoneName = t5.Name,
-                                                          ZoneIncharge = t5.ZoneIncharge,
-                                                          SubZonesName = t4.Name,
-                                                          SubZoneIncharge = t4.SalesOfficerName,
-                                                          SubZoneInchargeMobile = t4.MobileOffice,
                                                           CommonCustomerCode = t2.Code,
                                                           CustomerTypeFk = t2.CustomerTypeFK,
                                                           CustomerId = t2.VendorId,
@@ -3256,35 +3249,9 @@ namespace KGERP.Services.Procurement
 
 
 
-                                                      }).FirstOrDefault());
+                                                      }).ToListAsync());
 
-            vmSalesOrderSlave.DataListSlave = await Task.Run(() => (from t1 in _db.OrderDetails.Where(x => x.IsActive && x.OrderMasterId == orderMasterId)
-                                                                    join t3 in _db.Products.Where(x => x.IsActive) on t1.ProductId equals t3.ProductId
-                                                                    join t4 in _db.ProductSubCategories.Where(x => x.IsActive) on t3.ProductSubCategoryId equals t4.ProductSubCategoryId
-                                                                    join t5 in _db.ProductCategories.Where(x => x.IsActive) on t4.ProductCategoryId equals t5.ProductCategoryId
-                                                                    join t6 in _db.Units.Where(x => x.IsActive) on t3.UnitId equals t6.UnitId
-                                                                    select new VMSalesOrderSlave
-                                                                    {
-                                                                        
-                                                                        OrderMasterId = t1.OrderMasterId.Value,
-                                                                        OrderDetailId = t1.OrderDetailId,
-
-                                                                        ProductName = t5.Name + " " + t4.Name + " " + t3.ProductName,
-                                                                        Qty = t1.Qty,
-                                                                        UnitName = t6.Name,
-                                                                        UnitPrice = t1.UnitPrice,                                                                       
-                                                                        PackSize = t3.PackSize,
-                                                                        TotalAmount = t1.Qty * t1.UnitPrice,
-                                                                        QtyInPack = t3.FormulaQty,
-                                                                        PromotionalOfferId = t1.PromotionalOfferId,
-
-                                                                        FProductId = t3.ProductId,
-
-                                                                        ProductDiscountUnit = t1.DiscountUnit,//Unit Discount                                                             
-                                                                                                                                      
-                                                                        SpecialDiscount = t1.SpecialBaseCommission, // SpecialDiscount   
-
-                                                                    }).OrderByDescending(x => x.OrderDetailId).AsEnumerable());
+           
 
 
             return vmSalesOrderSlave;
@@ -4293,25 +4260,14 @@ namespace KGERP.Services.Procurement
             string poCid = "";
             if (vmSalesOrderSlave.CompanyFK.Value == (int)CompanyName.KrishibidSeedLimited)
             {
-                poCid = @"KSL#" + poMax.ToString();
+                poCid = @"TCL#" + poMax.ToString();
             }
 
-            else if (vmSalesOrderSlave.CompanyFK.Value == (int)CompanyName.GloriousCropCareLimited)
-            {
-                poCid = @"SI#" + poMax.ToString();
-            }
-            else if (vmSalesOrderSlave.CompanyFK.Value == (int)CompanyName.KrishibidPackagingLimited)
-            {
-                poCid = @"KPL#" + poMax.ToString();
-            }
-            else if (vmSalesOrderSlave.CompanyFK.Value == (int)CompanyName.KrishibidFarmMachineryAndAutomobilesLimited)
-            {
-                poCid = @"SI#" + poMax.ToString();
-            }
+           
             else
             {
                 poCid =
-                           @"SO-" +
+                           @"TCL-" +
                                 DateTime.Now.ToString("yy") +
                                 DateTime.Now.ToString("MM") +
                                 DateTime.Now.ToString("dd") + "-" +

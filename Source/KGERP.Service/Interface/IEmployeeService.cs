@@ -36,6 +36,7 @@ namespace KGERP.Service.Interface
         object GetEmployeeAutoComplete(string prefix);
         object GetEmployeeAutoCompleteByCompany(string prefix,int CompanyId );
         object GetEmployeeAutoCompleteOfficer(string prefix,int CompanyId);
+        object GetVendorAutoCompleteByCompany(string prefix,int CompanyId);
         List<EmployeeModel> GetTeamMembers(string searchText);
         EmployeeModel GetTeamMember(long id);
         bool UpdateTeamMember(EmployeeModel model);

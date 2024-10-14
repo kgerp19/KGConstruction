@@ -957,6 +957,21 @@ namespace KGERP.Service.Implementation
             }).OrderBy(x => x.label).Take(10).ToList();
 
         }
+
+
+
+        public object GetVendorAutoCompleteByCompany(string prefix, int ComapnyId)
+        {
+            return context.Vendors.Where(x => x.CompanyId == ComapnyId && x.IsActive && x.VendorTypeId==2
+                                             && x.Name.Contains(prefix)
+
+            ).Select(x => new
+            {
+                label = x.Name,
+                val = x.VendorId
+            }).OrderBy(x => x.label).Take(10).ToList();
+
+        }
         public object GetEmployeeAutoCompleteOfficer(string prefix, int CompanyId)
         {
             return context.Employees.Where(x => x.Active && x.CompanyId == CompanyId && x.Name.Contains(prefix)).Select(x => new

@@ -891,7 +891,7 @@ namespace KG.App.Controllers
             VMSalesOrderSlave vmSalesOrderSlave = new VMSalesOrderSlave();
             if (orderMasterId > 0)
             {
-                vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId, orderMasterId));
+                vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId));
                 vmSalesOrderSlave.TotalPriceInWord = VmCommonCurrency.NumberToWords(Convert.ToDecimal(vmSalesOrderSlave.DataListSlave.Select(x => x.TotalAmount).DefaultIfEmpty(0).Sum()), CurrencyType.BDT);
 
             }
@@ -927,20 +927,17 @@ namespace KG.App.Controllers
         {
             VMSalesOrderSlave vmSalesOrderSlave = new VMSalesOrderSlave();
 
-            if (orderMasterId == 0)
-            {
+           
                 vmSalesOrderSlave.CompanyFK = companyId;
                 vmSalesOrderSlave.Status = (int)EnumPOStatus.Draft;
-            }
-            else
-            {
-                vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId, orderMasterId));
+            
+                vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId));
 
-            }
+            
             vmSalesOrderSlave.TermNCondition = new SelectList(_service.CommonTremsAndConditionDropDownList(companyId), "Value", "Text");
             vmSalesOrderSlave.SubZoneList = new SelectList(_service.SubZonesDropDownList(companyId), "Value", "Text");
             vmSalesOrderSlave.StockInfoList = new SelectList(_service.StockInfoesDropDownList(companyId), "Value", "Text");
-            vmSalesOrderSlave.PromoOfferList = new SelectList(_service.PromtionalOffersDropDownList(companyId), "Value", "Text");
+            //vmSalesOrderSlave.PromoOfferList = new SelectList(_service.PromtionalOffersDropDownList(companyId), "Value", "Text");
 
 
             return View(vmSalesOrderSlave);
@@ -956,7 +953,7 @@ namespace KG.App.Controllers
                     vmSalesOrderSlave.OrderMasterId = await _service.OrderMasterAdd(vmSalesOrderSlave);
 
                 }
-                await _service.OrderDetailAdd(vmSalesOrderSlave);
+                //await _service.OrderDetailAdd(vmSalesOrderSlave);
             }
             if (vmSalesOrderSlave.PromotionalOfferId > 0)
             {
@@ -2491,7 +2488,7 @@ namespace KG.App.Controllers
                 }
                 else
                 {
-                    vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId, orderMasterId));
+                    vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId));
                 }
 
 

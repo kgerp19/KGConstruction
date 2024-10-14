@@ -6,16 +6,7 @@
     ViewData["Title"] = "Sales Order";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    int sl = 0;
-    double TotalPrice = 0;
-
-    decimal TotalDiscount = 0;
-    decimal TotalAmount = 0;
-
-    decimal TotalUnitDiscount = 0;
-    double TotalGrossAmount = 0;
-
-    decimal TotalSpetialDiscount = 0;
+   
 }
 
 <style type="text/css">
@@ -23,24 +14,69 @@
     input, select, textarea {
         max-width: 100%;
     }
+    .premium-form {
+        padding: 20px;
+        background-color: #f9f9f9; /* Light background */
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .premium-input, .premium-select {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s;
+    }
+
+        .premium-input:focus, .premium-select:focus {
+            border-color: #007bff; /* Primary color */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+    .premium-textarea {
+        border-radius: 5px;
+        resize: none; /* Prevent resizing */
+    }
+
+    .premium-error {
+        font-size: 0.875rem; /* Smaller font for error messages */
+    }
+
+    .form-group {
+        margin-bottom: 20px; /* Space between form groups */
+    }
+
+    label {
+        font-weight: bold;
+        color: #333; /* Darker label color */
+    }
+    .premium-button {
+        background-color: #007bff; /* Primary button color */
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px; /* Larger font size */
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+        .premium-button:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+            transform: scale(1.05); /* Slight scaling effect */
+        }
+
+        .premium-button:focus {
+            outline: none; /* Remove default outline */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.4); /* Focus effect */
+        }
+
+
 </style>
 
 <section class="content-header">
     <h1>
-        @if (Model.OrderMasterId > 0)
-        {
-            <span>
-                Sales Order :   <a style="width:100%" target="_blank" href="~/Report/PackagingSalesInvoiceReport?companyId=@Model.CompanyFK&orderMasterId=@Model.OrderMasterId&reportName=ISSSalesInvoiceReports"><i class="fa fa-print"></i> @Model.OrderNo</a>
-
-            </span>
-        }
-        else
-        {
-            <span>
-                Sales Order
-            </span>
-        }
-
+        
+        <span>Division</span>
 
     </h1>
     <ol class="breadcrumb">
@@ -73,593 +109,175 @@
                         @Html.HiddenFor(model => model.CompanyFK, new { id = "CompanyFK" })
                         @Html.HiddenFor(model => model.CustomerTypeFk, new { id = "hidCustomerTypeFk" })
 
-                        if (Model.OrderMasterId > 0)
-                        {
 
-
-                            <div class="col-md-1"> </div>
-                            <div class="col-md-10">
-                                <table class="table">
-                                    <tr>
-                                        <th style="width:18%">
-                                            Order No
-                                        </th>
-                                        <th style="width:2%">:</th>
-                                        <td style="width:30%">
-                                            <label class="col-form-label">@Model.OrderNo</label>
-                                        </td>
-                                        <th style="width:18%"> Date</th>
-                                        <th style="width:2%">:</th>
-                                        <td style="width:30%">@Model.OrderDate.ToShortDateString()</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Zone</th>
-                                        <th>:</th>
-                                        <td>@Model.ZoneName</td>
-
-                                        <th>Officer</th>
-                                        <th>:</th>
-                                        <td>@Model.OfficerNAme</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <th>Customer</th>
-                                        <th>:</th>
-                                        <td>@Model.CommonCustomerName</td>
-                                        <th>Phone</th>
-                                        <th>:</th>
-                                        <td>@Model.CustomerPhone</td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>Email</th>
-                                        <th>:</th>
-                                        <td>@Model.CustomerEmail</td>
-                                        <th>Address</th>
-                                        <th>:</th>
-                                        <td>@Model.CustomerAddress</td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>Contact Person</th>
-                                        <th>:</th>
-                                        <td>@Model.ContactPerson</td>
-                                        <th>Created By</th>
-                                        <th>:</th>
-                                        <td>@Model.CreatedBy</td>
-                                    </tr>
-                                </table>
+                        <div class="box-body premium-form">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="txtCommonCustomerName" class="col-form-label">Division Name</label>
+                                        @Html.EditorFor(model => model.CommonCustomerName, new { htmlAttributes = new { @class = "form-control premium-input", @id = "txtCommonCustomerName" } })
+                                        @Html.ValidationMessageFor(model => model.CommonCustomerName, "", new { @class = "text-danger premium-error" })
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Start Date</label>
+                                        <input name="OrderDate" asp-for="OrderDate" type="text" value="@DateTime.Today.ToString("yyyy-MM-dd")" required class="datePicker form-control premium-input" id="txtOrderDate" placeholder="Date" autocomplete="off">
+                                        @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger premium-error" })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Payment Method</label>
+                                        @Html.DropDownListFor(model => model.CustomerPaymentMethodEnumFK, Model.POPaymentMethodList as SelectList, "==Select Payment Method==", new { id = "ddlSupplierPaymentMethodEnumFK", @class = "form-control premium-select", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.CustomerPaymentMethodEnumFK, "", new { @class = "text-danger premium-error" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="VendorName" class="col-form-label">Customer:</label>
+                                        @Html.EditorFor(model => model.CustomerPONo, new { htmlAttributes = new { @class = "form-control premium-input", @name = "CustomerName", @id = "VendorName", required = "required" } })
+                                        @Html.ValidationMessageFor(model => model.CustomerPONo, "", new { @class = "text-danger premium-error" })
+                                        @Html.HiddenFor(x => x.CustomerId, new { @id = "Vendor", @name = "Vendor" })
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-1"> </div>
-                        }
-                        <div class="box-body">
 
-                            @if (Model.OrderMasterId == 0)
-                            {
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label>Invoice Date</label>
-                                            <input name="OrderDate" asp-for="OrderDate" type="text" value="@DateTime.Today.ToString("yyyy-MM-dd")" required="required" class="datePicker form-control" id="txtOrderDate" placeholder="Date" autocomplete="off">
-                                            @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Payment Method</label>
-                                            @Html.DropDownListFor(model => model.CustomerPaymentMethodEnumFK, Model.POPaymentMethodList as SelectList, "==Select Payment Method==", new { id = "ddlSupplierPaymentMethodEnumFK", @class = "form-control ddlReset", style = "width:100%", required = "required" })
-                                            @Html.ValidationMessageFor(model => model.CustomerPaymentMethodEnumFK, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Territory</label>
-                                            @Html.DropDownListFor(model => model.SubZoneFk, Model.SubZoneList as SelectList, "==Select Territory==", new { id = "ddlSubZoneFk", @class = "form-control searchingDropdown", style = "width:100%", required = "required" })
-                                            @Html.ValidationMessageFor(model => model.SubZoneFk, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Customer</label>
-                                            @Html.DropDownListFor(model => model.CustomerId, Model.CustomerList as SelectList, "==Select Customer==", new { id = "ddlCustomerId", @class = "form-control searchingDropdown", style = "width:100%", required = "required" })
-                                            @Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="row">
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Officer Name</label>
-                                            <input name="SalePersonId" asp-for="SalePersonId" id="personid" type="text" hidden />
-                                            <input readonly type="text" required="required" class="form-control" id="txtOfficerName" placeholder="Officer Name" autocomplete="off">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Warehouse</label>
-                                            @Html.DropDownListFor(model => model.StockInfoId, Model.StockInfoList as SelectList, "==Select WareHouse==", new { id = "ddlWareHouseFk", @class = "form-control searchingDropdown", style = "width:100%", required = "required" })
-                                            @Html.ValidationMessageFor(model => model.StockInfoId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label>Delivery Date</label>
-                                            <input name="ExpectedDeliveryDate" asp-for="ExpectedDeliveryDate" type="text" required="required" class="datePicker form-control" id="txtDeliveryDate" placeholder="Expected Delivery Date" autocomplete="off">
-                                            @Html.ValidationMessageFor(model => model.ExpectedDeliveryDate, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group" style="padding:0px">
-                                            <label for="message-text" class="col-form-label">Delivery Address</label>
-                                            @Html.EditorFor(model => model.FinalDestination, new { htmlAttributes = new { @class = "form-control", @id = "txtFinalDestination" } })
-                                            @Html.ValidationMessageFor(model => model.FinalDestination, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="txtDescription" class="col-form-label">Remarks:</label>
-                                            @Html.TextAreaFor(model => model.Remarks, new { id = "txtDescription", placeholder = "Description", @class = "form-control", rows = 2 })
-                                            @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                            }
-                            @if (Model.Status == (int)EnumPOStatus.Draft)
-                            {
-                                <div class="row">
-                                    <div class="col-md-4" style="padding:0px">
-                                        <div class="form-group" style="padding:0px">
-                                            <label for="message-text" class="col-form-label">Finish Item:</label>
-
-                                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @required = "required", @autocomplete = "on", @class = "form-control", @name = "Product Name", @id = "txtProductName" } })
-                                            @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
-                                            @Html.HiddenFor(model => model.FProductId, new { id = "ddlRProductFK", @required = "required" })
-                                            @Html.ValidationMessageFor(model => model.FProductId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-
-
-                                    <div class="col-md-3" style="padding:0px">
-                                        <div class="form-group">
-                                            <label>Order Qty</label>
-                                            <div class="input-group">
-                                                @Html.TextBoxFor(model => model.Qty, new { id = "txtSalesQuantity", @class = "form-control", @onkeyup = "calculateAmount()", @style = "width:100%;border:1px black solid", placeholder = "Order Quantity", required = "Required" })
-                                                @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
-
-                                                <div class="input-group-addon">
-                                                    <span class="txtUnitName"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3" style="padding:0px">
-                                        <div class="form-group">
-                                            <label>Pack Size (gm)</label>
-                                            @Html.TextBoxFor(model => model.PackSize, new { id = "txtPackSize", type = "number", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Pack Size" })
-                                            @Html.ValidationMessageFor(model => model.PackSize, "", new { @class = "text-danger" })
-
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-2" style="padding:0px">
-                                        <div class="form-group">
-                                            <label>Unit Price</label>
-                                            @Html.TextBoxFor(model => model.UnitPrice, new { id = "txtUnitPrice", type = "number", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Purchasing Price", required = "Required" })
-                                            @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-
-
-
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label>Per Unit Discount  <span class="text-danger" id="perUnitDiscountValue"></span></label>
-                                                @Html.TextBoxFor(model => model.ProductDiscountUnit, new { id = "ProductDiscountUnit", type = "number", @onkeyup = "TotalAmountWithDiscountSumation()", @class = "form-control", @style = "width:100%;border:1px black solid;text-align:right;", placeholder = "Discount", required = "Required" })
-                                                @Html.ValidationMessageFor(model => model.ProductDiscountUnit, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4" style="padding:0px">
-                                            <div class="form-group">
-                                                <label>Special Discount</label>
-                                                <div class="input-group">
-                                                    @Html.TextBoxFor(model => model.SpecialDiscount, new { id = "txtSpecialDiscount", type = "number", @class = "form-control", @style = "width:100%;border:1px black solid;text-align:right;", placeholder = "Discount" })
-                                                    @Html.ValidationMessageFor(model => model.SpecialDiscount, "", new { @class = "text-danger" })
-                                                    <div class="input-group-addon">
-                                                        <span>TK</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label>Total Amount</label>
-                                                @Html.TextBoxFor(model => model.TotalAmount, new { id = "txtTotalAmount", type = "number", @readonly = "readonly", @class = "form-control", @style = "width:100%;border:1px black solid;text-align:right;", placeholder = "Total Price", required = "Required" })
-                                                @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label"> Project Manager:</label>
+                                        @Html.EditorFor(model => model.OfficerNAme, new { htmlAttributes = new { @class = "form-control", @name = "OfficerNAme", @id = "OfficerNAme", required = "required" } })
+                                        @Html.ValidationMessageFor(model => model.OfficerNAme, "", new { @class = "text-danger" })
+                                        @Html.HiddenFor(x => x.SalePersonId, new { @id = "SalePersonId", @name = "SalePersonId" })
 
                                     </div>
                                 </div>
-
-
-
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <table class="table" id="tblStockAvailable">
-                                            <tr>
-                                                <th>Available Stock: </th>
-                                                <th id="stockAvailable"></th>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class="col-md-4">
-
-
-
-
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-
-                                        <button type="submit" id="poCreateBtn" class="btn btn-primary btn-block">
-                                            <i class='fa fa-plus'></i>
-                                            @if (Model.OrderMasterId > 0)
-                                            {
-                                                <span>Add Item</span>
-                                            }
-                                            else
-                                            {
-                                                <span>Create New Order</span>
-                                            }
-                                        </button>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Expected Delivery Date</label>
+                                        <input name="ExpectedDeliveryDate" asp-for="ExpectedDeliveryDate" type="text" required class="datePicker form-control premium-input" id="txtDeliveryDate" placeholder="Expected Delivery Date" autocomplete="off">
+                                        @Html.ValidationMessageFor(model => model.ExpectedDeliveryDate, "", new { @class = "text-danger premium-error" })
                                     </div>
                                 </div>
-                            }
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Warehouse</label>
+                                        @Html.DropDownListFor(model => model.StockInfoId, Model.StockInfoList as SelectList, "==Select Warehouse==", new { id = "ddlWareHouseFk", @class = "form-control premium-select", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.StockInfoId, "", new { @class = "text-danger premium-error" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="txtTotalAmount" class="col-form-label">Project Value</label>
+                                        @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control premium-input", @id = "txtTotalAmount" } })
+                                        @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger premium-error" })
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="txtFinalDestination" class="col-form-label">Delivery Address</label>
+                                        @Html.EditorFor(model => model.FinalDestination, new { htmlAttributes = new { @class = "form-control premium-input", @id = "txtFinalDestination" } })
+                                        @Html.ValidationMessageFor(model => model.FinalDestination, "", new { @class = "text-danger premium-error" })
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="txtDescription" class="col-form-label">Remarks:</label>
+                                        @Html.TextAreaFor(model => model.Remarks, new { id = "txtDescription", placeholder = "Description", @class = "form-control premium-textarea", rows = 2 })
+                                        @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger premium-error" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="row">
+                                <div class="col-md-12 text-right">
+                                    <button type="submit" class="btn premium-button">Save</button>
+                                </div>
+                            </div>
                         </div>
+
                     }
 
                     <!--Body Will by Start Here-->
-                    @{
-                        if (Model.OrderMasterId > 0)
-                        {
 
-                            @Html.HiddenFor(model => model.ID, new { id = "hidSlaveID" })
-                            <div class="table-responsive col-md-12 ">
-                                <table id="KgErpDataTable" class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th style="padding:5px;text-align:center;">SL</th>
-                                            <th>Finished Goods</th>
-                                            <th>Order Qty</th>
-                                            <th>Pack Size (gm)</th>
-                                            <th>Quantity (KG)</th>
-                                            <th>Qty in Pack</th>
-                                            <th>Unit Price</th>
-                                            <th style="padding:5px;text-align:center;"> Unit Discount</th>
-
-                                            <th style="padding:5px;text-align:center;">Special Discount</th>
-                                            <th style="padding:5px;text-align:right;">Total Price</th>
-                                            @if (Model.Status == (int)EnumPOStatus.Draft)
-                                            {
-                                                <th>Action</th>
-                                            }
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Model.DataListSlave)
-                                        {
-                                            TotalPrice += item.TotalAmount;
-                                            decimal unitDiscount = Convert.ToDecimal(item.Qty) * item.ProductDiscountUnit;
-
-
-                                            TotalGrossAmount += item.Qty * item.UnitPrice;
-                                            TotalUnitDiscount += unitDiscount;
-
-                                            TotalSpetialDiscount += item.SpecialDiscount;
-                                            TotalAmount += Convert.ToDecimal(item.Qty * item.UnitPrice) - (unitDiscount + item.SpecialDiscount);
-
-                                            var OfferBtn = item.PromotionalOfferId != null ? $"<a target=\"_blank\" href=\"{Url.Action("PromtionalOfferDetail", "Procurement", new { companyId = Model.CompanyFK, promtionalOfferId = item.PromotionalOfferId })}\" class='btn btn-danger btn-xs'>Promotion Item</a>" : string.Empty;
-
-                                            <tr>
-                                                <td style="padding:5px">@(++sl)</td>
-                                                <td>@item.ProductName @Html.Raw(OfferBtn) </td>
-                                                <td>@String.Format("{0:0.00}", item.Qty) @item.UnitName</td>
-                                                <td>@item.PackSize</td>
-                                                <td>
-                                                    @{
-                                                        var totalGm = item.Qty * item.PackSize;
-                                                        double divisor = 1000;
-
-                                                        if (totalGm < divisor)
-                                                        {
-                                                            <span>
-                                                                @totalGm gm
-                                                            </span>
-                                                        }
-                                                        else
-                                                        {
-                                                            double dividend = totalGm ?? 0;
-                                                            double remainder = dividend % divisor;
-                                                            if (remainder == 0)
-                                                            {
-                                                                totalGm = totalGm / divisor;
-                                                                <span>
-                                                                    @totalGm KG
-                                                                </span>
-                                                            }
-                                                            else
-                                                            {
-                                                                totalGm = (totalGm - remainder) / divisor;
-                                                                <span>
-                                                                    @totalGm KG @remainder gm
-                                                                </span>
-                                                            }
-                                                        }
-                                                    }
-                                                </td>
-
-
-                                                <td>@String.Format("{0:0.00}", item.QtyInPack)</td>
-                                                <td>@String.Format("{0:0.00}", item.UnitPrice)</td>
-                                                <td style="padding:5px;text-align:center;">@String.Format("{0:0.00}", unitDiscount) (@String.Format("{0:0.00}", item.ProductDiscountUnit))</td>
-                                                <td style="padding:5px;text-align:center;">@String.Format("{0:0.00}", item.SpecialDiscount)</td>
-
-                                                <td style="padding:5px;text-align:right;">@String.Format("{0:0.00}", item.TotalPrice)</td>
-                                                @{ if (Model.Status == (int)EnumPOStatus.Draft)
-                                                    {
-                                                        <td>
-                                                            <a id="@item.ID" onclick=" makeEditble(@item.OrderDetailId);" class="linkPointer" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></a>
-
-                                                            <a id="@item.ID" onclick="makeDeletale(@item.OrderDetailId)" class="linkPointer" data-toggle="modal" data-target="#deleteProcurementPurchaseOrderSlaveModal" title="Delete" data-placement="top"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
-                                                        </td>
-                                                    }
-                                                }
-                                            </tr>
-                                        }
-                                    </tbody>
-
-                                    <tfoot>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td style="padding:5px"></td>
-
-                                            <th colspan="5" style="padding:5px;text-align:left;">Total Gross Amount</th>
-
-                                            <th style="padding: 5px; text-align: right;">@String.Format("{0:0.00}", TotalGrossAmount) </th>
-
-
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td style="padding:5px"></td>
-                                            <th colspan="5" style="padding:5px;text-align:left;">Total Unit Discount</th>
-
-                                            <th style="padding: 5px; text-align: right;">@String.Format("{0:0.00}", TotalUnitDiscount) </th>
-
-
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td style="padding:5px"></td>
-                                            <th colspan="5" style="padding:5px;text-align:left;">Amount After Unit Discount</th>
-
-                                            <th style="padding: 5px; text-align: right;">@String.Format("{0:0.00}", Convert.ToDecimal(TotalGrossAmount) - TotalUnitDiscount) </th>
-
-
-                                        </tr>
-
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td style="padding:5px"></td>
-                                            <th colspan="5" style="padding:5px;text-align:left;">Total Special Discount</th>
-
-
-
-                                            <th style="padding: 5px; text-align: right;">@String.Format("{0:0.00}", TotalSpetialDiscount)</th>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td style="padding:5px"></td>
-                                            <th colspan="5" style="padding:5px;text-align:left;">Net Amount</th>
-
-
-
-                                            <th style="padding:5px;text-align:right;">@String.Format("{0:0.00}", TotalAmount)</th>
-                                        </tr>
-
-
-                                    </tfoot>
-                                </table>
-                            </div>
-                        }
-                    }
                 </div>
-                <div class="box-footer">
-                    @if (Model.OrderMasterId > 0)
-                    {
-                    <div class="row">
-                        @if (Model.Status == (int)EnumPOStatus.Draft)
-                        {
-                            <div class="col-md-6">
-                                @using (Html.BeginForm("ProcurementSalesOrderSlave", "Procurement", FormMethod.Post, new { id = "procurementSalesOrderSlaveFormId", @class = "formValidator" }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                    @Html.HiddenFor(model => model.OrderMasterId, new { id = "hidOrderMasterId" })
-                                    @Html.HiddenFor(model => model.OrderDetailId, new { id = "hidOrderDetailId" })
-                                    @Html.HiddenFor(model => model.CompanyFK, new { id = "hidOrderDetailId" })
 
-                                    @Html.HiddenFor(model => model.ActionId, new { id = "ActionId" })
-
-                                    <div class="col-md-9">
-                                        <div class="form-group">
-                                            @Html.DropDownListFor(model => model.PromotionalOfferId, Model.PromoOfferList as SelectList, "==Select Promotion==", new { id = "ddlCustomerId", @class = "form-control searchingDropdown", style = "width:100%" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button type="submit" id="poConfirmPromoBtn" class="btn btn-warning">
-
-                                            Confirm
-                                        </button>
-                                    </div>
-
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="col-md-6">
-                                <a class="btn btn-warning" style="width:100%" target="_blank" href="~/Report/PackagingSalesInvoiceReport?companyId=@Model.CompanyFK&orderMasterId=@Model.OrderMasterId&reportName=ISSSalesInvoiceReports"><i class="fa fa-print"></i> Sales Order Print</a>
-
-                            </div>
-                        }
-
-
-
-
-                        @if (Model.Status == (int)EnumPOStatus.Submitted)
-                        {
-                            <div class="col-md-3 btn btn-success">  <i>Submitted Successfully</i></div>
-                            <div class="col-md-3">
-                                <a id="@Model.OrderMasterId" onclick="makeSubmitble(@Model.OrderMasterId)" class="linkPointer btn btn-warning" data-toggle="modal" style="width:100%" data-target="#submitProcurementPurchaseOrderModal" data-placement="top">
-
-                                    <i>Undo Submit</i>
-
-                                </a>
-                            </div>
-
-
-
-                        }
-                        else
-                        {
-                            <div class="col-md-6">
-
-
-                                <a id="@Model.OrderMasterId" onclick="makeSubmitble(@Model.OrderMasterId)" class="linkPointer btn btn-success" data-toggle="modal" style="width:100%" data-target="#submitProcurementPurchaseOrderModal" data-placement="top">
-
-                                    <i class="fa fa-save"></i><i>&nbsp;Submit</i>
-                                </a>
-                            </div>
-                        }
-
-
-
-
-
-
-                    </div>
-
-
-                    }
-                </div>
             </div>
         </div>
     </div>
+
+
+    <div class="box">
+        <div class="box-danger">
+            <div class="box-header">
+                <h3 class="box-title">Data List</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="table-responsive text-nowrap">
+                    <table id="KgErpDataTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>SL</th>
+                                <th>Name</th>
+
+                                <th>Phone</th>
+                                <th>Email</th>
+
+
+                                <th>Address</th>
+                                <th>Officer Name</th>
+
+                                <th>Status</th>
+                                <th>Start date</th>
+                                <th>Expected Delivery date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int sl = 0; }
+                            @foreach (var item in Model.DataListSlave)
+                            {
+                                <tr>
+                                    <td>@(++sl)</td>
+                                    <td>@item.CustomerPONo</td>
+                                    
+                                    <td>@item.CustomerPhone</td>
+                                    <td>@item.CustomerEmail</td>
+                                   
+                                   
+                                    <td>@item.FinalDestination</td>
+                                    <td>@item.OfficerNAme </td>
+                               
+                                    <td>@item.Status</td>
+                                    <td>@item.OrderDate</td>
+                                    <td>@item.ExpectedDeliveryDate</td>
+                                    <td>
+                                        <a id="@item.ID" onclick="makeEditable(@item.ID);" class="linkPointer" title="Edit">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </a>
+                                        <a id="@item.ID" onclick="makeDeletable(@item.ID);" class="linkPointer" data-toggle="modal" data-target="#deleteModal" title="Delete">
+                                            <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="box-footer">
+                <!-- Optional footer content -->
+            </div>
+        </div>
+    </div>
+
 </section>
-
-@using (Html.BeginForm("SubmitOrderMastersFromSlave", "Procurement", FormMethod.Post, new { id = "submitOrderMastersFromSlaveFormId", @class = "formValidator" }))
-{
-
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="modal fade" id="submitProcurementPurchaseOrderModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
-                        &times;
-                    </button>
-                    <h5 class="modal-title"><b> Sales Order Submission</b></h5>
-                </div>
-                <div class="modal-body">
-                    @Html.HiddenFor(model => model.OrderMasterId, new { id = "hidsubmitOrderMasterId" })
-                    @Html.HiddenFor(model => model.CompanyFK, new { id = "hidsubmitCompanyFK" })
-
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-                    <div style="text-align:center">
-                        <h3>Are you sure to Submit this Sales Order?</h3>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="col-md-3">
-                        <button type="button" class="btn btn-warning fa fa-close" data-dismiss="modal">&nbsp;NO</button>
-                    </div>
-                    <div class="col-md-9">
-                        <button type="submit" id="btnDelete2" style="width:100%" class="btn btn-primary ">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-
-
-@using (Html.BeginForm("DeleteSalesOrderSlave", "Procurement", FormMethod.Post, new { id = "deleteProcurementPurchaseOrderSlaveFormId", @class = "formValidator" }))
-{
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="modal fade" id="deleteProcurementPurchaseOrderSlaveModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
-                        &times;
-                    </button>
-                    <h5 class="modal-title"><b>Delete Sales Item</b></h5>
-                </div>
-                <div class="modal-body">
-                    @Html.HiddenFor(model => model.OrderDetailId, new { id = "hidDeleteOrderDetailId" })
-                    @Html.HiddenFor(model => model.OrderMasterId, new { id = "hidDeleteOrderMasterId" })
-
-                    @Html.HiddenFor(model => model.CompanyFK, new { id = "deleteCompanyFK" })
-
-                    @Html.HiddenFor(model => model.ActionId, new { id = "deleteActionId" })
-
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-                    <div style="text-align:center">
-                        <h3>Are you sure to Delete this Sales Item?</h3>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="col-md-3">
-                        <button type="button" class="btn btn-warning fa fa-close" data-dismiss="modal">&nbsp;NO</button>
-                    </div>
-                    <div class="col-md-9">
-                        <button type="submit" id="btndelete" style="width:100%" class="btn btn-primary fa fa-remove">&nbsp; Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-}
 
 
 
@@ -920,7 +538,7 @@
 
 
 
-          $("#ddlSubZoneFk").change(function () {
+          @*$("#ddlSubZoneFk").change(function () {
                 var subZoneFk = $("#ddlSubZoneFk").val();
                 $.ajax({
                 type: "GET",
@@ -958,7 +576,87 @@
                     return false;
                     }
                 });
-            })
+            })*@
+
+
+
+        $("#VendorName").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '/Employee/VendorAutoCompleteByCompany/',
+                //data: "{ 'prefix': '" + request.term + "'}",
+                data: '{"prefix":"' + request.term + '", "CompanyId":@Model.CompanyFK}',
+                dataType: "json",
+                type: "POST",
+                cache: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return item;
+                    }))
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                },
+                failure: function (response) {
+                    //alert(response.responseText);
+                }
+            });
+        },
+        select: function (e, i) {
+            $("#Vendor").val(i.item.val);
+        },
+        minLength: 1,
+        cache: true
+
+    }).focus(function () {
+        $(this).autocomplete("search");
+    });
+
+
+
+
+
+      $(function () {
+          $("#OfficerNAme").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '/Employee/EmployeeAutoCompleteByCompany/',
+                //data: "{ 'prefix': '" + request.term + "'}",
+                data: '{"prefix":"' + request.term + '", "CompanyId":@Model.CompanyFK}',
+                dataType: "json",
+                type: "POST",
+                cache: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return item;
+                    }))
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                },
+                failure: function (response) {
+                    //alert(response.responseText);
+                }
+            });
+        },
+        select: function (e, i) {
+            $("#SalePersonId").val(i.item.val);
+        },
+        minLength: 1,
+        cache: true
+
+    }).focus(function () {
+        $(this).autocomplete("search");
+    });
+});
+
+
+
+
+
+
 
 
 
