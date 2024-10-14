@@ -8,7 +8,7 @@ namespace KGERP.Service.Implementation.AutoComplete.ViewModels
 {
     public class AutoCompleteVM
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
         public string EmployeeId { get; set; }
     }

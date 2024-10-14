@@ -86,19 +86,21 @@
 
                                                 <tr>
                                                     <td>@(++sl)</td>
-                                                    <td id="tdCompanyFK_@item.ID">
+                                                    <td id="tdCompanyFK_@item.CostCenterTypeId">
                                                         @item.CompanyName
-                                                        <input type="hidden" id="hidCompanyFK_@item.ID" value="@item.CompanyFK" />
+                                                        <input type="hidden" id="hidCompanyFK_@item.CostCenterTypeId" value="@item.CompanyFK" />
                                                     </td>
-                                                    <td id="tdMenuName_@item.ID">@item.Name</td>
+                                                    <td id="tdMenuName_@item.CostCenterTypeId">@item.Name</td>
                                                   
 
                                                     <td>
-                                                        <a id="@item.ID" onclick=" makeEditble(this);" class="linkPointer" data-toggle="modal" data-target="#exampleModal" title="Edit" data-placement="top"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                                                        <a id="@item.ID" onclick="makeDeletable(@item.ID);" class="linkPointer" data-toggle="modal" data-target="#itemActionModal" title="Delete"
+                                                        <a id="@item.CostCenterTypeId" onclick=" makeEditble(this);" class="linkPointer" data-toggle="modal" data-target="#exampleModal" title="Edit" data-placement="top"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                        <a id="@item.CostCenterTypeId" onclick="makeDeletable(@item.CostCenterTypeId);" class="linkPointer" data-toggle="modal" data-target="#itemActionModal" title="Delete"
                                                            data-placement="top">
                                                             <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
                                                         </a>
+                                                        <a href="~/Configuration/AccountingCostCenter?companyId=@item.CompanyFK&CostCenterTypeId=@item.CostCenterTypeId" class="btn btn-success btn-sm"> Project / Cost Center</a>
+
                                                     </td>
                                                 </tr>
                                                 }

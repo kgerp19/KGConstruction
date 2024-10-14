@@ -508,7 +508,6 @@
         <AssociationConnector Association="ERPModel.FK_Store_Vendor" />
         <AssociationConnector Association="ERPModel.FK_VendorOffer_Vendor" />
         <EntityTypeShape EntityType="ERPModel.PromtionalOffer" Width="1.5" PointX="54.375" PointY="43.75" />
-        <EntityTypeShape EntityType="ERPModel.Accounting_CostCenter" Width="1.5" PointX="28.375" PointY="35.75" />
         <EntityTypeShape EntityType="ERPModel.Accounting_CostCenterType" Width="1.5" PointX="36.375" PointY="15.75" />
         <EntityTypeShape EntityType="ERPModel.Voucher" Width="1.5" PointX="10" PointY="6.75" />
         <EntityTypeShape EntityType="ERPModel.OrderMaster" Width="1.5" PointX="6" PointY="90.25" />
@@ -519,6 +518,7 @@
         <AssociationConnector Association="ERPModel.FK_OrderDeliver_OrderMaster" />
         <AssociationConnector Association="ERPModel.FK_OrderDetail_OrderMaster" />
         <AssociationConnector Association="ERPModel.FK_OrderMaster_Supplier" />
+        <EntityTypeShape EntityType="ERPModel.Accounting_CostCenter" Width="1.5" PointX="28.375" PointY="35.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

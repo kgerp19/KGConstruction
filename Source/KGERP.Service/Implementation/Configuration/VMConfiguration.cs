@@ -85,7 +85,11 @@ namespace KGERP.Service.Configuration
     public class VMUserMenu : BaseVM
     {
         public string CompanyName { get; set; }
+        public long CostCenterId { get; set; }
+        public long CostCenterTypeId { get; set; }
+
         public string Name { get; set; }
+        public string ProjectType { get; set; }
         public int Priority { get; set; }
         public IEnumerable<VMUserMenu> DataList { get; set; }
         public int? LayerNo { get; set; }

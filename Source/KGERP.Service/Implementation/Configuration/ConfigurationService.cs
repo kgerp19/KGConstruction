@@ -247,16 +247,16 @@ namespace KGERP.Service.Implementation
                                    where t1.CompanyId == companyId && t1.IsActive
                                    select new VMUserMenu
                                    {
-                                       ID = t1.CostCenterTypeId,
+                                       CostCenterTypeId = t1.CostCenterTypeId,
                                        Name = t1.Name,
                                        CompanyName = t2.Name,
                                        CompanyFK = t1.CompanyId
-                                   }).OrderByDescending(x => x.ID).AsEnumerable();
+                                   }).OrderByDescending(x => x.CostCenterTypeId).AsEnumerable();
             return vmUserMenu;
         }
-        public async Task<int> CostCenterTypeAdd(VMUserMenu vmUserMenu)
+        public async Task<long> CostCenterTypeAdd(VMUserMenu vmUserMenu)
         {
-            var result = -1;
+            long result = -1;
 
 
             Accounting_CostCenterType costCenter = new Accounting_CostCenterType
@@ -276,9 +276,9 @@ namespace KGERP.Service.Implementation
             }
             return result;
         }
-        public async Task<int> CostCenterTypeEdit(VMUserMenu vmUserMenu)
+        public async Task<long> CostCenterTypeEdit(VMUserMenu vmUserMenu)
         {
-            var result = -1;
+            long result = -1;
             Accounting_CostCenterType costCenter = _db.Accounting_CostCenterType.Find(vmUserMenu.ID);
             costCenter.Name = vmUserMenu.Name;
 
@@ -291,9 +291,9 @@ namespace KGERP.Service.Implementation
             }
             return result;
         }
-        public async Task<int> CostCenterTypeDelete(int id)
+        public async Task<long> CostCenterTypeDelete(int id)
         {
-            int result = -1;
+            long result = -1;
             if (id != 0)
             {
                 Accounting_CostCenterType costCenter = _db.Accounting_CostCenterType.Find(id);
@@ -307,35 +307,40 @@ namespace KGERP.Service.Implementation
         }
 
 
-        public async Task<VMUserMenu> AccountingCostCenterGet(int companyId)
+        public async Task<VMUserMenu> AccountingCostCenterGet(int companyId, long CostCenterTypeId = 0)
         {
             VMUserMenu vmUserMenu = new VMUserMenu();
             vmUserMenu.CompanyFK = companyId;
             vmUserMenu.DataList = (from t1 in _db.Accounting_CostCenter
+                                   join t3 in _db.Accounting_CostCenterType on t1.CostCenterTypeId equals t3.CostCenterTypeId
                                    join t2 in _db.Companies on t1.CompanyId equals t2.CompanyId
                                    where t1.CompanyId == companyId && t1.IsActive
+                                   && (CostCenterTypeId > 0 ? t1.CostCenterTypeId == CostCenterTypeId: t1.CostCenterTypeId > 0)
                                    select new VMUserMenu
                                    {
-                                       ID = t1.CostCenterId,
+                                       CostCenterId = t1.CostCenterId,
+                                       CostCenterTypeId = t3.CostCenterTypeId,
                                        Name = t1.Name,
+                                       ProjectType = t3.Name,
                                        CompanyName = t2.Name,
                                        CompanyFK = t1.CompanyId
-                                   }).OrderByDescending(x => x.ID).AsEnumerable();
+                                   }).OrderByDescending(x => x.CostCenterId).AsEnumerable();
             return vmUserMenu;
         }
 
 
 
 
-        public async Task<int> AccountingCostCenterAdd(VMUserMenu vmUserMenu)
+        public async Task<long> AccountingCostCenterAdd(VMUserMenu vmUserMenu)
         {
-            var result = -1;
+            long result = -1;
 
 
             Accounting_CostCenter costCenter = new Accounting_CostCenter
             {
 
                 Name = vmUserMenu.Name,
+                CostCenterTypeId = vmUserMenu.CostCenterTypeId,
 
                 CompanyId = vmUserMenu.CompanyFK.Value,
                 CreatedBy = System.Web.HttpContext.Current.User.Identity.Name,
@@ -349,11 +354,12 @@ namespace KGERP.Service.Implementation
             }
             return result;
         }
-        public async Task<int> AccountingCostCenterEdit(VMUserMenu vmUserMenu)
+        public async Task<long> AccountingCostCenterEdit(VMUserMenu vmUserMenu)
         {
-            var result = -1;
+            long result = -1;
             Accounting_CostCenter costCenter = _db.Accounting_CostCenter.Find(vmUserMenu.ID);
             costCenter.Name = vmUserMenu.Name;
+            costCenter.CostCenterTypeId = vmUserMenu.CostCenterTypeId;
 
             costCenter.ModifiedBy = System.Web.HttpContext.Current.User.Identity.Name;
 
@@ -364,9 +370,9 @@ namespace KGERP.Service.Implementation
             }
             return result;
         }
-        public async Task<int> AccountingCostCenterDelete(int id)
+        public async Task<long> AccountingCostCenterDelete(int id)
         {
-            int result = -1;
+            long result = -1;
             if (id != 0)
             {
                 Accounting_CostCenter costCenter = _db.Accounting_CostCenter.Find(id);
@@ -902,6 +908,23 @@ namespace KGERP.Service.Implementation
             return v;
         }
 
+        public object GetAutoCompleteProjectType(int companyId, string prefix)
+        {
+
+            var v = (from t1 in _db.Accounting_CostCenterType
+                      
+                     where t1.CompanyId == companyId && t1.IsActive  &&
+                     ((t1.Name.StartsWith(prefix)) )
+
+                     select new
+                     {
+                         label = t1.Name ,
+                         val = t1.CostCenterTypeId,
+                         
+                     }).OrderBy(x => x.label).Take(20).ToList();
+
+            return v;
+        }
 
 
 
@@ -1023,8 +1046,8 @@ namespace KGERP.Service.Implementation
                          label = (t1.Name + "-" + t2.Name + "( " + t1.EmployeeId + " )"),
                          val = t1.Id,
                          mob = t1.MobileNo,
-                         Email=t1.Email,
-                         Designation=t2.Name
+                         Email = t1.Email,
+                         Designation = t2.Name
                      }).OrderBy(x => x.label).Take(100).ToList();
 
             return v;
@@ -2580,7 +2603,7 @@ namespace KGERP.Service.Implementation
             }
             return list;
         }
-        
+
         public List<object> CompanyMenusDropDownList()
         {
             var list = new List<object>();
@@ -3470,7 +3493,7 @@ namespace KGERP.Service.Implementation
                      select new VMFinishProductBOM
                      {
                          ID = t1.ID,
-                         FCEnumId=t1.CalculationUnit??0,
+                         FCEnumId = t1.CalculationUnit ?? 0,
                          RequiredQuantity = t1.RequiredQuantity,
                          RProductFK = t1.RProductFK,
                          FProductFK = t1.FProductFK,
@@ -3518,8 +3541,8 @@ namespace KGERP.Service.Implementation
                                                                               ID = t1.ID,
                                                                               RProductFK = t1.RProductFK,
                                                                               FProductFK = t1.FProductFK,
-                                                                              FCEnumId=t1.CalculationUnit!=null? t1.CalculationUnit.Value:0,
-                                                                              FCEnumName= t1.CalculationUnit != null ? ((FormulaCalculationEnum)t1.CalculationUnit).ToString():"N/A",
+                                                                              FCEnumId = t1.CalculationUnit != null ? t1.CalculationUnit.Value : 0,
+                                                                              FCEnumName = t1.CalculationUnit != null ? ((FormulaCalculationEnum)t1.CalculationUnit).ToString() : "N/A",
                                                                               CategoryName = t4.Name,
                                                                               SubCategoryName = t3.Name,
                                                                               Name = t2.ProductName,
@@ -3624,7 +3647,7 @@ namespace KGERP.Service.Implementation
                 RequiredQuantity = vmFinishProductBOM.RequiredQuantity,
                 RProductFK = vmFinishProductBOM.RProductFK,
                 RProcessLoss = vmFinishProductBOM.RProcessLoss,
-                CalculationUnit=vmFinishProductBOM.FCEnumId,
+                CalculationUnit = vmFinishProductBOM.FCEnumId,
                 CompanyId = vmFinishProductBOM.CompanyFK.Value,
                 CreatedBy = System.Web.HttpContext.Current.User.Identity.Name,
                 CreatedDate = DateTime.Now,
@@ -4365,19 +4388,19 @@ namespace KGERP.Service.Implementation
                                                          NID = t1.NID,
                                                          CustomerTypeFk = t1.CustomerTypeFK,
                                                          VendorTypeId = t1.VendorTypeId,
-                                                         ACName=t1.ACName,
-                                                        BankName=t1.BankName,
-                                                        BranchName=t1.BranchName,
-                                                        Imageurl=t1.ImageUrl,
-                                                        ACNo=t1.ACNo,
-                                                        CheckNo=t1.CheckNo,
+                                                         ACName = t1.ACName,
+                                                         BankName = t1.BankName,
+                                                         BranchName = t1.BranchName,
+                                                         Imageurl = t1.ImageUrl,
+                                                         ACNo = t1.ACNo,
+                                                         CheckNo = t1.CheckNo,
                                                          CheckDetailId = (int)(CheckDetail)t1.CheckDetailId,
                                                          CheckTypeId = (int)(CheckType)t1.CheckTypeId,
-                                                         TradeLicenceUrl =t1.TradeLicenseImageUrl,
-                                                         SaleLiUrl=t1.WLImageUrl,
-                                                         DelerLiUrl=t1.SDLImageUrl,
-                                                         TinUrl=t1.TINImageUrl,
-                                                         BankChkUrl=t1.CheckImageUrl
+                                                         TradeLicenceUrl = t1.TradeLicenseImageUrl,
+                                                         SaleLiUrl = t1.WLImageUrl,
+                                                         DelerLiUrl = t1.SDLImageUrl,
+                                                         TinUrl = t1.TINImageUrl,
+                                                         BankChkUrl = t1.CheckImageUrl
 
                                                      }).FirstOrDefault());
 
@@ -4537,18 +4560,18 @@ namespace KGERP.Service.Implementation
                 FixedCommissionPoultry = vmCommonCustomer.FixedCommissionPoultry,
                 NIDImageUrl = vmCommonCustomer.NidImage,
                 ImageUrl = vmCommonCustomer.Imageurl,
-                TradeLicenseImageUrl=vmCommonCustomer.TradeLicenceUrl,
-                BSAMemberImageUrl=vmCommonCustomer.BSAMemUrl,
-                WLImageUrl=vmCommonCustomer.SaleLiUrl,
-                SDLImageUrl=vmCommonCustomer.DelerLiUrl,
-                TINImageUrl=vmCommonCustomer.TinUrl,
-                CheckImageUrl=vmCommonCustomer.BankChkUrl,
-                CheckDetailId=vmCommonCustomer.CheckDetailId,
-                CheckTypeId=vmCommonCustomer.CheckTypeId,
-                ACName=vmCommonCustomer.ACName,
-                ACNo=vmCommonCustomer.ACNo,
-                BankName=vmCommonCustomer.BankName,
-                BranchName=vmCommonCustomer.BranchName
+                TradeLicenseImageUrl = vmCommonCustomer.TradeLicenceUrl,
+                BSAMemberImageUrl = vmCommonCustomer.BSAMemUrl,
+                WLImageUrl = vmCommonCustomer.SaleLiUrl,
+                SDLImageUrl = vmCommonCustomer.DelerLiUrl,
+                TINImageUrl = vmCommonCustomer.TinUrl,
+                CheckImageUrl = vmCommonCustomer.BankChkUrl,
+                CheckDetailId = vmCommonCustomer.CheckDetailId,
+                CheckTypeId = vmCommonCustomer.CheckTypeId,
+                ACName = vmCommonCustomer.ACName,
+                ACNo = vmCommonCustomer.ACNo,
+                BankName = vmCommonCustomer.BankName,
+                BranchName = vmCommonCustomer.BranchName
 
             };
             _db.Vendors.Add(commonCustomer);

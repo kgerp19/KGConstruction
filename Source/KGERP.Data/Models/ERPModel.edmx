@@ -28,7 +28,7 @@
             <PropertyRef Name="CostCenterId" />
           </Key>
           <Property Name="CostCenterId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CostCenterTypeId" Type="int" Nullable="false" />
+          <Property Name="CostCenterTypeId" Type="bigint" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CompanyId" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -10855,7 +10855,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             <End Role="VendorOffer" EntitySet="VendorOffers" />
           </AssociationSet>
           <EntitySet Name="PromtionalOffers" EntityType="ERPModel.PromtionalOffer" />
-          <EntitySet Name="Accounting_CostCenter" EntityType="ERPModel.Accounting_CostCenter" />
           <EntitySet Name="Accounting_CostCenterType" EntityType="ERPModel.Accounting_CostCenterType" />
           <EntitySet Name="Vouchers" EntityType="ERPModel.Voucher" />
           <EntitySet Name="OrderMasters" EntityType="ERPModel.OrderMaster" />
@@ -10887,6 +10886,7 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             <End Role="Vendor" EntitySet="Vendors" />
             <End Role="OrderMaster" EntitySet="OrderMasters" />
           </AssociationSet>
+          <EntitySet Name="Accounting_CostCenter" EntityType="ERPModel.Accounting_CostCenter" />
           </EntityContainer>
         <ComplexType Name="GetEmployeeListForTeam_Result">
           <Property Type="Int64" Name="Id" Nullable="false" />
@@ -19857,21 +19857,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityType Name="Accounting_CostCenter">
-          <Key>
-            <PropertyRef Name="CostCenterId" />
-          </Key>
-          <Property Name="CostCenterId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CostCenterTypeId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyId" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="Status" Type="Boolean" Nullable="false" />
-        </EntityType>
         <EntityType Name="Accounting_CostCenterType">
           <Key>
             <PropertyRef Name="CostCenterTypeId" />
@@ -20044,6 +20029,21 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Accounting_CostCenter">
+          <Key>
+            <PropertyRef Name="CostCenterId" />
+          </Key>
+          <Property Name="CostCenterId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CostCenterTypeId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -26872,22 +26872,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Accounting_CostCenter">
-            <EntityTypeMapping TypeName="ERPModel.Accounting_CostCenter">
-              <MappingFragment StoreEntitySet="Accounting_CostCenter">
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="CostCenterTypeId" ColumnName="CostCenterTypeId" />
-                <ScalarProperty Name="CostCenterId" ColumnName="CostCenterId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Accounting_CostCenterType">
             <EntityTypeMapping TypeName="ERPModel.Accounting_CostCenterType">
               <MappingFragment StoreEntitySet="Accounting_CostCenterType">
@@ -26969,6 +26953,22 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
                 <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
                 <ScalarProperty Name="CostCenterId" ColumnName="CostCenterId" />
                 <ScalarProperty Name="OrderMasterId" ColumnName="OrderMasterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Accounting_CostCenter">
+            <EntityTypeMapping TypeName="ERPModel.Accounting_CostCenter">
+              <MappingFragment StoreEntitySet="Accounting_CostCenter">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CostCenterTypeId" ColumnName="CostCenterTypeId" />
+                <ScalarProperty Name="CostCenterId" ColumnName="CostCenterId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

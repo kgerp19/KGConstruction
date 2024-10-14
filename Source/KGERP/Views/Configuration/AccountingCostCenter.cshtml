@@ -35,13 +35,19 @@
                                     @Html.HiddenFor(model => model.ActionId, new { id = "ActionId" })
                                     @Html.HiddenFor(model => model.CompanyFK, new { id = "CompanyFK" })
 
+                                    <div class="form-group" style="padding:0px">
+                                        <label for="message-text" class="col-form-label">Category:</label>
+                                        @Html.EditorFor(model => model.ProjectType, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "ProjectType", @id = "txtProjectType" } })
 
-                                    
+                                        @Html.HiddenFor(model => model.CostCenterTypeId, new { id = "ddlCostCenterTypeId" })
+                                        @Html.ValidationMessageFor(model => model.CostCenterTypeId, "", new { @class = "text-danger" })
+                                    </div>
+
                                     <div class="form-group">
                                         @Html.TextBoxFor(model => model.Name, new { id = "txtMenuName", @class = "form-control input-sm", @placeholder = "Project/Cost Center Name" })
                                         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                     </div>
-                                  
+
                                     <div class="form-group">
                                         <div class="col-md-4">
                                             <button type="button" onclick="resetForm()" class="btn btn-secondary" data-dismiss="modal">Reset</button>
@@ -74,6 +80,7 @@
                                                 <tr>
                                                     <th>SL</th>
                                                     <th>Company</th>
+                                                    <th>Project Type</th>
                                                     <th>Project / Cost Center Name</th>                                                   
                                                     <th>Action</th>
                                                 </tr>
@@ -88,17 +95,24 @@
                                                     <td>@(++sl)</td>
                                                     <td id="tdCompanyFK_@item.ID">
                                                         @item.CompanyName
-                                                        <input type="hidden" id="hidCompanyFK_@item.ID" value="@item.CompanyFK" />
+                                                        <input type="hidden" id="hidCompanyFK_@item.CostCenterId" value="@item.CompanyFK" />
+                                                        <input type="hidden" id="CostCenterTypeId_@item.CostCenterId" name="CostCenterTypeId_" value="@item.CostCenterTypeId" />
+
                                                     </td>
-                                                    <td id="tdMenuName_@item.ID">@item.Name</td>
-                                                  
+                                                    <td id="tdProjectType_@item.CostCenterId">
+                                                         @item.ProjectType
+                                                    </td>
+                                                    <td id="tdMenuName_@item.CostCenterId">@item.Name</td>
+
 
                                                     <td>
-                                                        <a id="@item.ID" onclick=" makeEditble(this);" class="linkPointer" data-toggle="modal" data-target="#exampleModal" title="Edit" data-placement="top"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                                                        <a id="@item.ID" onclick="makeDeletable(@item.ID);" class="linkPointer" data-toggle="modal" data-target="#itemActionModal" title="Delete"
+                                                        <a id="@item.CostCenterId" onclick=" makeEditble(this);" class="linkPointer" data-toggle="modal" data-target="#exampleModal" title="Edit" data-placement="top"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                        <a id="@item.CostCenterId" onclick="makeDeletable(@item.CostCenterId);" class="linkPointer" data-toggle="modal" data-target="#itemActionModal" title="Delete"
                                                            data-placement="top">
                                                             <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
                                                         </a>
+
+
                                                     </td>
                                                 </tr>
                                                 }
@@ -146,6 +160,47 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $('.formValidator').bootstrapValidator();
+
+
+
+                $("#txtProjectType").autocomplete({
+                source: function (request, response) {
+                    //console.log(request);
+                    //console.log(response);
+
+                    $.ajax({
+                        url:"@Url.Action("AutoCompleteProjectTypeGet", "Configuration")",
+                        //data: "{ 'prefix': '" + request.term + "'}",
+                        data: { companyId: "@Model.CompanyFK", prefix: request.term },
+                        dataType: "json",
+                        type: "get",
+                        cache: true,
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            //alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            //alert(response.responseText);
+                        }
+                    });
+                },
+
+                select: function (e, i) {
+                    $("#ddlCostCenterTypeId").val(i.item.val);
+
+
+                },
+                minLength: 1,
+                cache: true
+
+            }).focus(function () {
+                $(this).autocomplete("search");
+            });
             });
 
             function makeEditble(elem) {
@@ -155,6 +210,10 @@
                     $('#ActionId').val(2);
                     $('#btnSave').html("<i class='fa fa-edit'></i>&nbsp;Update");
                     $('#txtMenuName').val($('#tdMenuName_' + rowId).text().trim());
+
+                    $('#ddlCostCenterTypeId').val($('#CostCenterTypeId_' + rowId).val().trim()).trigger('change');
+                    $('#txtProjectType').val($('#tdProjectType_' + rowId).text().trim());
+
                     window.scrollTo({ top: 0, behavior: 'smooth' });
 
                 }

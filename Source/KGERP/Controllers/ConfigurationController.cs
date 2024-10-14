@@ -134,10 +134,10 @@ namespace Pos.App.Controllers
         }
 
         #endregion
-        public async Task<ActionResult> AccountingCostCenter(int companyId)
+        public async Task<ActionResult> AccountingCostCenter(int companyId,long CostCenterTypeId = 0)
         {
             VMUserMenu vmUserMenu;
-            vmUserMenu = await Task.Run(() => _service.AccountingCostCenterGet(companyId));
+            vmUserMenu = await Task.Run(() => _service.AccountingCostCenterGet(companyId, CostCenterTypeId));
 
             return View(vmUserMenu);
         }
@@ -1114,6 +1114,12 @@ namespace Pos.App.Controllers
         public JsonResult AutoCompleteProductCategoryGet(int companyId, string prefix, string productType)
         {
             var products = _service.GetAutoCompleteProductCategory(companyId, prefix, productType);
+            return Json(products, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AutoCompleteProjectTypeGet(int companyId, string prefix)
+        {
+            var products = _service.GetAutoCompleteProjectType(companyId, prefix);
             return Json(products, JsonRequestBehavior.AllowGet);
         }
         public JsonResult AutoCompleteProductGet(int companyId, string prefix, string productType = "")

@@ -15,7 +15,7 @@ namespace KGERP.Data.Models
     public partial class Accounting_CostCenter
     {
         public long CostCenterId { get; set; }
-        public int CostCenterTypeId { get; set; }
+        public long CostCenterTypeId { get; set; }
         public string Name { get; set; }
         public int CompanyId { get; set; }
         public string CreatedBy { get; set; }
