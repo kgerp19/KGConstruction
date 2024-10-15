@@ -386,7 +386,7 @@ namespace KGERP.Services.Procurement
     public class VMSalesOrderSlave : VMSalesOrder
     {
         public int ProductId;
-
+        public string Stockname { get; set; }
         public string ProductName { get; set; }
         public string ComLogo { get; set; }
         

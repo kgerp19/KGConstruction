@@ -969,6 +969,19 @@ namespace KG.App.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> DeleteProcurementSalesOrderSlaveTCL(VMSalesOrderSlave vmSalesOrderSlave)
+        {
+            
+                //Delete
+                vmSalesOrderSlave.OrderMasterId = await _service.ProcurementSaleeOrderSlaveDelete(vmSalesOrderSlave.OrderMasterId);
+            
+            return RedirectToAction(nameof(ProcurementSalesOrderSlave), new { companyId = vmSalesOrderSlave.CompanyId, costCenterId = vmSalesOrderSlave.CostCenterId });
+        }
+
+
+
+
+        [HttpPost]
         public async Task<ActionResult> DeleteProcurementSalesOrderSlave(VMSalesOrderSlave vmSalesOrderSlave)
         {
             if (vmSalesOrderSlave.ActionEum == ActionEnum.Delete)

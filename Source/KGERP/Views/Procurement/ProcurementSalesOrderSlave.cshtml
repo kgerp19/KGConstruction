@@ -14,7 +14,7 @@
     input, select, textarea {
         max-width: 100%;
     }
-/*
+    /*
     .premium-form {
         padding: 20px;
         background-color: #f9f9f9;
@@ -102,36 +102,39 @@
 
             <div class="box-danger">
 
-                <div class="box-header">
+                <div class="box-header" style="background: linear-gradient(135deg, #e6f2ff, #cce5ff); border-radius: 15px; padding: 20px; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);">
                     @if (Model.CostCenterId > 0)
                     {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="d-flex align-items-center">
 
-
-                        <div class="col-md-1"> </div>
-                        <div class="col-md-10">
-                            <table class="table">
-                                <tr>
-                                    <th style="width:15%">
-                                        Project Type
-                                    </th>
-                                    <th style="width:1%">:</th>
-                                    <td style="width:30%">
-                                        <label class="col-form-label">@Model.CostCenterType</label>
-
-
-                                    </td>
-                                    <th style="width:23%"> Project / Cost Center</th>
-                                    <th style="width:1%">:</th>
-                                    <td style="width:30%">@Model.CostCenterName</td>
-                                </tr>
-
-                            </table>
+                                    <table class="table" style="margin: 0; color: #343a40;">
+                                        <tr>
+                                            <th style="width:15%; font-weight: bold; font-size: 1.2rem; color: #007bff;">Project Type</th>
+                                            <th style="width:1%">:</th>
+                                            <td style="width:30%">
+                                                <label class="col-form-label" style="font-size: 1.5rem; color: #333;">@Model.CostCenterType</label>
+                                            </td>
+                                            <th style="width:23%; font-weight: bold; font-size: 1.2rem; color: #007bff;">Project / Cost Center</th>
+                                            <th style="width:1%">:</th>
+                                            <td style="width:30%">
+                                                <label class="col-form-label" style="font-size: 1.5rem; color: #333;">@Model.CostCenterName</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="tooltip" style="position: absolute; top: 10px; right: 10px;">
+                                    <i class="fa fa-info-circle" style="color: #007bff; cursor: pointer;" title="Additional project information"></i>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-1"> </div>
-
-
                     }
                 </div>
+
+
+
+
 
                 <div class="box-body">
 
@@ -160,7 +163,7 @@
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label"> Project Manager:</label>
                                         @Html.EditorFor(model => model.OfficerNAme, new { htmlAttributes = new { @class = "form-control", @name = "OfficerNAme", @id = "OfficerNAme", required = "required" } })
-                                       
+
                                         @Html.ValidationMessageFor(model => model.OfficerNAme, "", new { @class = "text-danger" })
                                         @Html.HiddenFor(x => x.SalePersonId, new { @id = "SalePersonId", @name = "SalePersonId" })
 
@@ -192,7 +195,7 @@
                                         </div>
                                         @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger premium-error" })
                                     </div>
-                                    </div>
+                                </div>
 
 
                                 <div class="col-md-3">
@@ -229,10 +232,11 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="txtDivisionValue" class="col-form-label">Project Value (Division)</label>
-                                        @Html.EditorFor(model => model.DivisionValue, new { htmlAttributes = new { @class = "form-control premium-input", @id = "txtTotalAmount" } })
+                                        @Html.EditorFor(model => model.DivisionValue, new { htmlAttributes = new { @class = "form-control premium-input", @id = "txtDivisionValue" } })
                                         @Html.ValidationMessageFor(model => model.DivisionValue, "", new { @class = "text-danger premium-error" })
                                     </div>
                                 </div>
+
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="txtFinalDestination" class="col-form-label">Delivery Address</label>
@@ -252,13 +256,13 @@
                             <!-- Submit Button -->
                             <div class="row">
                                 <div class="col-md-4">
-                                   
+
                                 </div>
                                 <div class="col-md-4">
-                                   
+
                                 </div>
                                 <div class="col-md-4">
-                                    <button type="submit" class="btn btn-primary" style="width:100%">Save</button>
+                                    <button type="submit" id="svvvvv" class="btn btn-primary" style="width:100%">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -276,20 +280,21 @@
                         Project Division List
                     </span>
                     <div class="table-responsive text-nowrap">
-                        <table id="KgErpDataTable" class="table table-striped">
+                        <table id="" class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>SL</th>
-                                    <th>Name</th>
+                                    <th>Division Name</th>
+                                    <th>Project Amount</th>
 
-                                    <th>Phone</th>
-                                    <th>Email</th>
+                                    <th>Customer Phone</th>
+                                    <th>Customer Email</th>
 
 
-                                    <th>Address</th>
+                                    <th>Delivery Address</th>
                                     <th>Officer Name</th>
 
-                                    <th>Status</th>
+
                                     <th>Start date</th>
                                     <th>Expected Delivery date</th>
                                     <th>Action</th>
@@ -302,6 +307,7 @@
                                     <tr>
                                         <td>@(++sl)</td>
                                         <td>@item.CustomerPONo</td>
+                                        <td>@item.DivisionValue</td>
 
                                         <td>@item.CustomerPhone</td>
                                         <td>@item.CustomerEmail</td>
@@ -310,18 +316,37 @@
                                         <td>@item.FinalDestination</td>
                                         <td>@item.OfficerNAme </td>
 
-                                        <td>@item.Status</td>
-                                        <td>@item.OrderDate</td>
-                                        <td>@item.ExpectedDeliveryDate</td>
+
+                                        <td>@item.OrderDate.ToString("dd-MMM-yyyy")</td>
+                                        <td>@item.ExpectedDeliveryDate.Value.ToString("dd-MMM-yyyy")</td>
                                         <td>
-                                            <a id="@item.ID" onclick="makeEditable(@item.ID);" class="linkPointer" title="Edit">
+                                            <a id="@item.ID"
+                                               onclick="makeEditable(
+           @item.OrderMasterId,
+           '@Html.Raw(item.CustomerPONo)',
+           '@Html.Raw(item.DivisionValue)',
+           '@Html.Raw(item.OfficerNAme)',
+           '@Html.Raw(item.SalePersonId)',
+           '@Html.Raw(item.CommonCustomerName)',
+           '@Html.Raw(item.CustomerId)',
+           '@item.OrderDate.ToString("yyyy-MM-dd")',
+           '@(item.ExpectedDeliveryDate.HasValue ? item.ExpectedDeliveryDate.Value.ToString("yyyy-MM-dd") : "")',
+           @item.StockInfoId,
+           @item.CustomerPaymentMethodEnumFK,
+           @item.TotalAmount,
+           '@Html.Raw(item.FinalDestination)',
+           '@Html.Raw(item.Remarks)'
+       );"
+                                               class="linkPointer"
+                                               title="Edit">
                                                 <i class="fa fa-pencil-square-o"></i>
                                             </a>
-                                            <a id="@item.ID" onclick="makeDeletable(@item.ID);" class="linkPointer" data-toggle="modal" data-target="#deleteModal" title="Delete">
+
+                                            <a id="@item.ID" onclick="makeDeletable(@item.OrderMasterId);" class="linkPointer" data-toggle="modal" data-target="#deleteModal" title="Delete">
                                                 <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
                                             </a>
 
-                                            <a href="~/Procurement/PackagingSalesOrderSlave?companyId=@item.CompanyFK&orderMasterId=@item.OrderMasterId" class="btn btn-success btn-sm">Manage BOQ Item</a>
+                                            <a href="~/Procurement/PackagingSalesOrderSlave?companyId=@item.CompanyFK&orderMasterId=@item.OrderMasterId" class="btn btn-success btn-sm">Manage BBQ Item</a>
 
 
                                         </td>
@@ -346,7 +371,7 @@
 
     @Scripts.Render("~/bundles/jqueryui")
     @Styles.Render("~/Content/cssjqryUi")
-    <script type="text/javascript">
+<script type="text/javascript">
         function calculateAmount() {
 
             var salesQuantity = $("#txtSalesQuantity").val();
@@ -728,6 +753,58 @@
 
 
 
+        function makeEditable(id, customerPONo, divisionValue, officerName, salePersonId, commonCustomerName, customerId, orderDate, expectedDeliveryDate, stockInfoId, paymentMethodEnumFK, totalAmount, finalDestination, remarks) {
+
+
+
+            document.getElementById('txtCustomerPONo').value = customerPONo;
+            document.getElementById('hidOrderMasterId').value = id;
+            document.getElementById('txtDivisionValue').value = divisionValue; // Add this field if it exists
+            document.getElementById('OfficerNAme').value = officerName;
+            document.getElementById('SalePersonId').value = salePersonId;
+            document.getElementById('VendorName').value = commonCustomerName;
+            document.getElementById('Vendor').value = customerId;
+            document.getElementById('txtOrderDate').value = orderDate;
+            document.getElementById('txtDeliveryDate').value = expectedDeliveryDate;
+            document.getElementById('ddlWareHouseFk').value = stockInfoId;
+            document.getElementById('ddlSupplierPaymentMethodEnumFK').value = paymentMethodEnumFK;
+
+            document.getElementById('txtFinalDestination').value = finalDestination;
+            document.getElementById('txtDescription').value = remarks;
+            document.getElementById('ActionId').value = 2;
+
+            document.getElementById('svvvvv').innerHTML = "Update";
+        }
+
+
+
+
+
+        function makeDeletable(id) {
+            // Show confirmation alert
+            if (confirm("Are you sure you want to delete this item?")) {
+                // Prepare data to send to the server
+                var data = {
+                    OrderMasterId: id,
+                    ActionEum: 3,
+                    CompanyId:@Model.CompanyFK,
+                    CostCenterId: @Model.CostCenterId
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Procurement/DeleteProcurementSalesOrderSlaveTCL', // Adjust the URL to your controller
+                    data: data,
+                    success: function (response) {
+                        // Optionally handle success, e.g., reload the table or redirect
+                        window.location.reload(); // Reload the page to see the changes
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred while deleting the item: " + error);
+                    }
+                });
+            }
+        }
 
 
 
@@ -737,5 +814,5 @@
 
 
 
-    </script>
+</script>
 }

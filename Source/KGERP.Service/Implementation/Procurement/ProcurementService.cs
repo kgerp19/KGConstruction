@@ -733,7 +733,12 @@ namespace KGERP.Services.Procurement
             orderMaster.ExpectedDeliveryDate = vmSalesOrder.ExpectedDeliveryDate;
             orderMaster.PaymentMethod = vmSalesOrder.CustomerPaymentMethodEnumFK;
             orderMaster.CostCenterId = vmSalesOrder.CostCenterId;
-
+            orderMaster.TotalAmount = vmSalesOrder.DivisionValue;
+            orderMaster.StockInfoId = vmSalesOrder.StockInfoId;
+            orderMaster.SalePersonId = vmSalesOrder.SalePersonId;
+            orderMaster.FinalDestination = vmSalesOrder.FinalDestination;
+            orderMaster.Remarks = vmSalesOrder.Remarks;
+            orderMaster.CustomerPONo = vmSalesOrder.CustomerPONo;
             orderMaster.ModifiedBy = System.Web.HttpContext.Current.User.Identity.Name;
             orderMaster.ModifiedDate = DateTime.Now;
 
@@ -2804,6 +2809,22 @@ namespace KGERP.Services.Procurement
             return result;
         }
 
+
+
+        public async Task<long> ProcurementSaleeOrderSlaveDelete(long id)
+        {
+            long result = -1;
+            OrderMaster OrderSlave = await _db.OrderMasters.FindAsync(id);
+            if (OrderSlave != null)
+            {
+                OrderSlave.IsActive = false;
+                if (await _db.SaveChangesAsync() > 0)
+                {
+                    result = OrderSlave.OrderMasterId;
+                }
+            }
+            return result;
+        }
         #endregion
 
 
@@ -3257,6 +3278,7 @@ namespace KGERP.Services.Procurement
                                                                     {
                                                                         WareHouse = t6 != null ? t6.Name : "",
                                                                         Propietor = t2.Propietor,
+                                                                        DivisionValue = (decimal)t1.TotalAmount,
                                                                         CreatedDate = t1.CreateDate,
                                                                         CustomerPONo = t1.CustomerPONo,
                                                                         CustomerPhone = t2.Phone,
@@ -3282,7 +3304,11 @@ namespace KGERP.Services.Procurement
                                                                         DiscountAmount = t1.DiscountAmount ?? 0,
                                                                         DiscountRate = t1.DiscountRate ?? 0,
                                                                         TotalAmountAfterDiscount = t1.TotalAmount ?? 0,
-                                                                        OfficerNAme = t8 != null ? t8.Name : ""
+                                                                        OfficerNAme = t8 != null ? t8.Name : "",
+                                                                        Remarks = t1.Remarks,
+                                                                        Stockname = t6.Name,
+                                                                        StockInfoId = (int)t1.StockInfoId,
+                                                                        SalePersonId = (int)t1.SalePersonId
 
 
 
