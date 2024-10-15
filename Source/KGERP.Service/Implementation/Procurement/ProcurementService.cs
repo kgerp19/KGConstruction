@@ -700,7 +700,7 @@ namespace KGERP.Services.Procurement
 
             return result;
         }
-        public async Task<long> OrderMastersEdit(VMSalesOrder vmSalesOrder)
+        public async Task<long> OrderMastersEdit(VMSalesOrderSlave vmSalesOrder)
         {
             long result = -1;
             OrderMaster orderMaster = await _db.OrderMasters.FindAsync(vmSalesOrder.OrderMasterId);
@@ -709,6 +709,7 @@ namespace KGERP.Services.Procurement
             orderMaster.CustomerId = vmSalesOrder.CustomerId;
             orderMaster.ExpectedDeliveryDate = vmSalesOrder.ExpectedDeliveryDate;
             orderMaster.PaymentMethod = vmSalesOrder.CustomerPaymentMethodEnumFK;
+            orderMaster.CostCenterId = vmSalesOrder.CostCenterId;
 
             orderMaster.ModifiedBy = System.Web.HttpContext.Current.User.Identity.Name;
             orderMaster.ModifiedDate = DateTime.Now;
@@ -721,6 +722,30 @@ namespace KGERP.Services.Procurement
 
             return result;
         }
+
+        public async Task<long> OrderMastersDevisionEdit(VMSalesOrderSlave vmSalesOrder)
+        {
+            long result = -1;
+            OrderMaster orderMaster = await _db.OrderMasters.FindAsync(vmSalesOrder.OrderMasterId);
+
+            orderMaster.OrderDate = vmSalesOrder.OrderDate;
+            orderMaster.CustomerId = vmSalesOrder.CustomerId;
+            orderMaster.ExpectedDeliveryDate = vmSalesOrder.ExpectedDeliveryDate;
+            orderMaster.PaymentMethod = vmSalesOrder.CustomerPaymentMethodEnumFK;
+            orderMaster.CostCenterId = vmSalesOrder.CostCenterId;
+
+            orderMaster.ModifiedBy = System.Web.HttpContext.Current.User.Identity.Name;
+            orderMaster.ModifiedDate = DateTime.Now;
+
+
+            if (await _db.SaveChangesAsync() > 0)
+            {
+                result = vmSalesOrder.OrderMasterId;
+            }
+
+            return result;
+        }
+
 
         public async Task<long> OrderMastersSubmit(long? id = 0)
         {
@@ -1306,7 +1331,7 @@ namespace KGERP.Services.Procurement
                         CreatedDate = DateTime.Now,
                         VATAddition = vmPurchaseOrderSlave.VATAddition,
                         IsActive = true,
-                        IsVATIncluded=vmPurchaseOrderSlave.IsVATIncluded
+                        IsVATIncluded = vmPurchaseOrderSlave.IsVATIncluded
                     };
                     _db.PurchaseOrderDetails.Add(procurementPurchaseOrderSlave);
 
@@ -2482,8 +2507,8 @@ namespace KGERP.Services.Procurement
                                                                 PromtionalOfferId = t1.PromtionalOfferId,
                                                                 PromtionType = t1.PromtionType,
                                                                 ToDate = t1.ToDate,
-                                                                IsSumitted=t1.IsSubmitted
-                                                                
+                                                                IsSumitted = t1.IsSubmitted
+
 
                                                             }).FirstOrDefault());
 
@@ -2800,7 +2825,7 @@ namespace KGERP.Services.Procurement
             return result;
         }
 
-        public async Task<int> PromtionalOfferEdit(int offerId,string offerCode,DateTime fromDate,DateTime toDate)
+        public async Task<int> PromtionalOfferEdit(int offerId, string offerCode, DateTime fromDate, DateTime toDate)
         {
             int result = -1;
             PromtionalOffer promtionalOfferModel = await _db.PromtionalOffers.FindAsync(offerId);
@@ -3206,52 +3231,65 @@ namespace KGERP.Services.Procurement
         }
         //ENds Feed ProcurementSalesOrderDetailsGet -22 May 2022
 
-        public async Task<VMSalesOrderSlave> ProcurementSalesOrderDetailsGet(int companyId)
+        public async Task<VMSalesOrderSlave> ProcurementSalesOrderDetailsGet(int companyId, long costCenterId)
         {
             VMSalesOrderSlave vmSalesOrderSlave = new VMSalesOrderSlave();
-            vmSalesOrderSlave.DataListSlave = await Task.Run(() => (from t1 in _db.OrderMasters.Where(x => x.IsActive  && x.CompanyId == companyId)
-                                                      join t2 in _db.Vendors on t1.CustomerId equals t2.VendorId
-                                                   
-                                                      join t6 in _db.StockInfoes on t1.StockInfoId equals t6.StockInfoId into t6_Join
-                                                      from t6 in t6_Join.DefaultIfEmpty() 
-                                                      join t8 in _db.Employees on t1.SalePersonId equals t8.Id into t8_Join
-                                                      from t8 in t8_Join.DefaultIfEmpty()
+            vmSalesOrderSlave = await Task.Run(() => (from t1 in _db.Accounting_CostCenter.Where(x => x.IsActive && x.CostCenterId == costCenterId)
+                                                      join t2 in _db.Accounting_CostCenterType on t1.CostCenterTypeId equals t2.CostCenterTypeId
+
+
                                                       select new VMSalesOrderSlave
                                                       {
-                                                          WareHouse = t6 != null ? t6.Name : "",                                                           
-                                                          Propietor = t2.Propietor,
-                                                          CreatedDate = t1.CreateDate,
-                                                         CustomerPONo=t1.CustomerPONo,
-                                                          CustomerPhone = t2.Phone,
-                                                          CustomerAddress = t2.Address,
-                                                          CustomerEmail = t2.Email,
-                                                          ContactPerson = t2.ContactName,
-                                                          CompanyFK = t1.CompanyId,
-                                                          OrderMasterId = t1.OrderMasterId,
-                                                          CreditLimit = t2.CreditLimit,
-                                                          OrderNo = t1.OrderNo,
-                                                          Status = t1.Status,
-                                                          OrderDate = t1.OrderDate,
-                                                          CreatedBy = t1.CreatedBy,
-                                                          CustomerPaymentMethodEnumFK = t1.PaymentMethod,
-                                                          ExpectedDeliveryDate = t1.ExpectedDeliveryDate,
-                                                          CommonCustomerName = t2.Name,
-                                                          CommonCustomerCode = t2.Code,
-                                                          CustomerTypeFk = t2.CustomerTypeFK,
-                                                          CustomerId = t2.VendorId,
-                                                          CourierCharge = t1.CourierCharge,
-                                                          FinalDestination = t1.FinalDestination,
-                                                          CourierNo = t1.CourierNo,
-                                                          DiscountAmount = t1.DiscountAmount ?? 0,
-                                                          DiscountRate = t1.DiscountRate ?? 0,
-                                                          TotalAmountAfterDiscount = t1.TotalAmount ?? 0,
-                                                          OfficerNAme = t8 != null ? t8.Name : ""
+                                                          CompanyFK = companyId,
+                                                          CostCenterId = t1.CostCenterId,
+                                                          CostCenterName = t1.Name,
+                                                          CostCenterType = t2.Name
+                                                      }).FirstOrDefault());
+
+            vmSalesOrderSlave.DataListSlave = await Task.Run(() => (from t1 in _db.OrderMasters.Where(x => x.IsActive && x.CompanyId == companyId)
+                                                                    join t2 in _db.Vendors on t1.CustomerId equals t2.VendorId
+                                                                    join t6 in _db.StockInfoes on t1.StockInfoId equals t6.StockInfoId into t6_Join
+                                                                    from t6 in t6_Join.DefaultIfEmpty()
+                                                                    join t8 in _db.Employees on t1.SalePersonId equals t8.Id into t8_Join
+                                                                    from t8 in t8_Join.DefaultIfEmpty()
+                                                                    where t1.CostCenterId == costCenterId
+
+                                                                    select new VMSalesOrderSlave
+                                                                    {
+                                                                        WareHouse = t6 != null ? t6.Name : "",
+                                                                        Propietor = t2.Propietor,
+                                                                        CreatedDate = t1.CreateDate,
+                                                                        CustomerPONo = t1.CustomerPONo,
+                                                                        CustomerPhone = t2.Phone,
+                                                                        CustomerAddress = t2.Address,
+                                                                        CustomerEmail = t2.Email,
+                                                                        ContactPerson = t2.ContactName,
+                                                                        CompanyFK = t1.CompanyId,
+                                                                        OrderMasterId = t1.OrderMasterId,
+                                                                        CreditLimit = t2.CreditLimit,
+                                                                        OrderNo = t1.OrderNo,
+                                                                        Status = t1.Status,
+                                                                        OrderDate = t1.OrderDate,
+                                                                        CreatedBy = t1.CreatedBy,
+                                                                        CustomerPaymentMethodEnumFK = t1.PaymentMethod,
+                                                                        ExpectedDeliveryDate = t1.ExpectedDeliveryDate,
+                                                                        CommonCustomerName = t2.Name,
+                                                                        CommonCustomerCode = t2.Code,
+                                                                        CustomerTypeFk = t2.CustomerTypeFK,
+                                                                        CustomerId = t2.VendorId,
+                                                                        CourierCharge = t1.CourierCharge,
+                                                                        FinalDestination = t1.FinalDestination,
+                                                                        CourierNo = t1.CourierNo,
+                                                                        DiscountAmount = t1.DiscountAmount ?? 0,
+                                                                        DiscountRate = t1.DiscountRate ?? 0,
+                                                                        TotalAmountAfterDiscount = t1.TotalAmount ?? 0,
+                                                                        OfficerNAme = t8 != null ? t8.Name : ""
 
 
 
-                                                      }).ToListAsync());
+                                                                    }).ToListAsync());
 
-           
+
 
 
             return vmSalesOrderSlave;
@@ -3653,14 +3691,14 @@ namespace KGERP.Services.Procurement
                              PackSize = t1.PackSize,
                              CompanyFK = t1.CompanyId,
                              FormulaQty = t1.FormulaQty,
-                             UnitPrice = t1.UnitPrice??0
+                             UnitPrice = t1.UnitPrice ?? 0
 
                          }).FirstOrDefault();
 
             VMProductStock vmProductStock = new VMProductStock();
             vmProductStock = _db.Database.SqlQuery<VMProductStock>("EXEC SeedFinishedGoodsStockByProduct {0},{1}", productId, companyId).FirstOrDefault();
             vmProduct.CurrentStock = vmProductStock.ClosingQty;
-             
+
 
             return vmProduct;
         }
@@ -3962,7 +4000,7 @@ namespace KGERP.Services.Procurement
             model.PackQuantity = vmSalesOrderSlave.PackQuantity;
             model.DiscountUnit = vmSalesOrderSlave.ProductDiscountUnit;
             model.SpecialBaseCommission = vmSalesOrderSlave.SpecialDiscount;
-
+             
 
 
             model.ModifiedBy = System.Web.HttpContext.Current.User.Identity.Name;
@@ -4263,7 +4301,7 @@ namespace KGERP.Services.Procurement
                 poCid = @"TCL#" + poMax.ToString();
             }
 
-           
+
             else
             {
                 poCid =
@@ -4281,6 +4319,7 @@ namespace KGERP.Services.Procurement
                 OrderNo = poCid,
                 OrderDate = vmSalesOrderSlave.OrderDate,
                 CustomerId = vmSalesOrderSlave.CustomerId,
+                CostCenterId = vmSalesOrderSlave.CostCenterId,
                 ExpectedDeliveryDate = vmSalesOrderSlave.ExpectedDeliveryDate,
                 PaymentMethod = vmSalesOrderSlave.CustomerPaymentMethodEnumFK,
                 ProductType = "F",
@@ -4647,7 +4686,7 @@ namespace KGERP.Services.Procurement
                 CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
                 CreatedDate = DateTime.Now,
                 IsActive = true,
-                IsVATIncluded=vmPurchaseOrderSlave.IsVATIncluded
+                IsVATIncluded = vmPurchaseOrderSlave.IsVATIncluded
             };
             _db.PurchaseOrderDetails.Add(procurementPurchaseOrderSlave);
             if (await _db.SaveChangesAsync() > 0)
@@ -5798,7 +5837,7 @@ namespace KGERP.Services.Procurement
                                           select new Officervwmodel
                                           {
                                               EmployeeName = t2.Name,
-                                              EmpId = t1.SalesOfficerId??0
+                                              EmpId = t1.SalesOfficerId ?? 0
                                           }).FirstOrDefault());
             return v;
         }

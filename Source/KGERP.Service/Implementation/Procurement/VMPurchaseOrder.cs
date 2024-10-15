@@ -387,6 +387,8 @@ namespace KGERP.Services.Procurement
 
         public string ProductName { get; set; }
         public string ComLogo { get; set; }
+        public string CostCenterName { get; set; }
+        public string CostCenterType { get; set; }
         public int DemandId { get; set; } = 0;
         public string DemandNo { get; set; } = "";
 
@@ -415,6 +417,7 @@ namespace KGERP.Services.Procurement
 
         public IEnumerable<VMSalesOrderSlave> DataListSlave { get; set; }
         public int ProductSubCategoryId { get; set; }
+        public long CostCenterId { get; set; }
         public int? AccountingHeadId { get; set; }
         public int ProductCategoryId { get; set; }
         public int SubZoneFk { get; set; }
