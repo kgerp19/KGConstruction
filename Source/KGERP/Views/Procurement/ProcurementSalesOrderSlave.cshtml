@@ -151,15 +151,16 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="txtCommonCustomerName" class="col-form-label">Division Name</label>
-                                        @Html.EditorFor(model => model.CommonCustomerName, new { htmlAttributes = new { @class = "form-control premium-input", @id = "txtCommonCustomerName" } })
-                                        @Html.ValidationMessageFor(model => model.CommonCustomerName, "", new { @class = "text-danger premium-error" })
+                                        <label for="txtCustomerPONo" class="col-form-label">Division Name</label>
+                                        @Html.EditorFor(model => model.CustomerPONo, new { htmlAttributes = new { @class = "form-control", @id = "txtCustomerPONo" } })
+                                        @Html.ValidationMessageFor(model => model.CustomerPONo, "", new { @class = "text-danger premium-error" })
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label"> Project Manager:</label>
                                         @Html.EditorFor(model => model.OfficerNAme, new { htmlAttributes = new { @class = "form-control", @name = "OfficerNAme", @id = "OfficerNAme", required = "required" } })
+                                       
                                         @Html.ValidationMessageFor(model => model.OfficerNAme, "", new { @class = "text-danger" })
                                         @Html.HiddenFor(x => x.SalePersonId, new { @id = "SalePersonId", @name = "SalePersonId" })
 
@@ -169,8 +170,8 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="VendorName" class="col-form-label">Customer:</label>
-                                        @Html.EditorFor(model => model.CustomerPONo, new { htmlAttributes = new { @class = "form-control premium-input", @name = "CustomerName", @id = "VendorName", required = "required" } })
-                                        @Html.ValidationMessageFor(model => model.CustomerPONo, "", new { @class = "text-danger premium-error" })
+                                        @Html.EditorFor(model => model.CommonCustomerName, new { htmlAttributes = new { @class = "form-control", @name = "CustomerName", @id = "VendorName", required = "required" } })
+                                        @Html.ValidationMessageFor(model => model.CommonCustomerName, "", new { @class = "text-danger" })
                                         @Html.HiddenFor(x => x.CustomerId, new { @id = "Vendor", @name = "Vendor" })
                                     </div>
                                 </div>
@@ -227,7 +228,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="txtTotalAmount" class="col-form-label">Project Value</label>
+                                        <label for="txtTotalAmount" class="col-form-label">Project Value (Division)</label>
                                         @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control premium-input", @id = "txtTotalAmount" } })
                                         @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger premium-error" })
                                     </div>

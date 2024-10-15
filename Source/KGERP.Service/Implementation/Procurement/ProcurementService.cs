@@ -4315,27 +4315,37 @@ namespace KGERP.Services.Procurement
 
             OrderMaster orderMaster = new OrderMaster
             {
-                CustomerPONo = vmSalesOrderSlave.CustomerPONo,
-                OrderNo = poCid,
-                OrderDate = vmSalesOrderSlave.OrderDate,
-                CustomerId = vmSalesOrderSlave.CustomerId,
+
                 CostCenterId = vmSalesOrderSlave.CostCenterId,
+                OrderNo = poCid,
+                CustomerPONo = vmSalesOrderSlave.CustomerPONo,
+                SalePersonId = vmSalesOrderSlave.SalePersonId,
+                CustomerId = vmSalesOrderSlave.CustomerId,
+                OrderDate = vmSalesOrderSlave.OrderDate,
                 ExpectedDeliveryDate = vmSalesOrderSlave.ExpectedDeliveryDate,
-                PaymentMethod = vmSalesOrderSlave.CustomerPaymentMethodEnumFK,
-                ProductType = "F",
-                Status = (int)EnumPOStatus.Draft,
-                CourierNo = vmSalesOrderSlave.CourierNo,
-                FinalDestination = vmSalesOrderSlave.FinalDestination,
-                CourierCharge = vmSalesOrderSlave.CourierCharge,
-                CurrentPayable = Convert.ToDecimal(vmSalesOrderSlave.PayableAmount),
                 StockInfoId = vmSalesOrderSlave.StockInfoId,
+                PaymentMethod = vmSalesOrderSlave.CustomerPaymentMethodEnumFK,
+                TotalAmount = vmSalesOrderSlave.DivisionValue,
+                FinalDestination = vmSalesOrderSlave.FinalDestination,
+                Remarks = vmSalesOrderSlave.Remarks,
+
+                Status = (int)EnumPOStatus.Draft,
+
+
+                 
+
+                ProductType = "F",
+               
+                CourierNo = vmSalesOrderSlave.CourierNo,
+                CourierCharge = vmSalesOrderSlave.CourierCharge,
+                CurrentPayable =0,
+              
                 CompanyId = vmSalesOrderSlave.CompanyFK,
                 CreatedBy = System.Web.HttpContext.Current.User.Identity.Name,// System.Web.HttpContext.Current.User.Identity.Name,
                 CreateDate = DateTime.Now,
                 IsActive = true,
                 OrderStatus = "N",
-                SalePersonId = vmSalesOrderSlave.SalePersonId,
-                Remarks = vmSalesOrderSlave.Remarks,
+               
                 IsService = vmSalesOrderSlave.IsService,
 
 
@@ -4495,20 +4505,16 @@ namespace KGERP.Services.Procurement
             VMSalesOrderSlave vmSalesOrderSlave = new VMSalesOrderSlave();
             vmSalesOrderSlave = await Task.Run(() => (from t1 in _db.OrderMasters.Where(x => x.IsActive && x.OrderMasterId == orderMasterId && x.CompanyId == companyId)
                                                       join t2 in _db.Vendors on t1.CustomerId equals t2.VendorId
-                                                      join t4 in _db.HeadGLs on t2.HeadGLId equals t4.Id
-                                                      join t6 in _db.OfficerAssigns on t1.SalePersonId equals t6.EmpId into x
-                                                      from t6 in x.DefaultIfEmpty()
-                                                      join t7 in _db.Employees on t6.EmpId equals t7.Id into y
+                                                      join t4 in _db.HeadGLs on t2.HeadGLId equals t4.Id                                                       
+                                                      join t7 in _db.Employees on t1.SalePersonId equals t7.Id into y
                                                       from t7 in y.DefaultIfEmpty()
+                                                      join t3 in _db.Accounting_CostCenter on t1.CostCenterId equals t3.CostCenterId
+                                                      join t5 in _db.Accounting_CostCenterType on t3.CostCenterTypeId equals t5.CostCenterTypeId
 
-
-
-                                                      join t3 in _db.Companies on t1.CompanyId equals t3.CompanyId
 
                                                       select new VMSalesOrderSlave
                                                       {
                                                           CommonCustomerCode = t4.AccCode,
-
                                                           CustomerPhone = t2.Phone,
                                                           CustomerAddress = t2.Address,
                                                           CustomerEmail = t2.Email,
@@ -4524,9 +4530,9 @@ namespace KGERP.Services.Procurement
                                                           ExpectedDeliveryDate = t1.ExpectedDeliveryDate,
                                                           CommonCustomerName = t2.Name,
                                                           CompanyName = t3.Name,
-                                                          CompanyAddress = t3.Address,
-                                                          CompanyEmail = t3.Email,
-                                                          CompanyPhone = t3.Phone,
+                                                          CostCenterName = t3.Name,
+                                                          CostCenterType = t5.Name,
+                                                          
                                                           CustomerPONo = t1.CustomerPONo,
                                                           CustomerTypeFk = t2.CustomerTypeFK,
                                                           CustomerId = t2.VendorId,
