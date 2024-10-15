@@ -398,6 +398,7 @@ namespace KGERP.Services.Procurement
 
         public long OrderDetailId { get; set; }
         public int FProductId { get; set; }
+        public int UnitId { get; set; }
         public int? AccountingIncomeHeadId { get; set; }
         public double Qty { get; set; }
         public double UnitPrice { get; set; }
@@ -418,6 +419,7 @@ namespace KGERP.Services.Procurement
         public SelectList SubZoneList { get; set; } = new SelectList(new List<object>());
         public SelectList ZoneList { get; set; } = new SelectList(new List<object>());
         public SelectList StockInfoList { get; set; } = new SelectList(new List<object>());
+        public SelectList UnitList { get; set; } = new SelectList(new List<object>());
 
         public IEnumerable<VMSalesOrderSlave> DataListSlave { get; set; }
         public int ProductSubCategoryId { get; set; }

@@ -4499,7 +4499,16 @@ namespace KGERP.Services.Procurement
             }
             return false;
         }
-
+        public List<object> UnitDropDownList(int companyId)
+        {
+            var UnitList = new List<object>();
+            var Units = _db.Units.Where(a => a.IsActive && a.CompanyId == companyId).ToList();
+            foreach (var x in Units)
+            {
+                UnitList.Add(new { Text = x.Name, Value = x.UnitId });
+            }
+            return UnitList;
+        }
         public async Task<VMSalesOrderSlave> PackagingSalesOrderDetailsGet(int companyId, int orderMasterId)
         {
             VMSalesOrderSlave vmSalesOrderSlave = new VMSalesOrderSlave();

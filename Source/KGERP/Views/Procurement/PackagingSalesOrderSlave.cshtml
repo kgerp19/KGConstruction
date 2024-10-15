@@ -30,28 +30,20 @@
 
 <section class="content-header">
     <h1>
-        @if (Model.OrderMasterId > 0)
-        {
-            <span>
-                Sales Order:
-                @*<a target="_blank" href="~/Procurement/ProcurementSalesOrderDetailsReport?companyId=@Model.CompanyFK&orderMasterId=@Model.OrderMasterId">@Model.OrderNo</a>*@
-                <a class="btn-link linkPointer link-black" target="_blank" href="~/Report/PackagingSalesInvoiceReport?companyId=@Model.CompanyFK&orderMasterId=@Model.OrderMasterId&reportName=PackagingSalesInvoiceReports">@Model.OrderNo</a>
+        <span>
+            Division:
+            <a class="btn-link linkPointer link-black" target="_blank" href="~/Report/PackagingSalesInvoiceReport?companyId=@Model.CompanyFK&orderMasterId=@Model.OrderMasterId&reportName=PackagingSalesInvoiceReports">@Model.OrderNo</a>
 
-            </span> }
-        else
-        {
-            <span>
-                Sales Order Form
-            </span>}
+        </span>
 
 
     </h1>
     <ol class="breadcrumb">
         <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i>Dashboard</a></li>
-        <li class="active">Sales Òrder</li>
+        <li class="active">Division</li>
         <li class="active">
 
-            <a class="btn-link btn btn-primary btn-xs" target="_blank" href="~/Procurement/PackagingSalesOrderSlave?companyId=@Model.CompanyFK">Add New Order</a>
+            <a class="btn-link btn btn-primary btn-xs" target="_blank" href="~/Procurement/ProcurementSalesOrderSlave?companyId=@Model.CompanyFK&costCenterId=@Model.CostCenterId">Add New Division</a>
 
         </li>
     </ol>
@@ -219,14 +211,22 @@
 
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3" style="padding:0px 0px 8px 0px;">
+                                    <div class="col-md-2" style="padding:0px">
                                         <div class="form-group">
-                                            <label>Job Date</label>
-                                            <input name="JobOrderDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" type="text" style="width:100%;border:1px black solid;" class="datepickerJobOrderDate form-control" id="txtJobOrderDate" placeholder="Job Date" autocomplete="off">
-                                             
+                                            <label for="message-text" class="col-form-label">Unit:</label>
+                                            @Html.DropDownListFor(model => model.UnitId, Model.UnitList as SelectList, "---Select Unit---", new { id = "ddlCommonUnitFk", @class = "form-control", @style = "width:100%;border:1px black solid;text-align:left;", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.UnitId, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-                                    
+
+                                    <div class="col-md-2" style="padding:0px 0px 8px 0px;">
+                                        <div class="form-group">
+                                            <label>Start Date</label>
+                                            <input name="JobOrderDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" type="text" style="width:100%;border:1px black solid;" class="datepickerJobOrderDate form-control" id="txtJobOrderDate" placeholder="Job Date" autocomplete="off">
+
+                                        </div>
+                                    </div>
+
                                     <div class="col-md-3" style="padding:0px 0px 8px 0px;">
                                         <div class="form-group">
                                             <label>Total Amount</label>
@@ -234,28 +234,24 @@
                                             @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-12" style="padding:0px 0px 8px 0px;">
+                                    <div class="col-md-5" style="padding:0px 0px 8px 0px;">
                                         <div class="form-group">
-                                            <label>Structure</label>
+                                            <label>Description</label>
                                             @Html.TextAreaFor(model => model.Description, new { id = "txtStructure", placeholder = "Structure", @class = "form-control", rows = 1, @style = "width:100%;border:1px black solid;", })
                                             @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="box-footer">
                                     <div class="row">
-                                        <div class="col-lg-4 col-md-4">
+                                        <div class="col-lg-7 col-md-7">
+                                            
+                                        </div>
+                                        <div class="col-lg-5 col-md-5">
                                             <button type="submit" id="poCreateBtn" class="btn btn-primary btn-block">
                                                 <i class='fa fa-plus'></i>
-                                                @if (Model.OrderMasterId > 0)
-                                                {
-                                                    <span>Add Item</span> }
-                                                else
-                                                {
-                                                    <span>Create New Order</span>}
+                                                <span>Add Bill of Quotation Item</span>
                                             </button>
                                         </div>
                                     </div>
