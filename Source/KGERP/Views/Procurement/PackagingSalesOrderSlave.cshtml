@@ -96,46 +96,36 @@
                                         <th style="width:2%">:</th>
                                         <td style="width:30%">@Model.CostCenterName</td>
                                     </tr>
-
-
                                     <tr>
                                         <th style="width:18%">
-                                            Order No
+                                            Division No
                                         </th>
                                         <th style="width:2%">:</th>
                                         <td style="width:30%">
                                             <label class="col-form-label">@Model.OrderNo</label>
                                         </td>
-                                        <th style="width:18%">Order Date</th>
-                                        <th style="width:2%">:</th>
-                                        <td style="width:30%">@Model.OrderDate.ToShortDateString()</td>
-                                    </tr>
-
-
-                                    <tr>
-                                        <th>Customer PO</th>
+                                        <th>Division</th>
                                         <th>:</th>
                                         <td>@Model.CustomerPONo</td>
+                                    </tr>
+                                    <tr>                                        
+                                        <th style="width:18%">Start Date</th>
+                                        <th style="width:2%">:</th>
+                                        <td style="width:30%">@Model.OrderDate.ToShortDateString()</td>
 
+                                        <th style="width:18%">Expected End Date</th>
+                                        <th style="width:2%">:</th>
+                                        <td style="width:30%">@Model.ExpectedDeliveryDate.Value.ToShortDateString()</td>
+                                    </tr>
+                                    <tr>
                                         <th>Customer</th>
                                         <th>:</th>
                                         <td>[@Model.CommonCustomerCode]-@Model.CommonCustomerName</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <th>
-                                            Address
-                                        </th>
-                                        <th>:</th>
-                                        <td>@Model.CustomerAddress</td>
                                         <th>Customer Phone</th>
                                         <th>:</th>
                                         <td>@Model.CustomerPhone</td>
                                     </tr>
-
                                     <tr>
-
                                         <th>Email</th>
                                         <th>:</th>
                                         <td>@Model.CustomerEmail</td>
@@ -144,7 +134,6 @@
                                         <td>@Model.FinalDestination</td>
                                     </tr>
                                     <tr>
-
                                         <th>Payment Method</th>
                                         <th>:</th>
                                         <td>@Model.POPaymentMethodName</td>
@@ -153,13 +142,12 @@
                                         <td>@Model.EnumStatusName</td>
                                     </tr>
                                     <tr>
-
                                         <th>Sales Officer Name</th>
                                         <th>:</th>
                                         <td>@Model.OfficerNAme</td>
-                                        <th></th>
-                                        <th></th>
-                                        <td></td>
+                                        <th>Division Value</th>
+                                        <th>:</th>
+                                        <td>@Model.DivisionValue</td>
                                     </tr>
                                     <tr>
                                         <th>Created By</th>
@@ -176,106 +164,17 @@
                             <div class="col-md-1"> </div>}
                         <div class="box-body">
 
-                            @if (Model.OrderMasterId == 0)
-                            {
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Customer PO NO</label>
-                                            @Html.TextBoxFor(model => model.CustomerPONo, new { id = "txtCustomerPONO", @class = "form-control", placeholder = "Customer PO NO", required = "Required" })
-                                            @Html.ValidationMessageFor(model => model.CustomerPONo, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label>Order Date</label>
-                                            <input name="OrderDate" type="text" value="@DateTime.Today.ToString("yyyy-MM-dd")" required="required" class="datepickerOrderDate form-control" id="txtOrderDate" placeholder="Date" autocomplete="off">
-                                            @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label>Payment Method</label>
-                                            @Html.DropDownListFor(model => model.CustomerPaymentMethodEnumFK, Model.POPaymentMethodList as SelectList, "Payment Method", new { id = "ddlSupplierPaymentMethodEnumFK", @class = "form-control ddlReset", style = "width:100%", required = "required" })
-                                            @Html.ValidationMessageFor(model => model.CustomerPaymentMethodEnumFK, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <div class="form-group" style="padding:0px">
-                                            <label for="message-text" class="col-form-label">Customer:</label>
-
-                                            @Html.EditorFor(model => model.CommonCustomerName, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Customer Name", @id = "txtCustomerName" } })
-
-                                            @Html.HiddenFor(model => model.CustomerId, new { id = "ddlCustomerId" })
-                                            @Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <div class="form-group" style="padding:0px">
-                                            <label for="message-text" class="col-form-label">Warehouse:</label>
-                                            @Html.DropDownListFor(model => model.StockInfoId, Model.StockInfoList as SelectList, "==Warehouse==", new { id = "ddStockInfoId", @class = "form-control searchingDropdown", style = "width:100%", required = "required" })
-                                            @Html.ValidationMessageFor(model => model.StockInfoId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label>Exp. Delivery Date</label>
-                                            <input name="ExpectedDeliveryDate" type="text" required="required" class="datepickerDeliveryDate form-control" id="txtDeliveryDate" placeholder="Expected Delivery Date" autocomplete="off">
-                                            @Html.ValidationMessageFor(model => model.ExpectedDeliveryDate, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group" style="padding:0px">
-                                            <label for="message-text" class="col-form-label">Final Destination:</label>
-                                            @Html.TextAreaFor(model => model.FinalDestination, new { @class = "form-control", @id = "txtFinalDestination", rows = 1 })
-                                            @Html.ValidationMessageFor(model => model.FinalDestination, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="txtDescription" class="col-form-label">Remarks:</label>
-                                            @Html.TextAreaFor(model => model.Remarks, new { id = "txtDescription", placeholder = "Remarks", @class = "form-control", rows = 1 })
-
-                                            @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <div class="form-group" style="padding:0px">
-                                            <label for="message-text" class="col-form-label">Sale Person:</label>
-
-                                            @Html.EditorFor(model => model.OfficerNAme, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Customer Name", @id = "txtSalePerson" } })
-
-                                            @Html.HiddenFor(model => model.SalePersonId, new { id = "ddlSalePerson" })
-                                            @Html.ValidationMessageFor(model => model.SalePersonId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                </div>
-                            }
+                            
                             @if (Model.Status != (int)EnumPOStatus.Submitted)
                             {
 
 
 
                                 <div class="row">
-                                    <div class="col-md-4" style="padding:0px">
+                                    <div class="col-md-5" style="padding:0px">
                                         <div class="form-group" style="padding:0px">
-                                            <label for="message-text" class="col-form-label">Product Item:</label>
-
-                                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @autocomplete = "on", @style = "width:100%;border:1px black solid", @class = "form-control", @name = "Product Name", @id = "txtProductName" } })
-
-                                            @Html.HiddenFor(model => model.FProductId, new { id = "ddlRProductFK" })
+                                            <label for="message-text" class="col-form-label">Bill of Quotation Item:</label>
+                                            @Html.TextAreaFor(model => model.ProductName,  new { @autocomplete = "on", @style = "width:100%;border:1px black solid", @class = "form-control", @name = "Product Name", @id = "txtProductName", Rows=1  })                                            
                                             @Html.ValidationMessageFor(model => model.FProductId, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -302,7 +201,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4" style="padding:0px">
+                                    <div class="col-md-3" style="padding:0px">
                                         <div class="form-group">
                                             <label style="text-align:right">VAT (%)</label>
                                             <div class="input-group">
@@ -324,32 +223,10 @@
                                         <div class="form-group">
                                             <label>Job Date</label>
                                             <input name="JobOrderDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" type="text" style="width:100%;border:1px black solid;" class="datepickerJobOrderDate form-control" id="txtJobOrderDate" placeholder="Job Date" autocomplete="off">
-                                            @*@Html.TextBoxFor(m => m.JobOrderDate, new
-                                                {
-                                                    @class = "datePicker form-control",
-                                                    placeholder = "Job Date",
-                                                    autocomplete = "off",
-                                                    style = "width:100%;border:1px black solid;",
-                                                    @id = "txtJobOrderDate"
-
-                                                })*@
+                                             
                                         </div>
                                     </div>
-                                    <div class="col-md-3" style="padding:0px 0px 8px 0px;">
-                                        <div class="form-group">
-                                            <label>Reel Direction</label>
-                                            @Html.TextBoxFor(model => model.ReelDirection, new { id = "txtReelDirection", @class = "form-control", @style = "width:100%;border:1px black solid;", placeholder = "Reel Direction" })
-                                            @Html.ValidationMessageFor(model => model.ReelDirection, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3" style="padding:0px 0px 8px 0px;">
-                                        <div class="form-group">
-                                            <label>Pouch Direction</label>
-                                            @Html.TextBoxFor(model => model.PouchDerection, new { id = "txtPouchDerection", @class = "form-control", @style = "width:100%;border:1px black solid;", placeholder = "Pouch Direction" })
-                                            @Html.ValidationMessageFor(model => model.PouchDerection, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
+                                    
                                     <div class="col-md-3" style="padding:0px 0px 8px 0px;">
                                         <div class="form-group">
                                             <label>Total Amount</label>
@@ -357,10 +234,6 @@
                                             @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-
-
-
-
                                 </div>
 
                                 <div class="row">
@@ -684,139 +557,9 @@
                 }
             });
 
-         $("#txtSalePerson").autocomplete({
-         source: function (request, response) {
+  
 
-
-             $.ajax({
-                   url: "@Url.Action("GetAutoCompleteSalesPerson", "Configuration")",
-
-                 data: { prefix: request.term, companyId: "@Model.CompanyFK" },
-                 dataType: "json",
-                 type: "get",
-                 cache: true,
-                 contentType: "application/json; charset=utf-8",
-                 success: function (data) {
-                    response($.map(data, function (item) {
-                        return item;
-                    }))
-                 },
-                 error: function (response) {
-
-                 },
-                 failure: function (response) {
-
-                 }
-             });
-         },
-
-         select: function (e, i) {
-             $("#ddlSalePerson").val(i.item.val);
-             $("#hidCustomerTypeFk").val(i.item.CustomerTypeFK);
-
-
-             },
-         minLength: 1,
-         cache: true
-
-     }).focus(function () {
-         $(this).autocomplete("search");
-     });
-
-
-
-
-
-              $("#txtProductName").autocomplete({
-                source: function (request, response) {
-
-
-                    $.ajax({
-                       url:"@Url.Action("AutoCompleteFinishedGoodsGet", "Configuration")",
-
-                        data: { companyId: "@Model.CompanyFK", prefix: request.term },
-                        dataType: "json",
-                        type: "get",
-                        cache: true,
-                        contentType: "application/json; charset=utf-8",
-                        success: function (data) {
-                            response($.map(data, function (item) {
-                                return item;
-                            }))
-                        },
-                        error: function (response) {
-
-                        },
-                        failure: function (response) {
-
-                        }
-                    });
-                },
-
-            select: function (e, i) {
-
-                    $("#ddlRProductFK").val(i.item.val);
-
-                },
-                minLength: 1,
-                cache: true
-
-            }).focus(function () {
-                $(this).autocomplete("search");
-            });
-
-
-
-            $("#txtCustomerName").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url:"@Url.Action("GetAutoCompleteSCustomer", "Procurement")",
-
-                        data: { prefix: request.term, companyId: "@Model.CompanyFK" },
-                        dataType: "json",
-                        type: "get",
-                        cache: true,
-                        contentType: "application/json; charset=utf-8",
-                        success: function (data) {
-                           response($.map(data, function (item) {
-                               return item;
-                           }))
-                        },
-                        error: function (response) {
-
-                        },
-                        failure: function (response) {
-
-                        }
-                    });
-                },
-
-                select: function (e, i) {
-                    $("#ddlCustomerId").val(i.item.val);
-                    $("#hidCustomerTypeFk").val(i.item.CustomerTypeFK);
-                    },
-                minLength: 1,
-                cache: true
-
-            }).focus(function () {
-                $(this).autocomplete("search");
-            });
-
-            $("#TermsAndConditionid").change(function () {
-                var termsAndConditionid = $('#TermsAndConditionid').val();
-                $.ajax({
-                    type: "GET",
-                    url: "@Url.Action("GetTermNCondition", "Procurement")",
-                    datatype: "Json",
-                    data: { id: termsAndConditionid },
-                    success: function (data) {
-                        $('#txtTermsAndCondition').empty();
-                        $('#txtTermsAndCondition').append(data.description);
-
-                    }
-                });
-            });
-        });
+         });
 
         function makeEditble(rowId) {
             $.ajax({
