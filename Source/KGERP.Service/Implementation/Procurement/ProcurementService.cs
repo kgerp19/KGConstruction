@@ -3732,6 +3732,7 @@ namespace KGERP.Services.Procurement
         {
             long dateTime = DateTime.Now.Ticks;
             long result = -1;
+            //ani
             OrderDetail orderDetail = new OrderDetail
             {
                 OrderMasterId = vmSalesOrderSlave.OrderMasterId,
