@@ -79,7 +79,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>SL</th>
-                                                    <th>Company</th>
+                                                    
                                                     <th>Project Type</th>
                                                     <th>Project / Cost Center Name</th>                                                   
                                                     <th>Action</th>
@@ -92,13 +92,13 @@
                                                 {
 
                                                 <tr>
-                                                    <td>@(++sl)</td>
-                                                    <td id="tdCompanyFK_@item.ID">
-                                                        @item.CompanyName
+                                                    <td>
+                                                        @(++sl)
                                                         <input type="hidden" id="hidCompanyFK_@item.CostCenterId" value="@item.CompanyFK" />
                                                         <input type="hidden" id="CostCenterTypeId_@item.CostCenterId" name="CostCenterTypeId_" value="@item.CostCenterTypeId" />
 
                                                     </td>
+                                              
                                                     <td id="tdProjectType_@item.CostCenterId">
                                                          @item.ProjectType
                                                     </td>
@@ -112,6 +112,7 @@
                                                             <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
                                                         </a>
 
+                                                        <a href="~/Procurement/ProcurementSalesOrderSlave?companyId=@item.CompanyFK&costCenterId=@item.CostCenterId" class="btn btn-success btn-sm">Manage Division</a>
 
                                                     </td>
                                                 </tr>

@@ -891,7 +891,7 @@ namespace KG.App.Controllers
             VMSalesOrderSlave vmSalesOrderSlave = new VMSalesOrderSlave();
             if (orderMasterId > 0)
             {
-                vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId));
+                //vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId));
                 vmSalesOrderSlave.TotalPriceInWord = VmCommonCurrency.NumberToWords(Convert.ToDecimal(vmSalesOrderSlave.DataListSlave.Select(x => x.TotalAmount).DefaultIfEmpty(0).Sum()), CurrencyType.BDT);
 
             }
@@ -923,15 +923,16 @@ namespace KG.App.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
-        public async Task<ActionResult> ProcurementSalesOrderSlave(int companyId = 0, int orderMasterId = 0)
+        public async Task<ActionResult> ProcurementSalesOrderSlave(int companyId = 0, long costCenterId = 0)
         {
             VMSalesOrderSlave vmSalesOrderSlave = new VMSalesOrderSlave();
 
            
                 vmSalesOrderSlave.CompanyFK = companyId;
+                vmSalesOrderSlave.CostCenterId = costCenterId;
                 vmSalesOrderSlave.Status = (int)EnumPOStatus.Draft;
             
-                vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId));
+                vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId, costCenterId));
 
             
             vmSalesOrderSlave.TermNCondition = new SelectList(_service.CommonTremsAndConditionDropDownList(companyId), "Value", "Text");
@@ -962,9 +963,9 @@ namespace KG.App.Controllers
             else if (vmSalesOrderSlave.ActionEum == ActionEnum.Edit)
             {
                 //Delete
-                await _service.OrderDetailEdit(vmSalesOrderSlave);
+                await _service.OrderMastersDevisionEdit(vmSalesOrderSlave);
             }
-            return RedirectToAction(nameof(ProcurementSalesOrderSlave), new { companyId = vmSalesOrderSlave.CompanyFK, orderMasterId = vmSalesOrderSlave.OrderMasterId });
+            return RedirectToAction(nameof(ProcurementSalesOrderSlave), new { companyId = vmSalesOrderSlave.CompanyFK, costCenterId = vmSalesOrderSlave.CostCenterId });
         }
 
         [HttpPost]
@@ -994,7 +995,7 @@ namespace KG.App.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> ProcurementSalesOrderList(VMSalesOrder vmSalesOrder)
+        public async Task<ActionResult> ProcurementSalesOrderList(VMSalesOrderSlave vmSalesOrder)
         {
             if (vmSalesOrder.ActionEum == ActionEnum.Edit)
             {
@@ -1022,7 +1023,7 @@ namespace KG.App.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> KFMALSalesOrderList(VMSalesOrder vmSalesOrder)
+        public async Task<ActionResult> KFMALSalesOrderList(VMSalesOrderSlave vmSalesOrder)
         {
             if (vmSalesOrder.ActionEum == ActionEnum.Edit)
             {
@@ -1375,7 +1376,7 @@ namespace KG.App.Controllers
             return View(vmSalesOrder);
         }
         [HttpPost]
-        public async Task<ActionResult> PackagingSalesOrderList(VMSalesOrder vmSalesOrder)
+        public async Task<ActionResult> PackagingSalesOrderList(VMSalesOrderSlave vmSalesOrder)
         {
             if (vmSalesOrder.ActionEum == ActionEnum.Edit)
             {
@@ -2488,7 +2489,7 @@ namespace KG.App.Controllers
                 }
                 else
                 {
-                    vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId));
+                    vmSalesOrderSlave = await Task.Run(() => _service.ProcurementSalesOrderDetailsGet(companyId,0));
                 }
 
 
