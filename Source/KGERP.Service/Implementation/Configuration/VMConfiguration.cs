@@ -447,7 +447,12 @@ namespace KGERP.Service.Configuration
     {
         public int FProductFK { get; set; }
         public string JobOrderNo { get; set; }
-        public string ORDStyle { get; set; }
+        public string CostCenterName { get; set; }
+        public string CostCenterType { get; set; }
+        public long CostCenterId { get; set; }
+        public string CustomerPONo { get; set; }
+        public string OfficerNAme { get; set; }
+        public decimal? DivisionValue { get; set; }
 
         public int CompanyId { get; set; }
         public int? StatusId { get; set; }
@@ -475,15 +480,16 @@ namespace KGERP.Service.Configuration
         public string CustomerEmail { get; set; }
         public string CustomerAddress { get; set; }
         public string ContactPerson { get; set; }
-        public long OrderMasterId { get; set; }
+        public string CommonCustomerCode { get; set; }
+      
         public string OrderNo { get; set; }
         public int Status { get; set; }
         public DateTime OrderDate { get; set; }
-        public string CustomerPaymentMethodEnumFK { get; set; }
-        public string ExpectedDeliveryDate { get; set; }
+        public int CustomerPaymentMethodEnumFK { get; set; }
+        public DateTime? ExpectedDeliveryDate { get; set; }
         public string CommonCustomerName { get; set; }
         public string CustomerTypeFk { get; set; }
-        public string CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public string CourierCharge { get; set; }
         public string FinalDestination { get; set; }
         public string CourierNo { get; set; }
@@ -612,9 +618,11 @@ namespace KGERP.Service.Configuration
         public Nullable<int> PackId { get; set; }
         public Nullable<decimal> DieSize { get; set; }
         public Nullable<double> PackSize { get; set; }
+        public DateTime? JobOrderDate { get; set; }
         public string PackName { get; set; }
         public string UnitName { get; set; }
         public decimal MRPPrice { get; set; }
+        public long OrderMasterId { get; set; }
         public decimal TPPrice { get; set; }
         public string HcCode { get; set; }
         public string Model { get; set; }
@@ -630,10 +638,15 @@ namespace KGERP.Service.Configuration
         [Required]
         [Range(1, 99999999999999, ErrorMessage = "Unit Price is Required!! not allow zero or nagetive .")]
         public decimal UnitPrice { get; set; }
+        public decimal VATPercent { get; set; }
+        public double VATAmount { get; set; }
+        public bool IsVATInclude { get; set; }
+        public double BOQIUnitPrice { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal PreviousStock { get; set; }
         public decimal CurrentStock { get; set; }
 
+        public string BOQItemName { get; set; }
         public string Image { get; set; }
 
         public string CompanyName { get; set; }

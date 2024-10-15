@@ -1945,8 +1945,7 @@ namespace KGERP.Services.Procurement
             model.IsActive = true;
             model.CreatedDate = DateTime.Now;
             model.CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString();
-            model.ORDStyle = vmFinishProductBOM.ORDStyle;
-
+            
 
             if (await _db.SaveChangesAsync() > 0)
             {
@@ -4583,37 +4582,60 @@ namespace KGERP.Services.Procurement
         public async Task<VMFinishProductBOM> PackagingSalesOrderDetailsGetBOM(int companyId, int orderDetailId)
         {
             VMFinishProductBOM vmFinishProductBOM = new VMFinishProductBOM();
-            vmFinishProductBOM = await Task.Run(() => (from t1 in _db.OrderDetails.Where(x => x.OrderDetailId == orderDetailId && x.CompanyId == companyId)
-                                                       join t4 in _db.OrderMasters on t1.OrderMasterId equals t4.OrderMasterId
-                                                       join t5 in _db.Products on t1.ProductId equals t5.ProductId
-                                                       join t6 in _db.ProductSubCategories on t5.ProductSubCategoryId equals t6.ProductSubCategoryId
-                                                       join t7 in _db.Units on t5.UnitId equals t7.UnitId
-                                                       join t2 in _db.Vendors on t4.CustomerId equals t2.VendorId
-                                                       join t3 in _db.Companies on t1.CompanyId equals t3.CompanyId
+            vmFinishProductBOM = await Task.Run(() => (from t0 in _db.OrderDetails.Where(x => x.OrderDetailId == orderDetailId && x.CompanyId == companyId)
+                                                       join t1 in _db.OrderMasters.Where(x => x.IsActive) on t0.OrderMasterId equals t1.OrderMasterId
+                                                       join t2 in _db.Vendors on t1.CustomerId equals t2.VendorId
+                                                       join t4 in _db.HeadGLs on t2.HeadGLId equals t4.Id
+                                                       join t6 in _db.Units on t0.UnitId equals t6.UnitId
+                                                       join t7 in _db.Employees on t1.SalePersonId equals t7.Id into y
+                                                       from t7 in y.DefaultIfEmpty()
+                                                       join t3 in _db.Accounting_CostCenter on t1.CostCenterId equals t3.CostCenterId
+                                                       join t5 in _db.Accounting_CostCenterType on t3.CostCenterTypeId equals t5.CostCenterTypeId
+
 
                                                        select new VMFinishProductBOM
                                                        {
-                                                           OrderDate = t4.OrderDate,
+                                                           StatusId = t0.Status,
+                                                           OrderMasterId = t0.OrderMasterId.Value,
+                                                           OrderDetailId = t0.OrderDetailId,
+                                                           JobOrderNo = t0.JobOrderNo,
+                                                           JobOrderDate = t0.OrderDate,
+                                                           BOQItemName = t0.BOQItemName,
+                                                           Qty = t0.Qty,
+                                                           BOQIUnitPrice = (t0.IsVATInclude == true ? t0.UnitPrice / (((double)t0.VATPercent + 100) / 100) : t0.UnitPrice),
+
+                                                           VATPercent = t0.VATPercent,
+                                                           VATAmount = (t0.Qty *
+                                                                        (t0.IsVATInclude == true ? t0.UnitPrice / (((double)t0.VATPercent + 100) / 100) : t0.UnitPrice) // Unit Price
+                                                                                    ) / 100 * (double)t0.VATPercent,
+                                                           IsVATInclude = t0.IsVATInclude,
+                                                           UnitName = t6.Name,
+                                                           Description = t0.Remarks,                                                            
+                                                           CostCenterName = t3.Name,
+                                                           CostCenterType = t5.Name,
+                                                           CostCenterId = t1.CostCenterId,
+                                                           OrderNo = t1.OrderNo,
+                                                           CustomerPONo = t1.CustomerPONo,
+                                                           CustomerId = t2.VendorId,
+                                                           CommonCustomerName = t2.Name,
+                                                           OrderDate = t1.OrderDate,
+                                                           ExpectedDeliveryDate = t1.ExpectedDeliveryDate,
+                                                           OfficerNAme = t7.Name,
+                                                           Status = t1.Status,
+                                                           CustomerPaymentMethodEnumFK = t1.PaymentMethod,
+                                                           DivisionValue = t1.TotalAmount ?? 0,
+                                                           FinalDestination = t1.FinalDestination,
+                                                           Remarks = t1.Remarks,
+                                                           CommonCustomerCode = t4.AccCode,
                                                            CustomerPhone = t2.Phone,
                                                            CustomerAddress = t2.Address,
                                                            CustomerEmail = t2.Email,
                                                            ContactPerson = t2.ContactName,
                                                            CompanyFK = t1.CompanyId,
-                                                           OrderMasterId = t1.OrderDetailId,
+
+                                                           CreatedDate = t1.CreateDate,
                                                            CreatedBy = t1.CreatedBy,
-                                                           CommonCustomerName = t2.Name,
-                                                           CompanyName = t3.Name,
-                                                           CompanyAddress = t3.Address,
-                                                           CompanyEmail = t3.Email,
-                                                           CompanyPhone = t3.Phone,
-                                                           Qty = t1.Qty,
-                                                           FinishUnitPrice = t1.UnitPrice,
-                                                           FinishProductName = t6.Name + " " + t5.ProductName,
-                                                           OrderNo = t4.OrderNo,
-                                                           UnitName = t7.Name,
-                                                           JobOrderNo = t1.JobOrderNo,
-                                                           StatusId = t1.Status,
-                                                           OrderDetailId = t1.OrderDetailId
+
                                                        }).FirstOrDefault());
 
             vmFinishProductBOM.DataListProductBOM = await Task.Run(() => (from t1 in _db.FinishProductBOMs.Where(x => x.IsActive && x.OrderDetailId == orderDetailId)
@@ -4651,8 +4673,7 @@ namespace KGERP.Services.Procurement
                 IsActive = true,
                 CreatedDate = DateTime.Now,
                 CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
-                ORDStyle = vmFinishProductBOM.ORDStyle
-
+                
 
             };
             _db.FinishProductBOMs.Add(FinishProductBOM);
