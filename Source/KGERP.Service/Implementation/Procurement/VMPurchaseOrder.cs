@@ -298,6 +298,7 @@ namespace KGERP.Services.Procurement
         public int CustomerPaymentMethodEnumFK { get; set; }
         public string Description { get; set; }
         public double TotalAmount { get; set; }
+        public decimal DivisionValue { get; set; }
         public double PayableAmount { get; set; }
         public decimal ReturnAmount { get; set; }
         public decimal? CreditLimit { get; set; }
@@ -318,6 +319,7 @@ namespace KGERP.Services.Procurement
 
         public int SalePersonId { get; set; }
         public string CompanyAddress { get; set; }
+       
         public string ReelDirection { get; set; }
         public string PouchDerection { get; set; }
         public DateTime? JobOrderDate { get; set; }
@@ -387,8 +389,10 @@ namespace KGERP.Services.Procurement
 
         public string ProductName { get; set; }
         public string ComLogo { get; set; }
-        public string CostCenterName { get; set; }
+        
         public string CostCenterType { get; set; }
+        public string CostCenterName { get; set; }
+
         public int DemandId { get; set; } = 0;
         public string DemandNo { get; set; } = "";
 

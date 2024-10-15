@@ -4315,27 +4315,37 @@ namespace KGERP.Services.Procurement
 
             OrderMaster orderMaster = new OrderMaster
             {
-                CustomerPONo = vmSalesOrderSlave.CustomerPONo,
-                OrderNo = poCid,
-                OrderDate = vmSalesOrderSlave.OrderDate,
-                CustomerId = vmSalesOrderSlave.CustomerId,
+
                 CostCenterId = vmSalesOrderSlave.CostCenterId,
+                OrderNo = poCid,
+                CustomerPONo = vmSalesOrderSlave.CustomerPONo,
+                SalePersonId = vmSalesOrderSlave.SalePersonId,
+                CustomerId = vmSalesOrderSlave.CustomerId,
+                OrderDate = vmSalesOrderSlave.OrderDate,
                 ExpectedDeliveryDate = vmSalesOrderSlave.ExpectedDeliveryDate,
-                PaymentMethod = vmSalesOrderSlave.CustomerPaymentMethodEnumFK,
-                ProductType = "F",
-                Status = (int)EnumPOStatus.Draft,
-                CourierNo = vmSalesOrderSlave.CourierNo,
-                FinalDestination = vmSalesOrderSlave.FinalDestination,
-                CourierCharge = vmSalesOrderSlave.CourierCharge,
-                CurrentPayable = Convert.ToDecimal(vmSalesOrderSlave.PayableAmount),
                 StockInfoId = vmSalesOrderSlave.StockInfoId,
+                PaymentMethod = vmSalesOrderSlave.CustomerPaymentMethodEnumFK,
+                TotalAmount = vmSalesOrderSlave.DivisionValue,
+                FinalDestination = vmSalesOrderSlave.FinalDestination,
+                Remarks = vmSalesOrderSlave.Remarks,
+
+                Status = (int)EnumPOStatus.Draft,
+
+
+                 
+
+                ProductType = "F",
+               
+                CourierNo = vmSalesOrderSlave.CourierNo,
+                CourierCharge = vmSalesOrderSlave.CourierCharge,
+                CurrentPayable =0,
+              
                 CompanyId = vmSalesOrderSlave.CompanyFK,
                 CreatedBy = System.Web.HttpContext.Current.User.Identity.Name,// System.Web.HttpContext.Current.User.Identity.Name,
                 CreateDate = DateTime.Now,
                 IsActive = true,
                 OrderStatus = "N",
-                SalePersonId = vmSalesOrderSlave.SalePersonId,
-                Remarks = vmSalesOrderSlave.Remarks,
+               
                 IsService = vmSalesOrderSlave.IsService,
 
 
@@ -4495,48 +4505,40 @@ namespace KGERP.Services.Procurement
             VMSalesOrderSlave vmSalesOrderSlave = new VMSalesOrderSlave();
             vmSalesOrderSlave = await Task.Run(() => (from t1 in _db.OrderMasters.Where(x => x.IsActive && x.OrderMasterId == orderMasterId && x.CompanyId == companyId)
                                                       join t2 in _db.Vendors on t1.CustomerId equals t2.VendorId
-                                                      join t4 in _db.HeadGLs on t2.HeadGLId equals t4.Id
-                                                      join t6 in _db.OfficerAssigns on t1.SalePersonId equals t6.EmpId into x
-                                                      from t6 in x.DefaultIfEmpty()
-                                                      join t7 in _db.Employees on t6.EmpId equals t7.Id into y
+                                                      join t4 in _db.HeadGLs on t2.HeadGLId equals t4.Id                                                       
+                                                      join t7 in _db.Employees on t1.SalePersonId equals t7.Id into y
                                                       from t7 in y.DefaultIfEmpty()
+                                                      join t3 in _db.Accounting_CostCenter on t1.CostCenterId equals t3.CostCenterId
+                                                      join t5 in _db.Accounting_CostCenterType on t3.CostCenterTypeId equals t5.CostCenterTypeId
 
-
-
-                                                      join t3 in _db.Companies on t1.CompanyId equals t3.CompanyId
 
                                                       select new VMSalesOrderSlave
                                                       {
+                                                          OrderMasterId = t1.OrderMasterId,
+                                                          CostCenterName = t3.Name,
+                                                          CostCenterType = t5.Name,
+                                                          CostCenterId = t1.CostCenterId,
+                                                          OrderNo = t1.OrderNo,
+                                                          CustomerPONo = t1.CustomerPONo,                                                           
+                                                          CustomerId = t2.VendorId,
+                                                          CommonCustomerName = t2.Name,
+                                                          OrderDate = t1.OrderDate,
+                                                          ExpectedDeliveryDate = t1.ExpectedDeliveryDate,                                                          
+                                                          OfficerNAme = t7.Name,
+                                                          Status = t1.Status,
+                                                          CustomerPaymentMethodEnumFK = t1.PaymentMethod,
+                                                          DivisionValue = t1.TotalAmount??0,
+                                                          FinalDestination = vmSalesOrderSlave.FinalDestination,
+                                                          Remarks = vmSalesOrderSlave.Remarks,                                                           
                                                           CommonCustomerCode = t4.AccCode,
-
                                                           CustomerPhone = t2.Phone,
                                                           CustomerAddress = t2.Address,
                                                           CustomerEmail = t2.Email,
                                                           ContactPerson = t2.ContactName,
                                                           CompanyFK = t1.CompanyId,
-                                                          OrderMasterId = t1.OrderMasterId,
-                                                          CreatedDate = t1.CreateDate,
-                                                          OrderNo = t1.OrderNo,
-                                                          Status = t1.Status,
-                                                          OrderDate = t1.OrderDate,
-                                                          CreatedBy = t1.CreatedBy,
-                                                          CustomerPaymentMethodEnumFK = t1.PaymentMethod,
-                                                          ExpectedDeliveryDate = t1.ExpectedDeliveryDate,
-                                                          CommonCustomerName = t2.Name,
-                                                          CompanyName = t3.Name,
-                                                          CompanyAddress = t3.Address,
-                                                          CompanyEmail = t3.Email,
-                                                          CompanyPhone = t3.Phone,
-                                                          CustomerPONo = t1.CustomerPONo,
-                                                          CustomerTypeFk = t2.CustomerTypeFK,
-                                                          CustomerId = t2.VendorId,
-                                                          CourierCharge = t1.CourierCharge,
-                                                          FinalDestination = t1.FinalDestination,
-                                                          CourierNo = t1.CourierNo,
-                                                          OfficerNAme = t7 != null ? t7.Name : ""
-
-
-
+                                                          
+                                                          CreatedDate = t1.CreateDate,   
+                                                          CreatedBy = t1.CreatedBy 
 
                                                       }).FirstOrDefault());
 
