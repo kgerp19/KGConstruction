@@ -16,12 +16,13 @@ namespace KGERP.Data.Models
     {
         public long OrderDetailId { get; set; }
         public string JobOrderNo { get; set; }
+        public string BOQItemName { get; set; }
         public Nullable<long> OrderMasterId { get; set; }
         public int DemandItemId { get; set; }
         public Nullable<int> CustomerId { get; set; }
         public Nullable<System.DateTime> OrderDate { get; set; }
         public Nullable<int> ProductSerial { get; set; }
-        public int ProductId { get; set; }
+        public Nullable<int> ProductId { get; set; }
         public double Qty { get; set; }
         public double UnitPrice { get; set; }
         public double Amount { get; set; }
@@ -35,7 +36,6 @@ namespace KGERP.Data.Models
         public Nullable<int> Status { get; set; }
         public decimal AvgParchaseRate { get; set; }
         public Nullable<int> CompanyId { get; set; }
-        public string StyleNo { get; set; }
         public Nullable<double> Comsumption { get; set; }
         public Nullable<double> PackQuantity { get; set; }
         public decimal DiscountRate { get; set; }
@@ -52,10 +52,10 @@ namespace KGERP.Data.Models
         public decimal VATPercent { get; set; }
         public decimal TDSPercent { get; set; }
         public bool IsVATInclude { get; set; }
-        public string ReelDirection { get; set; }
         public string PouchDerection { get; set; }
+        public Nullable<int> UnitId { get; set; }
     
-        public virtual Product Product { get; set; }
         public virtual OrderMaster OrderMaster { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

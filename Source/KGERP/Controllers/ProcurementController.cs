@@ -1308,7 +1308,9 @@ namespace KG.App.Controllers
             {
                 vmSalesOrderSlave = await Task.Run(() => _service.PackagingSalesOrderDetailsGet(companyId, orderMasterId));
             }
-             return View(vmSalesOrderSlave);
+            vmSalesOrderSlave.UnitList = new SelectList(_service.UnitDropDownList(companyId), "Value", "Text");
+
+            return View(vmSalesOrderSlave);
         }
         [HttpPost]
         public async Task<ActionResult> PackagingSalesOrderSlave(VMSalesOrderSlave vmSalesOrderSlave)
@@ -1544,7 +1546,7 @@ namespace KG.App.Controllers
             styleNo = (from orderdtls in db.OrderDetails
                        select new
                        {
-                           orderdtls.StyleNo
+                           orderdtls.JobOrderNo
 
                        });
 

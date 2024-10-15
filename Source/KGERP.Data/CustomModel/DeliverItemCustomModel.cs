@@ -6,7 +6,7 @@ namespace KGERP.Data.CustomModel
 {
     public class DeliverItemCustomModel
     {
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
         public int StockInfoId { get; set; }
 
 

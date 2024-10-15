@@ -7,7 +7,7 @@ namespace KGERP.Service.ServiceModel
         public bool IsActive { get; set; }
         public long OrderDeliverDetailId { get; set; }
         public Nullable<long> OrderDeliverId { get; set; }
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
         public double UnitPrice { get; set; }
         public double DeliveredQty { get; set; }
         public decimal Amount { get; set; }
