@@ -436,7 +436,6 @@
         <EntityTypeShape EntityType="ERPModel.OfficerAssign" Width="1.5" PointX="55.125" PointY="73.75" />
         <AssociationConnector Association="ERPModel.FK_OfficerAssign_Employee" />
         <EntityTypeShape EntityType="ERPModel.MoneyReceiptDetail" Width="1.5" PointX="13.375" PointY="33.75" />
-        <EntityTypeShape EntityType="ERPModel.OrderDeliverDetail" Width="1.5" PointX="19.5" PointY="115.875" />
         <EntityTypeShape EntityType="ERPModel.QualityExceptionComplaintMap" Width="1.5" PointX="54.375" PointY="25.75" />
         <EntityTypeShape EntityType="ERPModel.QualityExceptionComplaint" Width="1.5" PointX="54.375" PointY="21.75" />
         <EntityTypeShape EntityType="ERPModel.QualityExceptionComplaintDetail" Width="1.5" PointX="54.375" PointY="10.75" />
@@ -474,8 +473,6 @@
         <AssociationConnector Association="ERPModel.FK_ProductBookingInfo_CustomerGroupInfo" />
         <EntityTypeShape EntityType="ERPModel.PurchaseReturnDetail" Width="1.5" PointX="20.25" PointY="70.625" />
         <AssociationConnector Association="ERPModel.FK_PurchaseReturnDetail_PurchaseReturn" />
-        <EntityTypeShape EntityType="ERPModel.OrderDetail" Width="1.5" PointX="8.25" PointY="143.5" />
-        <AssociationConnector Association="ERPModel.FK_OrderDetail_Product" />
         <EntityTypeShape EntityType="ERPModel.PurchaseOrderDetail" Width="1.5" PointX="26.25" PointY="99" />
         <AssociationConnector Association="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" />
         <EntityTypeShape EntityType="ERPModel.ProductCategory" Width="1.5" PointX="0.75" PointY="194.5" />
@@ -485,7 +482,6 @@
         <AssociationConnector Association="ERPModel.FK__SeedProce__Mater__2CEE1B9F" />
         <EntityTypeShape EntityType="ERPModel.Prod_Reference" Width="1.5" PointX="54.375" PointY="37.75" />
         <EntityTypeShape EntityType="ERPModel.OrderDeliver" Width="1.5" PointX="8.25" PointY="97.875" />
-        <AssociationConnector Association="ERPModel.FK_OrderDeliverDetail_OrderDeliver" />
         <AssociationConnector Association="ERPModel.FK_SaleReturn_OrderDeliver" />
         <EntityTypeShape EntityType="ERPModel.FinishProductBOM" Width="1.5" PointX="42.375" PointY="24.75" />
         <EntityTypeShape EntityType="ERPModel.SeedProcessing" Width="1.5" PointX="15.375" PointY="6" />
@@ -516,9 +512,13 @@
         <AssociationConnector Association="ERPModel.FK_VoucherDetail_Voucher" />
         <AssociationConnector Association="ERPModel.FK_EMI_OrderMaster" />
         <AssociationConnector Association="ERPModel.FK_OrderDeliver_OrderMaster" />
-        <AssociationConnector Association="ERPModel.FK_OrderDetail_OrderMaster" />
         <AssociationConnector Association="ERPModel.FK_OrderMaster_Supplier" />
         <EntityTypeShape EntityType="ERPModel.Accounting_CostCenter" Width="1.5" PointX="28.375" PointY="35.75" />
+        <EntityTypeShape EntityType="ERPModel.OrderDetail" Width="1.5" PointX="8.25" PointY="143.625" />
+        <AssociationConnector Association="ERPModel.FK_OrderDetail_OrderMaster" />
+        <AssociationConnector Association="ERPModel.FK_OrderDetail_Product" />
+        <EntityTypeShape EntityType="ERPModel.OrderDeliverDetail" Width="1.5" PointX="10.5" PointY="96.875" />
+        <AssociationConnector Association="ERPModel.FK_OrderDeliverDetail_OrderDeliver" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

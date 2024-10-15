@@ -1533,7 +1533,7 @@ namespace KG.App.Controllers
             styleNo = (from orderdtls in db.OrderDetails
                        select new
                        {
-                           orderdtls.StyleNo
+                           orderdtls.JobOrderNo
 
                        });
 

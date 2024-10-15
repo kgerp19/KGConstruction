@@ -166,22 +166,16 @@
                                     <div class="col-md-5" style="padding:0px">
                                         <div class="form-group" style="padding:0px">
                                             <label for="message-text" class="col-form-label">Bill of Quotation Item:</label>
-                                            @Html.TextAreaFor(model => model.ProductName,  new { @autocomplete = "on", @style = "width:100%;border:1px black solid", @class = "form-control", @name = "Product Name", @id = "txtProductName", Rows=1  })                                            
-                                            @Html.ValidationMessageFor(model => model.FProductId, "", new { @class = "text-danger" })
+                                            @Html.TextAreaFor(model => model.BOQItemName,  new { @autocomplete = "on", @style = "width:100%;border:1px black solid", @class = "form-control", @name = "BOQ Item", @id = "txtProductName", Rows=1  })                                            
+                                            @Html.ValidationMessageFor(model => model.BOQItemName, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                     <div class="col-md-2" style="padding:0px">
                                         <div class="form-group">
                                             <label>Quantity</label>
-                                            <div class="input-group">
-                                                @Html.TextBoxFor(model => model.Qty, new { id = "txtPurchaseQuantity", @onkeyup = "TotalAmountSumation()", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Purchase Quantity", required = "Required" })
-                                                @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
+                                            @Html.TextBoxFor(model => model.Qty, new { id = "txtPurchaseQuantity", @onkeyup = "TotalAmountSumation()", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Purchase Quantity", required = "Required" })
+                                            @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
 
-                                                <div class="input-group-addon">
-                                                    <span class="txtUnitName"></span>
-                                                </div>
-
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2" style="padding:0px">
@@ -268,15 +262,11 @@
                                                     <th style="padding:5px;text-align:center;">SL</th>
                                                     <th style="padding:5px;text-align:center;">Job No</th>
                                                     <th style="padding:5px;text-align:center;">Job Date</th>
-                                                    <th style="padding:5px;text-align:left;">Product</th>
-                                                    <th style="padding:5px;text-align:left;">Structure</th>
-                                                    <th style="padding:5px;text-align:left;">Reed Direction</th>
-                                                    <th style="padding:5px;text-align:left;">Pouch Direction</th>
+                                                    <th style="padding:5px;text-align:left;">BOQ Item</th>
+                                                    <th style="padding:5px;text-align:left;">Unit</th>                                                    
                                                     <th style="padding:5px;text-align:center;">Quantity</th>
                                                     <th style="padding:5px;text-align:center;">Unit Price</th>
-
-                                                    <th style="padding:5px;text-align:center;">VAT</th>
-                                                    @*<th style="padding:5px;text-align:center;">TDS</th>*@
+                                                    <th style="padding:5px;text-align:center;">VAT</th>                                                     
                                                     <th style="padding:5px;text-align:right;">Total Amount</th>
                                                     @if (Model.Status == (int)EnumPOStatus.Draft)
                                                     {
@@ -287,38 +277,23 @@
                                             <tbody>
                                                 @foreach (var item in Model.DataListSlave)
                                                 {
-                                                    //decimal unitDiscount = Convert.ToDecimal(item.Qty) * item.ProductDiscountUnit;
-
-                                                    //decimal cashdiscount = item.ProductDiscountUnit > 0 ? ((Convert.ToDecimal((item.Qty * item.UnitPrice)) - (Convert.ToDecimal(item.Qty) * item.ProductDiscountUnit)) / 100 * item.CashDiscountPercent) : ((Convert.ToDecimal(item.Qty) * Convert.ToDecimal(item.UnitPrice)) / 100 * item.CashDiscountPercent);
-
-                                                    //TotalUnitDiscount += unitDiscount;
-                                                    //TotalCashDiscount += cashdiscount;
-                                                    //TotalSpetialDiscount += item.SpecialDiscount;
-
+                                                    
 
                                                     TotalGrossAmount += (item.Qty * item.UnitPrice);
-                                                    //TotalTDS += (item.Qty * item.UnitPrice) / 100 * Convert.ToDouble(item.TDSPercent);
-                                                    TotalVAT += item.VATAmount;
-                                                    // tds = ((item.Qty * item.UnitPrice) / 100) * Convert.ToDouble(item.TDSPercent);
-
-                                                    //  TotalAmount += Convert.ToDecimal((item.Qty * item.UnitPrice) + (((item.Qty * item.UnitPrice) / 100) * Convert.ToDouble(item.VATPercent)) - (((item.Qty * item.UnitPrice) / 100) * Convert.ToDouble(item.TDSPercent))) - (unitDiscount + cashdiscount + item.SpecialDiscount);
-
+                                                       TotalVAT += item.VATAmount;
+                                                 
                                                     <tr>
                                                         <td style="padding:5px">@(++sl)</td>
                                                         <td style="padding:5px;text-align:center;">@item.JobOrderNo</td>
                                                         <td style="padding:5px;text-align:center;">@item.JobOrderDate</td>
-                                                        <td style="padding:5px;text-align:left;"><a target="_blank" href="~/Procurement/PackagingSalesOrderBOM?companyId=@Model.CompanyFK&orderDetailId=@item.OrderDetailId">@item.ProductName <span class="label label-warning">@(item.PromotionalOfferId != null? "Promotion Item":"")</span> </a></td>
-                                                        <td style="padding:5px;text-align:center;">@item.Description</td>
-
-                                                        <td style="padding:5px;text-align:center;">@item.ReelDirection</td>
-                                                        <td style="padding:5px;text-align:center;">@item.PouchDerection</td>
-
+                                                        <td style="padding:5px;text-align:left;"><a target="_blank" title="Manage Bill of Quotation" href="~/Procurement/PackagingSalesOrderBOM?companyId=@Model.CompanyFK&orderDetailId=@item.OrderDetailId">@item.BOQItemName  </a></td>
+                                                        <td style="padding:5px;text-align:center;">@item.UnitName</td>
+                                                         
                                                         <td style="padding:5px;text-align:center;">@String.Format("{0:0.00}", item.Qty) @item.UnitName</td>
                                                         <td style="padding:5px;text-align:center;">@String.Format("{0:0.00}", item.UnitPrice)</td>
 
-                                                        <td style="padding:5px;text-align:center;">@String.Format("{0:0.00}", item.VATAmount) (@String.Format("{0:0.00}", item.VATPercent))</td>
-                                                        @*<td style="padding:5px;text-align:center;">@String.Format("{0:0.00}", tds) (@String.Format("{0:0.00}", item.TDSPercent))</td>*@
-
+                                                        <td style="padding:5px;text-align:center;">@String.Format("{0:0.00}", item.VATAmount) (@String.Format("{0:0.00}", item.VATPercent)%)</td>
+                                                        
 
                                                         <td style="padding:5px;text-align:right;">@String.Format("{0:0.00}", (item.Qty * item.UnitPrice))  </td>
                                                         @{ if (Model.Status == (int)EnumPOStatus.Draft)

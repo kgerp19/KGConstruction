@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width" />
     <link href="~/Images/Logo/kg_logo-150x150.ico" rel="shortcut icon" type="image/x-icon" />
     <title>
-        KG-ISS # @ViewData["Title"]
+        KG-Construction # @ViewData["Title"]
 
     </title>
 
@@ -118,7 +118,7 @@
     @RenderSection("Head", false)
     @RenderSection("Styles", false)
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-purple sidebar-mini">
 
     <div class="wrapper">
         <header class="main-header">
@@ -129,16 +129,8 @@
             <!--<span class="logo-lg"><b>Admin</b>LTE</span>
             </a>-->
             <a href="#" class="logo">
-                <div class="row">
-                    <div class="col-xs-4">
-                        <img src=@Common.GetCompanyLogo() alt="TCL" title="TCL" class="img-responsive" style="width:100%;">
-                    </div>
-                    @*<div class="col-xs-8 text-left">
-                        <b class="brand-text" style="font-size: 20px; color:white; font-weight: normal;">
-                            ISS
-                        </b>
-                    </div>*@
-                </div>
+                <img src="@CompanyInfo.ProjectLogoUrl" alt="TCL" title="TCL" class="img-responsive" style="width:100%;height:95%">
+            
             </a>
             <nav class="navbar navbar-static-top">
 

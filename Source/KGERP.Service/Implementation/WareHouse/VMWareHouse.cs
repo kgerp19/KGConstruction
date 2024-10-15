@@ -601,7 +601,7 @@ namespace KGERP.Services.WareHouse
     {
         public long OrderDetailId { get; set; }
         public long OrderMasterId { get; set; }
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
         public double UnitPrice { get; set; }
         public double UnitPriceDisplay { get; set; }
         public double CogsUnitPrice { get; set; }

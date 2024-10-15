@@ -322,7 +322,6 @@ namespace KGERP.Data.Models
         public virtual DbSet<KGCompanySaleTerget> KGCompanySaleTergets { get; set; }
         public virtual DbSet<OfficerAssign> OfficerAssigns { get; set; }
         public virtual DbSet<MoneyReceiptDetail> MoneyReceiptDetails { get; set; }
-        public virtual DbSet<OrderDeliverDetail> OrderDeliverDetails { get; set; }
         public virtual DbSet<QualityExceptionComplaintMap> QualityExceptionComplaintMaps { get; set; }
         public virtual DbSet<QualityExceptionComplaint> QualityExceptionComplaints { get; set; }
         public virtual DbSet<QualityExceptionComplaintDetail> QualityExceptionComplaintDetails { get; set; }
@@ -346,7 +345,6 @@ namespace KGERP.Data.Models
         public virtual DbSet<IssueDetailInfo> IssueDetailInfoes { get; set; }
         public virtual DbSet<ProductBookingInfo> ProductBookingInfoes { get; set; }
         public virtual DbSet<PurchaseReturnDetail> PurchaseReturnDetails { get; set; }
-        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
         public virtual DbSet<SeedProcessingDetail> SeedProcessingDetails { get; set; }
@@ -362,6 +360,8 @@ namespace KGERP.Data.Models
         public virtual DbSet<Voucher> Vouchers { get; set; }
         public virtual DbSet<OrderMaster> OrderMasters { get; set; }
         public virtual DbSet<Accounting_CostCenter> Accounting_CostCenter { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+        public virtual DbSet<OrderDeliverDetail> OrderDeliverDetails { get; set; }
     
         public virtual ObjectResult<GetEmployeeListForTeam_Result> GetEmployeeListForTeam(Nullable<int> companyId)
         {

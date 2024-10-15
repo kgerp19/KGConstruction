@@ -320,7 +320,7 @@ namespace KGERP.Services.Procurement
         public int SalePersonId { get; set; }
         public string CompanyAddress { get; set; }
        
-        public string ReelDirection { get; set; }
+        public string BOQItemName { get; set; }
         public string PouchDerection { get; set; }
         public DateTime? JobOrderDate { get; set; }
         public string CompanyEmail { get; set; }
@@ -397,7 +397,7 @@ namespace KGERP.Services.Procurement
         public string DemandNo { get; set; } = "";
 
         public long OrderDetailId { get; set; }
-        public int FProductId { get; set; }
+        public int? FProductId { get; set; }
         public int UnitId { get; set; }
         public int? AccountingIncomeHeadId { get; set; }
         public double Qty { get; set; }

@@ -239,7 +239,7 @@ namespace KGERP.Controllers
                     //if (item.DueQty > item.ReadyToDeliver)
                     //    noOfDiscrepencies = noOfDiscrepencies + 1;
 
-                    BusinessCostCustomModel businessCost = productService.GetCustomerBusinessCost(orderMasterModel.CustomerId, item.ProductId, orderMasterModel.StockInfoId);
+                    BusinessCostCustomModel businessCost = productService.GetCustomerBusinessCost(orderMasterModel.CustomerId, item.ProductId??0, orderMasterModel.StockInfoId);
                     OrderDeliverDetailModel orderDeliverDetailModel = new OrderDeliverDetailModel
                     {
                         ProductId = item.ProductId,
@@ -334,7 +334,7 @@ namespace KGERP.Controllers
 
             foreach (var item in vm.DeliverItems)
             {
-                BusinessCostCustomModel businessCost = productService.GetCustomerBusinessCost(vm.OrderDeliverCustomModel.CustomerId, item.ProductId, orderMasterModel.StockInfoId);
+                BusinessCostCustomModel businessCost = productService.GetCustomerBusinessCost(vm.OrderDeliverCustomModel.CustomerId, item.ProductId??0, orderMasterModel.StockInfoId);
 
                 //OrderDeliver
                 OrderDeliveryPreview preview = new OrderDeliveryPreview();

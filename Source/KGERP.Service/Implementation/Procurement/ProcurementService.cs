@@ -459,7 +459,7 @@ namespace KGERP.Services.Procurement
                                                               companyId = t2.CompanyId.Value,
                                                               Structure = t1.Remarks,
                                                               PouchDerection = t1.PouchDerection,
-                                                              ReelDirection = t1.ReelDirection,
+                                                              //ReelDirection = t1.ReelDirection,
                                                               JobOrderDate = t1.OrderDate,
                                                               StatusId = t1.Status
 
@@ -3633,7 +3633,7 @@ namespace KGERP.Services.Procurement
                                               IsVATInclude = t1.IsVATInclude,
                                               VATPercent = t1.VATPercent,
                                               TDSPercent = t1.TDSPercent,
-                                              ReelDirection = t1.ReelDirection,
+                                             // ReelDirection = t1.ReelDirection,
                                               PouchDerection = t1.PouchDerection,
                                               JobOrderDate = t1.OrderDate
                                           }).FirstOrDefault());
@@ -3727,7 +3727,7 @@ namespace KGERP.Services.Procurement
                 CompanyId = vmSalesOrderSlave.CompanyFK,
                 CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
                 CreateDate = DateTime.Now,
-                StyleNo = Convert.ToString(dateTime),
+                 
                 IsActive = true
             };
             _db.OrderDetails.Add(orderDetail);
@@ -3770,7 +3770,7 @@ namespace KGERP.Services.Procurement
                 CompanyId = model.CompanyId,
                 CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
                 CreateDate = DateTime.Now,
-                StyleNo = Convert.ToString(dateTime),
+                 
                 IsActive = true
             };
             _db.OrderDetails.Add(orderDetail);
@@ -3803,7 +3803,7 @@ namespace KGERP.Services.Procurement
                 CompanyId = vmSalesOrderSlave.CompanyFK,
                 CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
                 CreateDate = DateTime.Now,
-                StyleNo = Convert.ToString(dateTime),
+                 
                 IsActive = true
             };
             _db.OrderDetails.Add(orderDetail);
@@ -3838,7 +3838,7 @@ namespace KGERP.Services.Procurement
             string dat = month + yearLastTwoDigits;
 
             // Start with a default job order  
-            var newJobOrder = $"JOB-{dat}-0001"; // Default to 4-digit format with zeros  
+            var newJobOrder = $"BOQI-{dat}-0001"; // Default to 4-digit format with zeros  
 
             if (lastObjects != null)
             {
@@ -3847,7 +3847,7 @@ namespace KGERP.Services.Procurement
                 // Split the JobOrderNo by '-'  
                 string[] parts = lastJobOrderNo.Split('-');
 
-                if (parts.Length == 3 && parts[0] == "JOB")
+                if (parts.Length == 3 && parts[0] == "BOQI")
                 {
                     // Extract and increment the last part  
                     if (int.TryParse(parts[2], out int orderNumber))
@@ -3856,7 +3856,7 @@ namespace KGERP.Services.Procurement
                         orderNumber++;
 
                         // Format the new JobOrderNo  
-                        newJobOrder = $"JOB-{dat}-{orderNumber:D4}";
+                        newJobOrder = $"BOQI-{dat}-{orderNumber:D4}";
                     }
                 }
             }
@@ -3867,32 +3867,32 @@ namespace KGERP.Services.Procurement
 
             OrderDetail orderDetail = new OrderDetail
             {
+
+                JobOrderNo = newJobOrder,
                 OrderMasterId = vmSalesOrderSlave.OrderMasterId,
-                ProductId = vmSalesOrderSlave.FProductId,
+                BOQItemName = vmSalesOrderSlave.BOQItemName,                
                 Qty = vmSalesOrderSlave.Qty,
                 UnitPrice = vmSalesOrderSlave.UnitPrice,
-                Amount = (vmSalesOrderSlave.Qty * vmSalesOrderSlave.UnitPrice),
-                Comsumption = vmSalesOrderSlave.Consumption,
-                PackQuantity = vmSalesOrderSlave.PackQuantity,
-                Remarks = vmSalesOrderSlave.Description,
-                DiscountUnit = vmSalesOrderSlave.ProductDiscountUnit,
-                DiscountRate = vmSalesOrderSlave.CashDiscountPercent,
-                SpecialBaseCommission = vmSalesOrderSlave.SpecialDiscount,
                 VATPercent = vmSalesOrderSlave.VATPercent,
-                TDSPercent = vmSalesOrderSlave.TDSPercent,
                 IsVATInclude = vmSalesOrderSlave.IsVATInclude,
                 OrderDate = vmSalesOrderSlave.JobOrderDate,
-                ReelDirection = vmSalesOrderSlave.ReelDirection,
-                PouchDerection = vmSalesOrderSlave.PouchDerection,
-                Status = (int)EnumPOStatus.Draft,
-
+                UnitId = vmSalesOrderSlave.UnitId,
+                Remarks = vmSalesOrderSlave.Description,
+                Status = (int)EnumPOStatus.Draft,  
 
                 CompanyId = vmSalesOrderSlave.CompanyFK,
                 CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
                 CreateDate = DateTime.Now,
-                StyleNo = Convert.ToString(dateTime),
-                JobOrderNo = newJobOrder,
-                IsActive = true
+                IsActive = true,
+
+                Comsumption = 0,
+                PackQuantity = 0,                
+                DiscountUnit = 0,
+                DiscountRate = 0,
+                SpecialBaseCommission = 0,
+                TDSPercent = 0,
+                 
+               
             };
             _db.OrderDetails.Add(orderDetail);
             if (await _db.SaveChangesAsync() > 0)
@@ -4017,6 +4017,7 @@ namespace KGERP.Services.Procurement
         {
             var result = -1;
             OrderDetail model = await _db.OrderDetails.FindAsync(vmSalesOrderSlave.OrderDetailId);
+            model.BOQItemName = vmSalesOrderSlave.BOQItemName;
 
             model.ProductId = vmSalesOrderSlave.FProductId;
             model.Qty = vmSalesOrderSlave.Qty;
@@ -4032,7 +4033,6 @@ namespace KGERP.Services.Procurement
             model.TDSPercent = vmSalesOrderSlave.TDSPercent;
             model.IsVATInclude = vmSalesOrderSlave.IsVATInclude;
             model.OrderDate = vmSalesOrderSlave.JobOrderDate;
-            model.ReelDirection = vmSalesOrderSlave.ReelDirection;
             model.PouchDerection = vmSalesOrderSlave.PouchDerection;
             model.Remarks = vmSalesOrderSlave.Description;
 
@@ -4552,10 +4552,7 @@ namespace KGERP.Services.Procurement
                                                       }).FirstOrDefault());
 
             vmSalesOrderSlave.DataListSlave = await Task.Run(() => (from t1 in _db.OrderDetails.Where(x => x.IsActive && x.OrderMasterId == orderMasterId)
-                                                                    join t3 in _db.Products on t1.ProductId equals t3.ProductId
-                                                                    join t4 in _db.ProductSubCategories on t3.ProductSubCategoryId equals t4.ProductSubCategoryId
-                                                                    join t5 in _db.ProductCategories on t4.ProductCategoryId equals t5.ProductCategoryId
-                                                                    join t6 in _db.Units on t3.UnitId equals t6.UnitId
+                                                                     join t6 in _db.Units on t1.UnitId equals t6.UnitId
                                                                     select new VMSalesOrderSlave
                                                                     {
 
@@ -4564,29 +4561,19 @@ namespace KGERP.Services.Procurement
 
                                                                         JobOrderNo = t1.JobOrderNo,
                                                                         JobOrderDate = t1.OrderDate,
-                                                                        ReelDirection = t1.ReelDirection,
-                                                                        PouchDerection = t1.PouchDerection,
-                                                                        ProductName = t4.Name + " " + t3.ProductName,
+                                                                        BOQItemName = t1.BOQItemName,
+                                                                        
                                                                         Qty = t1.Qty,
-                                                                        TDSPercent = t1.TDSPercent,
+                                                                        UnitPrice = (t1.IsVATInclude == true ? t1.UnitPrice / (((double)t1.VATPercent + 100) / 100) : t1.UnitPrice),
+
+                                                                        
                                                                         VATPercent = t1.VATPercent,
                                                                         VATAmount = (t1.Qty *
                                                                         (t1.IsVATInclude == true ? t1.UnitPrice / (((double)t1.VATPercent + 100) / 100) : t1.UnitPrice) // Unit Price
                                                                                     ) / 100 * (double)t1.VATPercent,
                                                                         IsVATInclude = t1.IsVATInclude,
-                                                                        UnitPrice = (t1.IsVATInclude == true ? t1.UnitPrice / (((double)t1.VATPercent + 100) / 100) : t1.UnitPrice),
-                                                                        UnitName = t6.Name,
-                                                                        TotalAmount = t1.Amount,
-                                                                        Description = t1.Remarks,
-
-                                                                        ProductCategoryId = t5.ProductCategoryId,
-                                                                        ProductSubCategoryId = t4.ProductSubCategoryId,
-                                                                        FProductId = t3.ProductId,
-
-
-                                                                        //ProductDiscountUnit = t1.DiscountUnit,//Unit Discount                                                               
-                                                                        //CashDiscountPercent = t1.DiscountRate, // Cash Discount                                                               
-                                                                        //SpecialDiscount = t1.SpecialBaseCommission, // SpecialDiscount 
+                                                                        UnitName = t6.Name,                                                                         
+                                                                        Description = t1.Remarks
                                                                     }).OrderByDescending(x => x.OrderDetailId).AsEnumerable());
 
 
@@ -6069,7 +6056,7 @@ namespace KGERP.Services.Procurement
                             CompanyId = vmSalesOrderSlave.CompanyFK,
                             CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
                             CreateDate = DateTime.Now,
-                            StyleNo = Convert.ToString(DateTime.Now.Ticks),
+                             
                             IsActive = true
                         });
                     }

@@ -16,7 +16,7 @@ namespace KGERP.Data.Models
     {
         public long OrderDeliverDetailId { get; set; }
         public Nullable<long> OrderDeliverId { get; set; }
-        public int ProductId { get; set; }
+        public Nullable<int> ProductId { get; set; }
         public double UnitPrice { get; set; }
         public double DeliveredQty { get; set; }
         public decimal Amount { get; set; }

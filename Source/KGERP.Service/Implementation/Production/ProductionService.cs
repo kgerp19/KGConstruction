@@ -470,25 +470,17 @@ namespace KGERP.Services.Production
 
                                                              CustomerName = t3.Name,
                                                              CustomerPhone = t3.Phone,
-
-
                                                              JobNo = t0.JobOrderNo,
                                                              JobDate = t0.OrderDate,
                                                              OrderQty = t0.Qty,
                                                              Remarks = t0.Remarks,
-                                                             ReelDirection = t0.ReelDirection,
+                                                             ReelDirection = t0.BOQItemName,
                                                              PouchDerection = t0.PouchDerection,
-
-
                                                              OrderMasterNo = t2.OrderNo,
                                                              OrderDate = t2.OrderDate,
                                                              CustomerPONo = t2.CustomerPONo,
-
                                                              CreatedBy = t4.Name,
                                                              CreatedDate = t1.CreatedDate,
-
-
-
                                                              IsSubmitted = t1.IsSubmitted,
                                                              IsAuthorized = t1.IsAuthorized,
                                                              AuthorizedDate = t1.AuthorizedDate,
