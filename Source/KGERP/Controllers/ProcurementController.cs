@@ -1295,25 +1295,15 @@ namespace KG.App.Controllers
             {
                 vmSalesOrderSlave = await Task.Run(() => _service.PackagingSalesOrderDetailsGet(companyId, orderMasterId));
             }
-            vmSalesOrderSlave.TermNCondition = new SelectList(_service.CommonTremsAndConditionDropDownList(companyId), "Value", "Text");
-             
-            vmSalesOrderSlave.StockInfoList = new SelectList(_service.StockInfoesDropDownList(companyId), "Value", "Text");
-            return View(vmSalesOrderSlave);
+             return View(vmSalesOrderSlave);
         }
         [HttpPost]
         public async Task<ActionResult> PackagingSalesOrderSlave(VMSalesOrderSlave vmSalesOrderSlave)
         {
             if (vmSalesOrderSlave.ActionEum == ActionEnum.Add)
             {
-                if (vmSalesOrderSlave.OrderMasterId == 0)
-                {
-                    vmSalesOrderSlave.OrderMasterId = await _service.OrderMasterAdd(vmSalesOrderSlave);
-                }
-                if (vmSalesOrderSlave.FProductId > 0)
-                {
-                    await _service.PackagingOrderDetailAdd(vmSalesOrderSlave);
-                }
-              
+                await _service.PackagingOrderDetailAdd(vmSalesOrderSlave);
+
             }
             else if (vmSalesOrderSlave.ActionEum == ActionEnum.Edit)
             {

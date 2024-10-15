@@ -4514,35 +4514,31 @@ namespace KGERP.Services.Procurement
 
                                                       select new VMSalesOrderSlave
                                                       {
+                                                          OrderMasterId = t1.OrderMasterId,
+                                                          CostCenterName = t3.Name,
+                                                          CostCenterType = t5.Name,
+                                                          CostCenterId = t1.CostCenterId,
+                                                          OrderNo = t1.OrderNo,
+                                                          CustomerPONo = t1.CustomerPONo,                                                           
+                                                          CustomerId = t2.VendorId,
+                                                          CommonCustomerName = t2.Name,
+                                                          OrderDate = t1.OrderDate,
+                                                          ExpectedDeliveryDate = t1.ExpectedDeliveryDate,                                                          
+                                                          OfficerNAme = t7.Name,
+                                                          Status = t1.Status,
+                                                          CustomerPaymentMethodEnumFK = t1.PaymentMethod,
+                                                          DivisionValue = t1.TotalAmount??0,
+                                                          FinalDestination = vmSalesOrderSlave.FinalDestination,
+                                                          Remarks = vmSalesOrderSlave.Remarks,                                                           
                                                           CommonCustomerCode = t4.AccCode,
                                                           CustomerPhone = t2.Phone,
                                                           CustomerAddress = t2.Address,
                                                           CustomerEmail = t2.Email,
                                                           ContactPerson = t2.ContactName,
                                                           CompanyFK = t1.CompanyId,
-                                                          OrderMasterId = t1.OrderMasterId,
-                                                          CreatedDate = t1.CreateDate,
-                                                          OrderNo = t1.OrderNo,
-                                                          Status = t1.Status,
-                                                          OrderDate = t1.OrderDate,
-                                                          CreatedBy = t1.CreatedBy,
-                                                          CustomerPaymentMethodEnumFK = t1.PaymentMethod,
-                                                          ExpectedDeliveryDate = t1.ExpectedDeliveryDate,
-                                                          CommonCustomerName = t2.Name,
-                                                          CompanyName = t3.Name,
-                                                          CostCenterName = t3.Name,
-                                                          CostCenterType = t5.Name,
                                                           
-                                                          CustomerPONo = t1.CustomerPONo,
-                                                          CustomerTypeFk = t2.CustomerTypeFK,
-                                                          CustomerId = t2.VendorId,
-                                                          CourierCharge = t1.CourierCharge,
-                                                          FinalDestination = t1.FinalDestination,
-                                                          CourierNo = t1.CourierNo,
-                                                          OfficerNAme = t7 != null ? t7.Name : ""
-
-
-
+                                                          CreatedDate = t1.CreateDate,   
+                                                          CreatedBy = t1.CreatedBy 
 
                                                       }).FirstOrDefault());
 
