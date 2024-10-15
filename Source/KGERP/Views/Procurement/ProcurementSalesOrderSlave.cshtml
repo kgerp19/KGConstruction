@@ -232,10 +232,11 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="txtDivisionValue" class="col-form-label">Project Value (Division)</label>
-                                        @Html.EditorFor(model => model.DivisionValue, new { htmlAttributes = new { @class = "form-control premium-input", @id = "txtTotalAmount" } })
+                                        @Html.EditorFor(model => model.DivisionValue, new { htmlAttributes = new { @class = "form-control premium-input", @id = "txtDivisionValue" } })
                                         @Html.ValidationMessageFor(model => model.DivisionValue, "", new { @class = "text-danger premium-error" })
                                     </div>
                                 </div>
+
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="txtFinalDestination" class="col-form-label">Delivery Address</label>
@@ -261,7 +262,7 @@
 
                                 </div>
                                 <div class="col-md-4">
-                                    <button type="submit" class="btn btn-primary" style="width:100%">Save</button>
+                                    <button type="submit" id="svvvvv" class="btn btn-primary" style="width:100%">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -306,7 +307,7 @@
                                     <tr>
                                         <td>@(++sl)</td>
                                         <td>@item.CustomerPONo</td>
-                                        <td>@item.TotalAmount</td>
+                                        <td>@item.DivisionValue</td>
 
                                         <td>@item.CustomerPhone</td>
                                         <td>@item.CustomerEmail</td>
@@ -321,28 +322,31 @@
                                         <td>
                                             <a id="@item.ID"
                                                onclick="makeEditable(
-       @item.ID,
-       '@Html.Raw(item.CustomerPONo)',
-       '@Html.Raw(item.OfficerNAme)',
-       '@Html.Raw(item.CommonCustomerName)',
-       '@item.OrderDate.ToString("yyyy-MM-dd")',
-       '@(item.ExpectedDeliveryDate.HasValue ? item.ExpectedDeliveryDate.Value.ToString("yyyy-MM-dd") : "")',
-       @item.StockInfoId,
-       @item.CustomerPaymentMethodEnumFK,
-       @item.TotalAmount,
-       '@Html.Raw(item.FinalDestination)',
-       '@Html.Raw(item.Remarks)'
-   );"
+           @item.OrderMasterId,
+           '@Html.Raw(item.CustomerPONo)',
+           '@Html.Raw(item.DivisionValue)',
+           '@Html.Raw(item.OfficerNAme)',
+           '@Html.Raw(item.SalePersonId)',
+           '@Html.Raw(item.CommonCustomerName)',
+           '@Html.Raw(item.CustomerId)',
+           '@item.OrderDate.ToString("yyyy-MM-dd")',
+           '@(item.ExpectedDeliveryDate.HasValue ? item.ExpectedDeliveryDate.Value.ToString("yyyy-MM-dd") : "")',
+           @item.StockInfoId,
+           @item.CustomerPaymentMethodEnumFK,
+           @item.TotalAmount,
+           '@Html.Raw(item.FinalDestination)',
+           '@Html.Raw(item.Remarks)'
+       );"
                                                class="linkPointer"
                                                title="Edit">
                                                 <i class="fa fa-pencil-square-o"></i>
                                             </a>
 
-                                            <a id="@item.ID" onclick="makeDeletable(@item.ID);" class="linkPointer" data-toggle="modal" data-target="#deleteModal" title="Delete">
+                                            <a id="@item.ID" onclick="makeDeletable(@item.OrderMasterId);" class="linkPointer" data-toggle="modal" data-target="#deleteModal" title="Delete">
                                                 <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
                                             </a>
 
-                                            <a href="~/Procurement/PackagingSalesOrderSlave?companyId=@item.CompanyFK&orderMasterId=@item.OrderMasterId" class="btn btn-success btn-sm">Manage BOQ Item</a>
+                                            <a href="~/Procurement/PackagingSalesOrderSlave?companyId=@item.CompanyFK&orderMasterId=@item.OrderMasterId" class="btn btn-success btn-sm">Manage BBQ Item</a>
 
 
                                         </td>
@@ -367,7 +371,7 @@
 
     @Scripts.Render("~/bundles/jqueryui")
     @Styles.Render("~/Content/cssjqryUi")
-    <script type="text/javascript">
+<script type="text/javascript">
         function calculateAmount() {
 
             var salesQuantity = $("#txtSalesQuantity").val();
@@ -749,37 +753,66 @@
 
 
 
-    function makeEditable(id, customerPONo, officerName, commonCustomerName, orderDate, expectedDeliveryDate, stockInfoId, paymentMethodId, totalAmount, finalDestination, remarks) {
-        // Populate the form fields
-        document.getElementById("txtCustomerPONo").value = customerPONo;
-        document.getElementById("OfficerNAme").value = officerName;
-        document.getElementById("VendorName").value = commonCustomerName;
-        document.getElementById("txtOrderDate").value = orderDate;
-        document.getElementById("txtDeliveryDate").value = expectedDeliveryDate;
-        document.getElementById("ddlWareHouseFk").value = stockInfoId;
-        document.getElementById("ddlSupplierPaymentMethodEnumFK").value = paymentMethodId;
-        document.getElementById("txtTotalAmount").value = totalAmount;
-        document.getElementById("txtFinalDestination").value = finalDestination;
-        document.getElementById("txtDescription").value = remarks;
-
-        // Optionally set hidden fields like SalePersonId and CustomerId if needed
-        // document.getElementById("SalePersonId").value = salePersonId;
-
-        // Show the form or modal if needed
-        // You can also implement logic here to clear the form if required
-    }
+        function makeEditable(id, customerPONo, divisionValue, officerName, salePersonId, commonCustomerName, customerId, orderDate, expectedDeliveryDate, stockInfoId, paymentMethodEnumFK, totalAmount, finalDestination, remarks) {
 
 
 
+            document.getElementById('txtCustomerPONo').value = customerPONo;
+            document.getElementById('hidOrderMasterId').value = id;
+            document.getElementById('txtDivisionValue').value = divisionValue; // Add this field if it exists
+            document.getElementById('OfficerNAme').value = officerName;
+            document.getElementById('SalePersonId').value = salePersonId;
+            document.getElementById('VendorName').value = commonCustomerName;
+            document.getElementById('Vendor').value = customerId;
+            document.getElementById('txtOrderDate').value = orderDate;
+            document.getElementById('txtDeliveryDate').value = expectedDeliveryDate;
+            document.getElementById('ddlWareHouseFk').value = stockInfoId;
+            document.getElementById('ddlSupplierPaymentMethodEnumFK').value = paymentMethodEnumFK;
 
+            document.getElementById('txtFinalDestination').value = finalDestination;
+            document.getElementById('txtDescription').value = remarks;
+            document.getElementById('ActionId').value = 2;
 
+            document.getElementById('svvvvv').innerHTML = "Update";
+        }
 
 
 
 
 
+        function makeDeletable(id) {
+            // Show confirmation alert
+            if (confirm("Are you sure you want to delete this item?")) {
+                // Prepare data to send to the server
+                var data = {
+                    OrderMasterId: id,
+                    ActionEum: 3,
+                    CompanyId:@Model.CompanyFK,
+                    CostCenterId: @Model.CostCenterId
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Procurement/DeleteProcurementSalesOrderSlaveTCL', // Adjust the URL to your controller
+                    data: data,
+                    success: function (response) {
+                        // Optionally handle success, e.g., reload the table or redirect
+                        window.location.reload(); // Reload the page to see the changes
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred while deleting the item: " + error);
+                    }
+                });
+            }
+        }
 
 
 
-    </script>
+
+
+
+
+
+
+</script>
 }
