@@ -722,9 +722,7 @@ namespace KGERP.Service.Implementation
                        join c in context.Companies on r.CompanyId equals c.CompanyId
                        join s in context.StockInfoes on r.FromRequisitionId equals s.StockInfoId
                        join s1 in context.StockInfoes on r.ToRequisitionId equals s1.StockInfoId
-                       join od in context.OrderDetails.Where(x => x.IsActive) on r.OrderDetailsId equals od.OrderDetailId
-                       join p in context.Products on od.ProductId equals p.ProductId
-                       join psc in context.ProductSubCategories on p.ProductSubCategoryId equals psc.ProductSubCategoryId
+                       join od in context.OrderDetails.Where(x => x.IsActive) on r.OrderDetailsId equals od.OrderDetailId                       
                        join om in context.OrderMasters on od.OrderMasterId equals om.OrderMasterId
                        join e in context.Employees on r.RequisitionBy.Trim().ToLower() equals e.EmployeeId.Trim().ToLower()
                        join v in context.Vendors on om.CustomerId equals v.VendorId
@@ -747,8 +745,8 @@ namespace KGERP.Service.Implementation
                            RequisitionBy = e.Name,
                            ExpectedDeliveryDate = om.ExpectedDeliveryDate,
                            StockName = s.Name,
-                           OrderMasterId = om.OrderMasterId,
-                           ProductNames = psc.Name + " " + p.ProductName
+                           OrderMasterId = om.OrderMasterId
+                            
                        }).OrderByDescending(x => x.RequisitionId).FirstOrDefaultAsync(cancellationToken);
 
 
