@@ -1829,7 +1829,7 @@ namespace KG.App.Controllers
 
             }
 
-            return RedirectToAction(nameof(PackagingIssueProductFromStore), new { companyId = 20, issueMasterId = vmPackagingPurchaseRequisition.IssueMasterId });
+            return RedirectToAction(nameof(PackagingIssueProductFromStore), new { companyId = vmPackagingPurchaseRequisition.CompanyFK, issueMasterId = vmPackagingPurchaseRequisition.IssueMasterId });
         }
 
         [HttpPost]
@@ -1845,7 +1845,7 @@ namespace KG.App.Controllers
 
             }
 
-            return RedirectToAction(nameof(PackagingGIssueProductFromStore), new { companyId = 20, issueMasterId = vmPackagingPurchaseRequisition.IssueMasterId });
+            return RedirectToAction(nameof(PackagingGIssueProductFromStore), new { companyId = vmPackagingPurchaseRequisition.CompanyId, issueMasterId = vmPackagingPurchaseRequisition.IssueMasterId });
         }
         public JsonResult GetAutoCompleteOrderNoGetRequsitionId(string prefix, int companyId)
         {
@@ -1934,7 +1934,7 @@ namespace KG.App.Controllers
 
             vmPurchaseRequisition = await Task.Run(() => _service.PackagingNotIssueItemList(companyId));
             vmPurchaseRequisition.DDLStockDepartment = _dropdownService.RenderDDL(_productService.GetDDLStockInfoDepartment(companyId), true);
-
+            vmPurchaseRequisition.CompanyFK = companyId;
             return View(vmPurchaseRequisition);
         }
 

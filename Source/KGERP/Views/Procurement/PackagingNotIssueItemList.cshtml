@@ -119,7 +119,7 @@
             &nbsp;
             <a onclick="makeDeletale(@item.IssueMasterId)" class="linkPointer"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
             &nbsp;*@
-                                            <a target="_blank" href="~/Procurement/PackagingIssueProductFromStore?companyId=20&issueMasterId=0&RequisitionId=@item.RequisitionId" title="Details">Issue</a>
+                                            <a target="_blank" href="~/Procurement/PackagingIssueProductFromStore?companyId=@item.CompanyId&issueMasterId=0&RequisitionId=@item.RequisitionId" title="Details">Issue</a>
 
                                         </td>
 

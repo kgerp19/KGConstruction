@@ -722,9 +722,7 @@ namespace KGERP.Service.Implementation
                        join c in context.Companies on r.CompanyId equals c.CompanyId
                        join s in context.StockInfoes on r.FromRequisitionId equals s.StockInfoId
                        join s1 in context.StockInfoes on r.ToRequisitionId equals s1.StockInfoId
-                       join od in context.OrderDetails.Where(x => x.IsActive) on r.OrderDetailsId equals od.OrderDetailId
-                       join p in context.Products on od.ProductId equals p.ProductId
-                       join psc in context.ProductSubCategories on p.ProductSubCategoryId equals psc.ProductSubCategoryId
+                       join od in context.OrderDetails.Where(x => x.IsActive) on r.OrderDetailsId equals od.OrderDetailId                       
                        join om in context.OrderMasters on od.OrderMasterId equals om.OrderMasterId
                        join e in context.Employees on r.RequisitionBy.Trim().ToLower() equals e.EmployeeId.Trim().ToLower()
                        join v in context.Vendors on om.CustomerId equals v.VendorId
@@ -747,8 +745,8 @@ namespace KGERP.Service.Implementation
                            RequisitionBy = e.Name,
                            ExpectedDeliveryDate = om.ExpectedDeliveryDate,
                            StockName = s.Name,
-                           OrderMasterId = om.OrderMasterId,
-                           ProductNames = psc.Name + " " + p.ProductName
+                           OrderMasterId = om.OrderMasterId
+                            
                        }).OrderByDescending(x => x.RequisitionId).FirstOrDefaultAsync(cancellationToken);
 
 
@@ -885,8 +883,7 @@ namespace KGERP.Service.Implementation
                  from t1 in context.Requisitions.Where(x => x.IsActive && x.RequisitionType == 3)
                  join t2 in context.OrderDetails.Where(x => x.IsActive) on t1.OrderDetailsId equals t2.OrderDetailId
                  join t3 in context.OrderMasters.Where(x => x.IsActive) on t2.OrderMasterId equals t3.OrderMasterId
-                 join t4 in context.Products.Where(x => x.IsActive) on t2.ProductId equals t4.ProductId
-                 join t5 in context.ProductSubCategories.Where(x => x.IsActive) on t4.ProductSubCategoryId equals t5.ProductSubCategoryId
+                 
                  join t6 in context.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
                  join t7 in context.StockInfoes.Where(x => x.IsActive) on t1.ToRequisitionId equals t7.StockInfoId
 
@@ -908,7 +905,7 @@ namespace KGERP.Service.Implementation
                      JobOrderNo = t2.JobOrderNo,
                      FromRequisitionName = t6.Name,
                      ToRequisitionName = t7.Name,
-                     ProductName = t5.Name + " " + t4.ProductName,
+                     ProductName = t2.BOQItemName,
                      Description = t3.Remarks,
                      Structure = t2.Remarks,
                      Qty = t2.Qty,
@@ -921,14 +918,13 @@ namespace KGERP.Service.Implementation
             if (result != null)
             {
                 result.DDLGerOrderList = (from t1 in context.OrderDetails.Where(x => x.OrderMasterId == result.OrderMasterId)
-                                          join t3 in context.Products.Where(x => x.IsActive) on t1.ProductId equals t3.ProductId
-                                          join t4 in context.ProductSubCategories.Where(x => x.IsActive) on t3.ProductSubCategoryId equals t4.ProductSubCategoryId
+                                          
                                           join t6 in context.FinishProductBOMs on t1.OrderDetailId equals t6.OrderDetailId
                                           where t1.IsActive
                                           select new SelectListItem
                                           {
                                               Value = t1.OrderDetailId.ToString(),
-                                              Text = t4.Name + " " + t3.ProductName
+                                              Text = t1.BOQItemName
                                           }).Distinct().ToList();
             }
 
@@ -940,12 +936,10 @@ namespace KGERP.Service.Implementation
         {
             var result = await (
                  from t1 in context.Requisitions.Where(x => x.IsActive && x.RequisitionType == 3)
-                     //join t2 in context.OrderDetails.Where(x => x.IsActive) on t1.OrderDetailsId equals t2.OrderDetailId
-                     //join t3 in context.OrderMasters.Where(x => x.IsActive) on t2.OrderMasterId equals t3.OrderMasterId
-                     //join t4 in context.Products.Where(x => x.IsActive) on t2.ProductId equals t4.ProductId
-                     //join t5 in context.ProductSubCategories.Where(x => x.IsActive) on t4.ProductSubCategoryId equals t5.ProductSubCategoryId
-                     //join t6 in context.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
-                     //join t7 in context.StockInfoes.Where(x => x.IsActive) on t1.ToRequisitionId equals t7.StockInfoId
+                 join t2 in context.OrderDetails.Where(x => x.IsActive) on t1.OrderDetailsId equals t2.OrderDetailId
+                 join t3 in context.OrderMasters.Where(x => x.IsActive) on t2.OrderMasterId equals t3.OrderMasterId                  
+                 join t6 in context.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
+                 join t7 in context.StockInfoes.Where(x => x.IsActive) on t1.ToRequisitionId equals t7.StockInfoId
 
                  where t1.RequisitionId == ReqId
                  select new ResuisitionRM
@@ -956,38 +950,37 @@ namespace KGERP.Service.Implementation
                      OrderDetailsId = t1.OrderDetailsId,
 
 
-                     //RequisitionId = t1.RequisitionId,
-                     //RequisitionNo = t1.RequisitionNo,
+                     RequisitionId = t1.RequisitionId,
+                     RequisitionNo = t1.RequisitionNo,
 
-                     //RequisitionStatus = t1.RequisitionStatus,
-                     //OrderNo = t3.OrderNo,
-                     //OrderDate = t3.OrderDate,
-                     //JobOrderNo = t2.JobOrderNo,
-                     //FromRequisitionName = t6.Name,
-                     //ToRequisitionName = t7.Name,
-                     //ProductName = t5.Name + " " + t4.ProductName,
-                     //Description = t3.Remarks,
-                     //Structure = t2.Remarks,
-                     //Qty = t2.Qty,
-                     //OrderMasterId = t3.OrderMasterId
+                     RequisitionStatus = t1.RequisitionStatus,
+                     OrderNo = t3.OrderNo,
+                     OrderDate = t3.OrderDate,
+                     JobOrderNo = t2.JobOrderNo,
+                     FromRequisitionName = t6.Name,
+                     ToRequisitionName = t7.Name,
+                     ProductName = t2.BOQItemName,
+                     Description = t3.Remarks,
+                     Structure = t2.Remarks,
+                     Qty = t2.Qty,
+                     OrderMasterId = t3.OrderMasterId
                  }
              ).FirstOrDefaultAsync(cancellationToken);
 
 
 
-            //if (result != null)
-            //{
-            //    result.DDLGerOrderList = (from t1 in context.OrderDetails.Where(x => x.OrderMasterId == result.OrderMasterId)
-            //                              join t3 in context.Products.Where(x => x.IsActive) on t1.ProductId equals t3.ProductId
-            //                              join t4 in context.ProductSubCategories.Where(x => x.IsActive) on t3.ProductSubCategoryId equals t4.ProductSubCategoryId
-            //                              join t6 in context.FinishProductBOMs on t1.OrderDetailId equals t6.OrderDetailId
-            //                              where t1.IsActive
-            //                              select new SelectListItem
-            //                              {
-            //                                  Value = t1.OrderDetailId.ToString(),
-            //                                  Text = t4.Name + " " + t3.ProductName
-            //                              }).Distinct().ToList();
-            //}
+            if (result != null)
+            {
+                result.DDLGerOrderList = (from t1 in context.OrderDetails.Where(x => x.OrderMasterId == result.OrderMasterId)
+                                          
+                                          join t6 in context.FinishProductBOMs on t1.OrderDetailId equals t6.OrderDetailId
+                                          where t1.IsActive
+                                          select new SelectListItem
+                                          {
+                                              Value = t1.OrderDetailId.ToString(),
+                                              Text = t1.BOQItemName
+                                          }).Distinct().ToList();
+            }
 
 
             return result;

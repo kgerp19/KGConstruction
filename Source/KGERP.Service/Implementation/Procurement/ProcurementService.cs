@@ -183,21 +183,19 @@ namespace KGERP.Services.Procurement
         {
             var v = (from t1 in _db.Requisitions.Where(x => x.CompanyId == companyId)
                      join t2 in _db.OrderDetails on t1.OrderDetailsId equals t2.OrderDetailId
-                     join t3 in _db.OrderMasters on t2.OrderMasterId equals t3.OrderMasterId
-                     join t4 in _db.Products on t2.ProductId equals t4.ProductId
-                     join t5 in _db.ProductSubCategories on t4.ProductSubCategoryId equals t5.ProductSubCategoryId
+                     join t3 in _db.OrderMasters on t2.OrderMasterId equals t3.OrderMasterId                      
                      join t6 in _db.Vendors on t3.CustomerId equals t6.VendorId
 
 
                      where t1.IsActive && ((t1.RequisitionNo.StartsWith(prefix)) || (t2.JobOrderNo.StartsWith(prefix))
-                     || (t3.OrderNo.StartsWith(prefix)) || (t5.Name.StartsWith(prefix)) || (t4.ProductName.StartsWith(prefix))
+                     || (t3.OrderNo.StartsWith(prefix)) || t2.BOQItemName.StartsWith(prefix)
                      || (t6.Name.StartsWith(prefix))
                      )
 
                      select new
                      {
                          label = t1.RequisitionNo + " " + t1.RequisitionDate + " " + t2.JobOrderNo + " " +
-                         t5.Name + " " + t4.ProductName + " " + t2.Remarks + " " + t6.Name,
+                         t2.BOQItemName + " " + t2.Remarks + " " + t6.Name,
                          val = t1.RequisitionId
 
                      }).OrderBy(x => x.label).Take(20).ToList();
@@ -210,14 +208,12 @@ namespace KGERP.Services.Procurement
             var v = (from t1 in _db.Requisitions
                      join t2 in _db.OrderDetails on t1.OrderDetailsId equals t2.OrderDetailId
                      join t3 in _db.OrderMasters on t2.OrderMasterId equals t3.OrderMasterId
-                     join t4 in _db.Products on t2.ProductId equals t4.ProductId
-                     join t5 in _db.ProductSubCategories on t4.ProductSubCategoryId equals t5.ProductSubCategoryId
-                     join t6 in _db.Vendors on t3.CustomerId equals t6.VendorId
+                      join t6 in _db.Vendors on t3.CustomerId equals t6.VendorId
                      where t1.IsActive && t1.RequisitionId == requisitionId && t1.CompanyId == companyId
                      select new
                      {
                          label = t1.RequisitionNo + " " + t1.RequisitionDate + " " + t2.JobOrderNo + " " +
-                         t5.Name + " " + t4.ProductName + " " + t2.Remarks + " " + t6.Name,
+                          t2.BOQItemName + " " + t2.Remarks + " " + t6.Name,
 
                      }).OrderBy(x => x.label).FirstOrDefault();
 
@@ -260,13 +256,11 @@ namespace KGERP.Services.Procurement
         public object GetAutoCompleteStyleNo(int orderMasterId)
         {
             var v = (from t1 in _db.OrderDetails.Where(x => x.OrderMasterId == orderMasterId && x.IsActive && x.Status == (int)EnumPOStatus.Submitted)
-                     join t3 in _db.Products.Where(x => x.IsActive) on t1.ProductId equals t3.ProductId
-                     join t4 in _db.ProductSubCategories.Where(x => x.IsActive) on t3.ProductSubCategoryId equals t4.ProductSubCategoryId
-
+                     
                      select new
                      {
                          val = t1.OrderDetailId,
-                         lable = t4.Name + " " + t3.ProductName + " Job No: " + t1.JobOrderNo + " Job Date: " + t1.OrderDate + " Qty: " + t1.Qty
+                         lable = t1.BOQItemName + " Job No: " + t1.JobOrderNo + " Job Date: " + t1.OrderDate + " Qty: " + t1.Qty
 
                      }).ToList();
 
@@ -4882,9 +4876,7 @@ namespace KGERP.Services.Procurement
             vmSalesOrder.DataList = await Task.Run(() => (from t1 in _db.Requisitions.Where(x => x.IsActive && x.CompanyId == companyId && x.RequisitionType == 3)
                                                           join t2 in _db.OrderDetails.Where(x => x.IsActive) on t1.OrderDetailsId equals t2.OrderDetailId
                                                           join t3 in _db.OrderMasters.Where(x => x.IsActive) on t2.OrderMasterId equals t3.OrderMasterId
-                                                          join t4 in _db.Products.Where(x => x.IsActive) on t2.ProductId equals t4.ProductId
-                                                          join t5 in _db.ProductSubCategories.Where(x => x.IsActive) on t4.ProductSubCategoryId equals t5.ProductSubCategoryId
-                                                          join t6 in _db.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
+                                                            join t6 in _db.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
                                                           join t7 in _db.StockInfoes.Where(x => x.IsActive) on t1.ToRequisitionId equals t7.StockInfoId
 
 
@@ -4901,7 +4893,7 @@ namespace KGERP.Services.Procurement
                                                               JobOrderNo = t2.JobOrderNo,
                                                               FromRequisitionName = t6.Name,
                                                               ToRequisitionName = t7.Name,
-                                                              ProductName = t5.Name + " " + t4.ProductName,
+                                                              ProductName = t2.BOQItemName,
                                                               Description = t2.Remarks,
                                                               OrderMasterId = t3.OrderMasterId,
                                                               IsSubmitted = t1.IsSubmitted
@@ -4914,7 +4906,7 @@ namespace KGERP.Services.Procurement
         {
             VMPackagingPurchaseRequisition vmSalesOrder = new VMPackagingPurchaseRequisition();
             var list = (from t1 in _db.RequisitionItemDetails.Where(x => x.RequisitionId == RequisitionId)
-                            //join t2 in _db.FinishProductBOMs.Where(x => x.IsActive) on t1.FinishProductBOMId equals t2.ID
+                        join t2 in _db.FinishProductBOMs.Where(x => x.IsActive) on t1.FinishProductBOMId equals t2.ID
                         join t4 in _db.Products.Where(x => x.IsActive) on t1.RProductId equals t4.ProductId
                         join t5 in _db.ProductSubCategories.Where(x => x.IsActive) on t4.ProductSubCategoryId equals t5.ProductSubCategoryId
                         join t6 in _db.Requisitions.Where(x => x.IsActive) on t1.RequisitionId equals t6.RequisitionId
@@ -5186,6 +5178,7 @@ namespace KGERP.Services.Procurement
                                                                    from e3 in emp.DefaultIfEmpty()
                                                                    select new VMPackagingPurchaseRequisition
                                                                    {
+                                                                       CompanyFK = t1.CompanyId,
                                                                        IssueMasterId = t1.IssueMasterId,
                                                                        RequisitionNo = t2.RequisitionNo,
                                                                        RequisitionDate = t2.RequisitionDate.Value,
@@ -5321,33 +5314,11 @@ namespace KGERP.Services.Procurement
         public async Task<VMPackagingPurchaseRequisition> PackagingNotIssueItemList(int companyId)
         {
             VMPackagingPurchaseRequisition vmSalesOrder = new VMPackagingPurchaseRequisition();
-
-            //vmSalesOrder.DataList = await Task.Run(() => (from t1 in _db.Requisitions
-            //                                              join t3 in _db.StockInfoes on t1.FromRequisitionId equals t3.StockInfoId
-            //                                              join t4 in _db.StockInfoes on t1.ToRequisitionId equals t4.StockInfoId
-            //                                              join t2 in _db.IssueMasterInfoes.Where(x=>x.CompanyId==companyId)
-            //                                              on t1.RequisitionId equals t2.RequisitionId into joined
-            //                                              from t2 in joined.DefaultIfEmpty()
-            //                                              where t1.CompanyId == companyId && t2 == null && t1.IsActive
-            //                                              select new VMPackagingPurchaseRequisition
-            //                                              {
-            //                                                  RequisitionNo=t1.RequisitionNo,
-            //                                                  RequisitionId=t1.RequisitionId,
-            //                                                  RequisitionDate=t1.RequisitionDate,
-            //                                                  FromDepartmentReqId =(int)t1.FromRequisitionId,
-            //                                                  ToDepartmentReqId =(int)t1.ToRequisitionId,
-            //                                                  FromRequisitionName = t3.Name,
-            //                                                  ToRequisitionName = t4.Name,
-
-            //                                              }).OrderByDescending(x => x.RequisitionId).AsEnumerable());
-
-
+             
             vmSalesOrder.DataList = await Task.Run(() => (from t1 in _db.Requisitions.Where(x => x.IsActive && x.CompanyId == companyId && x.RequisitionType == 3 && x.RequisitionStatus == "N" && x.IsSubmitted)
                                                           join t2 in _db.OrderDetails.Where(x => x.IsActive) on t1.OrderDetailsId equals t2.OrderDetailId
                                                           join t3 in _db.OrderMasters.Where(x => x.IsActive) on t2.OrderMasterId equals t3.OrderMasterId
-                                                          join t4 in _db.Products.Where(x => x.IsActive) on t2.ProductId equals t4.ProductId
-                                                          join t5 in _db.ProductSubCategories.Where(x => x.IsActive) on t4.ProductSubCategoryId equals t5.ProductSubCategoryId
-                                                          join t6 in _db.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
+                                                            join t6 in _db.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
                                                           join t7 in _db.StockInfoes.Where(x => x.IsActive) on t1.ToRequisitionId equals t7.StockInfoId
 
 
@@ -5364,7 +5335,7 @@ namespace KGERP.Services.Procurement
                                                               JobOrderNo = t2.JobOrderNo,
                                                               FromRequisitionName = t6.Name,
                                                               ToRequisitionName = t7.Name,
-                                                              ProductName = t5.Name + " " + t4.ProductName,
+                                                              ProductName = t2.BOQItemName,
                                                               Description = t2.Remarks,
                                                               OrderMasterId = (long)t2.OrderMasterId
 

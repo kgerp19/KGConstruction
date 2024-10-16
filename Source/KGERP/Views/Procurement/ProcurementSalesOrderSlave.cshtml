@@ -284,19 +284,13 @@
                             <thead>
                                 <tr>
                                     <th>SL</th>
-                                    <th>Division Name</th>
-                                    <th>Project Amount</th>
-
-                                    <th>Customer Phone</th>
-                                    <th>Customer Email</th>
-
-
-                                    <th>Delivery Address</th>
+                                    <th>Division</th>
+                                    <th>Customer</th>
+                                    <th>Start Date</th>
+                                    <th>Exp. End Date</th>
                                     <th>Officer Name</th>
+                                    <th style="text-align:right">Value</th>
 
-
-                                    <th>Start date</th>
-                                    <th>Expected Delivery date</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -304,25 +298,19 @@
                                 @{ int sl = 0; }
                                 @foreach (var item in Model.DataListSlave)
                                 {
-                                    <tr>
-                                        <td>@(++sl)</td>
-                                        <td>@item.CustomerPONo</td>
-                                        <td>@item.DivisionValue</td>
-                                        <td>@item.DivisionValue</td>
-
-                                        <td>@item.CustomerPhone</td>
-                                        <td>@item.CustomerEmail</td>
-
-
-                                        <td>@item.FinalDestination</td>
-                                        <td>@item.OfficerNAme </td>
+                                <tr>
+                                    <td>@(++sl)</td>
+                                    <td>@item.CustomerPONo</td>
+                                    <td>@item.CommonCustomerName</td>
+                                    <td>@item.OrderDate.ToString("dd-MMM-yyyy")</td>
+                                    <td>@item.ExpectedDeliveryDate.Value.ToString("dd-MMM-yyyy")</td>
+                                    <td>@item.OfficerNAme </td>
+                                    <td style="text-align:right">@item.DivisionValue</td>
 
 
-                                        <td>@item.OrderDate.ToString("dd-MMM-yyyy")</td>
-                                        <td>@item.ExpectedDeliveryDate.Value.ToString("dd-MMM-yyyy")</td>
-                                        <td>
-                                            <a id="@item.ID"
-                                               onclick="makeEditable(
+                                    <td>
+                                        <a id="@item.ID"
+                                           onclick="makeEditable(
            @item.OrderMasterId,
            '@Html.Raw(item.CustomerPONo)',
            '@Html.Raw(item.DivisionValue)',
@@ -338,20 +326,20 @@
            '@Html.Raw(item.FinalDestination)',
            '@Html.Raw(item.Remarks)'
        );"
-                                               class="linkPointer"
-                                               title="Edit">
-                                                <i class="fa fa-pencil-square-o"></i>
-                                            </a>
+                                           class="linkPointer"
+                                           title="Edit">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </a>
 
-                                            <a id="@item.ID" onclick="makeDeletable(@item.OrderMasterId);" class="linkPointer" data-toggle="modal" data-target="#deleteModal" title="Delete">
-                                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
-                                            </a>
+                                        <a id="@item.ID" onclick="makeDeletable(@item.OrderMasterId);" class="linkPointer" data-toggle="modal" data-target="#deleteModal" title="Delete">
+                                            <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                        </a>
 
-                                            <a href="~/Procurement/PackagingSalesOrderSlave?companyId=@item.CompanyFK&orderMasterId=@item.OrderMasterId" class="btn btn-success btn-sm">Manage BBQ Item</a>
+                                        <a href="~/Procurement/PackagingSalesOrderSlave?companyId=@item.CompanyFK&orderMasterId=@item.OrderMasterId" class="btn btn-success btn-sm">Manage BBQ Item</a>
 
 
-                                        </td>
-                                    </tr>
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
@@ -372,7 +360,7 @@
 
     @Scripts.Render("~/bundles/jqueryui")
     @Styles.Render("~/Content/cssjqryUi")
-<script type="text/javascript">
+    <script type="text/javascript">
         function calculateAmount() {
 
             var salesQuantity = $("#txtSalesQuantity").val();
@@ -815,5 +803,5 @@
 
 
 
-</script>
+    </script>
 }
