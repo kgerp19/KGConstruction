@@ -467,7 +467,7 @@
 
 
             if (@Model.RequisitionId> 0) {
-                var RequisitionNo = HttpRequest.AjaxData("POST", '/Procurement/GetRequisitionNoByRequsitionId', { requisitionId: '@Model.RequisitionId', companyId: 20 });
+                var RequisitionNo = HttpRequest.AjaxData("POST", '/Procurement/GetRequisitionNoByRequsitionId', { requisitionId: '@Model.RequisitionId', companyId: "@Model.CompanyFK" });
                 $('#txtRequisitionNo').val(RequisitionNo);
                 $('#txtRequisitionNo').prop('disabled', true);
                 updatePackagingData(@Model.RequisitionId);
@@ -479,8 +479,8 @@
             $("#txtRequisitionNo").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url:"@Url.Action("GetAutoCompleteOrderNoGetRequsitionId", "Procurement")",
-                        data: { prefix: request.term, companyId:20 },
+                        url: "@Url.Action("GetAutoCompleteOrderNoGetRequsitionId", "Procurement")",
+                        data: { prefix: request.term, companyId: "@Model.CompanyFK" },
                         dataType: "json",
                         type: "get",
                         cache: true,

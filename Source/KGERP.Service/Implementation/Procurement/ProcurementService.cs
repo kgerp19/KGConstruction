@@ -183,21 +183,19 @@ namespace KGERP.Services.Procurement
         {
             var v = (from t1 in _db.Requisitions.Where(x => x.CompanyId == companyId)
                      join t2 in _db.OrderDetails on t1.OrderDetailsId equals t2.OrderDetailId
-                     join t3 in _db.OrderMasters on t2.OrderMasterId equals t3.OrderMasterId
-                     join t4 in _db.Products on t2.ProductId equals t4.ProductId
-                     join t5 in _db.ProductSubCategories on t4.ProductSubCategoryId equals t5.ProductSubCategoryId
+                     join t3 in _db.OrderMasters on t2.OrderMasterId equals t3.OrderMasterId                      
                      join t6 in _db.Vendors on t3.CustomerId equals t6.VendorId
 
 
                      where t1.IsActive && ((t1.RequisitionNo.StartsWith(prefix)) || (t2.JobOrderNo.StartsWith(prefix))
-                     || (t3.OrderNo.StartsWith(prefix)) || (t5.Name.StartsWith(prefix)) || (t4.ProductName.StartsWith(prefix))
+                     || (t3.OrderNo.StartsWith(prefix)) || t2.BOQItemName.StartsWith(prefix)
                      || (t6.Name.StartsWith(prefix))
                      )
 
                      select new
                      {
                          label = t1.RequisitionNo + " " + t1.RequisitionDate + " " + t2.JobOrderNo + " " +
-                         t5.Name + " " + t4.ProductName + " " + t2.Remarks + " " + t6.Name,
+                         t2.BOQItemName + " " + t2.Remarks + " " + t6.Name,
                          val = t1.RequisitionId
 
                      }).OrderBy(x => x.label).Take(20).ToList();
@@ -4908,7 +4906,7 @@ namespace KGERP.Services.Procurement
         {
             VMPackagingPurchaseRequisition vmSalesOrder = new VMPackagingPurchaseRequisition();
             var list = (from t1 in _db.RequisitionItemDetails.Where(x => x.RequisitionId == RequisitionId)
-                            //join t2 in _db.FinishProductBOMs.Where(x => x.IsActive) on t1.FinishProductBOMId equals t2.ID
+                        join t2 in _db.FinishProductBOMs.Where(x => x.IsActive) on t1.FinishProductBOMId equals t2.ID
                         join t4 in _db.Products.Where(x => x.IsActive) on t1.RProductId equals t4.ProductId
                         join t5 in _db.ProductSubCategories.Where(x => x.IsActive) on t4.ProductSubCategoryId equals t5.ProductSubCategoryId
                         join t6 in _db.Requisitions.Where(x => x.IsActive) on t1.RequisitionId equals t6.RequisitionId
@@ -5180,6 +5178,7 @@ namespace KGERP.Services.Procurement
                                                                    from e3 in emp.DefaultIfEmpty()
                                                                    select new VMPackagingPurchaseRequisition
                                                                    {
+                                                                       CompanyFK = t1.CompanyId,
                                                                        IssueMasterId = t1.IssueMasterId,
                                                                        RequisitionNo = t2.RequisitionNo,
                                                                        RequisitionDate = t2.RequisitionDate.Value,
