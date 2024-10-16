@@ -10873,6 +10873,11 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             <End Role="OrderMaster" EntitySet="OrderMasters" />
           </AssociationSet>
           <EntitySet Name="Accounting_CostCenter" EntityType="ERPModel.Accounting_CostCenter" />
+          <EntitySet Name="OrderDeliverDetails" EntityType="ERPModel.OrderDeliverDetail" />
+          <AssociationSet Name="FK_OrderDeliverDetail_OrderDeliver" Association="ERPModel.FK_OrderDeliverDetail_OrderDeliver">
+            <End Role="OrderDeliver" EntitySet="OrderDelivers" />
+            <End Role="OrderDeliverDetail" EntitySet="OrderDeliverDetails" />
+          </AssociationSet>
           <EntitySet Name="OrderDetails" EntityType="ERPModel.OrderDetail" />
           <AssociationSet Name="FK_OrderDetail_OrderMaster" Association="ERPModel.FK_OrderDetail_OrderMaster">
             <End Role="OrderMaster" EntitySet="OrderMasters" />
@@ -10881,11 +10886,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <AssociationSet Name="FK_OrderDetail_Product" Association="ERPModel.FK_OrderDetail_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
-          </AssociationSet>
-          <EntitySet Name="OrderDeliverDetails" EntityType="ERPModel.OrderDeliverDetail" />
-          <AssociationSet Name="FK_OrderDeliverDetail_OrderDeliver" Association="ERPModel.FK_OrderDeliverDetail_OrderDeliver">
-            <End Role="OrderDeliver" EntitySet="OrderDelivers" />
-            <End Role="OrderDeliverDetail" EntitySet="OrderDeliverDetails" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="GetEmployeeListForTeam_Result">
@@ -19916,6 +19916,63 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="Status" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="OrderDeliverDetail">
+          <Key>
+            <PropertyRef Name="OrderDeliverDetailId" />
+          </Key>
+          <Property Name="OrderDeliverDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderDeliverId" Type="Int64" />
+          <Property Name="ProductId" Type="Int32" />
+          <Property Name="UnitPrice" Type="Double" Nullable="false" />
+          <Property Name="DeliveredQty" Type="Double" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BaseCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CashCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CarryingRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CreditCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SpecialDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="EBaseCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ECarryingCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ECashCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="COGSPrice" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="SaleCommissionRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="AdditionPrice" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="EngineNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ChassisNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BatteryNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RearTyreRH" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RearTyreLH" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OrderDetailId" Type="Int64" Nullable="false" />
+          <Property Name="OverQty" Type="Double" Nullable="false" />
+          <Property Name="TPPrice" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="MonthlyIncentive" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="YearlyIncentive" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="VATPercent" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TDSPercent" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsReturn" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModifedDate" Type="DateTime" Precision="3" />
+          <Property Name="GrossWeight" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <Property Name="NetWeight" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <Property Name="NoofReels" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <Property Name="NoofBags" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <NavigationProperty Name="OrderDeliver" Relationship="ERPModel.FK_OrderDeliverDetail_OrderDeliver" FromRole="OrderDeliverDetail" ToRole="OrderDeliver" />
+        </EntityType>
+        <Association Name="FK_OrderDeliverDetail_OrderDeliver">
+          <End Type="ERPModel.OrderDeliver" Role="OrderDeliver" Multiplicity="0..1" />
+          <End Type="ERPModel.OrderDeliverDetail" Role="OrderDeliverDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderDeliver">
+              <PropertyRef Name="OrderDeliverId" />
+            </Principal>
+            <Dependent Role="OrderDeliverDetail">
+              <PropertyRef Name="OrderDeliverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="OrderDetail">
           <Key>
             <PropertyRef Name="OrderDetailId" />
@@ -19984,63 +20041,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             </Principal>
             <Dependent Role="OrderDetail">
               <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="OrderDeliverDetail">
-          <Key>
-            <PropertyRef Name="OrderDeliverDetailId" />
-          </Key>
-          <Property Name="OrderDeliverDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OrderDeliverId" Type="Int64" />
-          <Property Name="ProductId" Type="Int32" />
-          <Property Name="UnitPrice" Type="Double" Nullable="false" />
-          <Property Name="DeliveredQty" Type="Double" Nullable="false" />
-          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="BaseCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="CashCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="CarryingRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="CreditCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SpecialDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="EBaseCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ECarryingCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ECashCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="COGSPrice" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
-          <Property Name="SaleCommissionRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="AdditionPrice" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="EngineNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ChassisNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BatteryNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RearTyreRH" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RearTyreLH" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="OrderDetailId" Type="Int64" Nullable="false" />
-          <Property Name="OverQty" Type="Double" Nullable="false" />
-          <Property Name="TPPrice" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
-          <Property Name="MonthlyIncentive" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="YearlyIncentive" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="VATPercent" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TDSPercent" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="IsReturn" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ModifedDate" Type="DateTime" Precision="3" />
-          <Property Name="GrossWeight" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
-          <Property Name="NetWeight" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
-          <Property Name="NoofReels" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
-          <Property Name="NoofBags" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
-          <NavigationProperty Name="OrderDeliver" Relationship="ERPModel.FK_OrderDeliverDetail_OrderDeliver" FromRole="OrderDeliverDetail" ToRole="OrderDeliver" />
-        </EntityType>
-        <Association Name="FK_OrderDeliverDetail_OrderDeliver">
-          <End Type="ERPModel.OrderDeliver" Role="OrderDeliver" Multiplicity="0..1" />
-          <End Type="ERPModel.OrderDeliverDetail" Role="OrderDeliverDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderDeliver">
-              <PropertyRef Name="OrderDeliverId" />
-            </Principal>
-            <Dependent Role="OrderDeliverDetail">
-              <PropertyRef Name="OrderDeliverId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -26881,6 +26881,51 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="OrderDeliverDetails">
+            <EntityTypeMapping TypeName="ERPModel.OrderDeliverDetail">
+              <MappingFragment StoreEntitySet="OrderDeliverDetail">
+                <ScalarProperty Name="NoofBags" ColumnName="NoofBags" />
+                <ScalarProperty Name="NoofReels" ColumnName="NoofReels" />
+                <ScalarProperty Name="NetWeight" ColumnName="NetWeight" />
+                <ScalarProperty Name="GrossWeight" ColumnName="GrossWeight" />
+                <ScalarProperty Name="ModifedDate" ColumnName="ModifedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsReturn" ColumnName="IsReturn" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="TDSPercent" ColumnName="TDSPercent" />
+                <ScalarProperty Name="VATPercent" ColumnName="VATPercent" />
+                <ScalarProperty Name="YearlyIncentive" ColumnName="YearlyIncentive" />
+                <ScalarProperty Name="MonthlyIncentive" ColumnName="MonthlyIncentive" />
+                <ScalarProperty Name="TPPrice" ColumnName="TPPrice" />
+                <ScalarProperty Name="OverQty" ColumnName="OverQty" />
+                <ScalarProperty Name="OrderDetailId" ColumnName="OrderDetailId" />
+                <ScalarProperty Name="RearTyreLH" ColumnName="RearTyreLH" />
+                <ScalarProperty Name="RearTyreRH" ColumnName="RearTyreRH" />
+                <ScalarProperty Name="BatteryNo" ColumnName="BatteryNo" />
+                <ScalarProperty Name="ChassisNo" ColumnName="ChassisNo" />
+                <ScalarProperty Name="EngineNo" ColumnName="EngineNo" />
+                <ScalarProperty Name="AdditionPrice" ColumnName="AdditionPrice" />
+                <ScalarProperty Name="SaleCommissionRate" ColumnName="SaleCommissionRate" />
+                <ScalarProperty Name="COGSPrice" ColumnName="COGSPrice" />
+                <ScalarProperty Name="ECashCommission" ColumnName="ECashCommission" />
+                <ScalarProperty Name="ECarryingCommission" ColumnName="ECarryingCommission" />
+                <ScalarProperty Name="EBaseCommission" ColumnName="EBaseCommission" />
+                <ScalarProperty Name="SpecialDiscount" ColumnName="SpecialDiscount" />
+                <ScalarProperty Name="CreditCommission" ColumnName="CreditCommission" />
+                <ScalarProperty Name="CarryingRate" ColumnName="CarryingRate" />
+                <ScalarProperty Name="CashCommission" ColumnName="CashCommission" />
+                <ScalarProperty Name="BaseCommission" ColumnName="BaseCommission" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="DeliveredQty" ColumnName="DeliveredQty" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="OrderDeliverId" ColumnName="OrderDeliverId" />
+                <ScalarProperty Name="OrderDeliverDetailId" ColumnName="OrderDeliverDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="OrderDetails">
             <EntityTypeMapping TypeName="ERPModel.OrderDetail">
               <MappingFragment StoreEntitySet="OrderDetail">
@@ -26924,51 +26969,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
                 <ScalarProperty Name="BOQItemName" ColumnName="BOQItemName" />
                 <ScalarProperty Name="JobOrderNo" ColumnName="JobOrderNo" />
                 <ScalarProperty Name="OrderDetailId" ColumnName="OrderDetailId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OrderDeliverDetails">
-            <EntityTypeMapping TypeName="ERPModel.OrderDeliverDetail">
-              <MappingFragment StoreEntitySet="OrderDeliverDetail">
-                <ScalarProperty Name="NoofBags" ColumnName="NoofBags" />
-                <ScalarProperty Name="NoofReels" ColumnName="NoofReels" />
-                <ScalarProperty Name="NetWeight" ColumnName="NetWeight" />
-                <ScalarProperty Name="GrossWeight" ColumnName="GrossWeight" />
-                <ScalarProperty Name="ModifedDate" ColumnName="ModifedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IsReturn" ColumnName="IsReturn" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="TDSPercent" ColumnName="TDSPercent" />
-                <ScalarProperty Name="VATPercent" ColumnName="VATPercent" />
-                <ScalarProperty Name="YearlyIncentive" ColumnName="YearlyIncentive" />
-                <ScalarProperty Name="MonthlyIncentive" ColumnName="MonthlyIncentive" />
-                <ScalarProperty Name="TPPrice" ColumnName="TPPrice" />
-                <ScalarProperty Name="OverQty" ColumnName="OverQty" />
-                <ScalarProperty Name="OrderDetailId" ColumnName="OrderDetailId" />
-                <ScalarProperty Name="RearTyreLH" ColumnName="RearTyreLH" />
-                <ScalarProperty Name="RearTyreRH" ColumnName="RearTyreRH" />
-                <ScalarProperty Name="BatteryNo" ColumnName="BatteryNo" />
-                <ScalarProperty Name="ChassisNo" ColumnName="ChassisNo" />
-                <ScalarProperty Name="EngineNo" ColumnName="EngineNo" />
-                <ScalarProperty Name="AdditionPrice" ColumnName="AdditionPrice" />
-                <ScalarProperty Name="SaleCommissionRate" ColumnName="SaleCommissionRate" />
-                <ScalarProperty Name="COGSPrice" ColumnName="COGSPrice" />
-                <ScalarProperty Name="ECashCommission" ColumnName="ECashCommission" />
-                <ScalarProperty Name="ECarryingCommission" ColumnName="ECarryingCommission" />
-                <ScalarProperty Name="EBaseCommission" ColumnName="EBaseCommission" />
-                <ScalarProperty Name="SpecialDiscount" ColumnName="SpecialDiscount" />
-                <ScalarProperty Name="CreditCommission" ColumnName="CreditCommission" />
-                <ScalarProperty Name="CarryingRate" ColumnName="CarryingRate" />
-                <ScalarProperty Name="CashCommission" ColumnName="CashCommission" />
-                <ScalarProperty Name="BaseCommission" ColumnName="BaseCommission" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="DeliveredQty" ColumnName="DeliveredQty" />
-                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="OrderDeliverId" ColumnName="OrderDeliverId" />
-                <ScalarProperty Name="OrderDeliverDetailId" ColumnName="OrderDeliverDetailId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

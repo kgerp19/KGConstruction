@@ -514,11 +514,11 @@
         <AssociationConnector Association="ERPModel.FK_OrderDeliver_OrderMaster" />
         <AssociationConnector Association="ERPModel.FK_OrderMaster_Supplier" />
         <EntityTypeShape EntityType="ERPModel.Accounting_CostCenter" Width="1.5" PointX="28.375" PointY="35.75" />
+        <EntityTypeShape EntityType="ERPModel.OrderDeliverDetail" Width="1.5" PointX="10.5" PointY="96.875" />
+        <AssociationConnector Association="ERPModel.FK_OrderDeliverDetail_OrderDeliver" />
         <EntityTypeShape EntityType="ERPModel.OrderDetail" Width="1.5" PointX="8.25" PointY="143.625" />
         <AssociationConnector Association="ERPModel.FK_OrderDetail_OrderMaster" />
         <AssociationConnector Association="ERPModel.FK_OrderDetail_Product" />
-        <EntityTypeShape EntityType="ERPModel.OrderDeliverDetail" Width="1.5" PointX="10.5" PointY="96.875" />
-        <AssociationConnector Association="ERPModel.FK_OrderDeliverDetail_OrderDeliver" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
