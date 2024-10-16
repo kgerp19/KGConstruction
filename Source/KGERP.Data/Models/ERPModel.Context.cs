@@ -360,8 +360,8 @@ namespace KGERP.Data.Models
         public virtual DbSet<Voucher> Vouchers { get; set; }
         public virtual DbSet<OrderMaster> OrderMasters { get; set; }
         public virtual DbSet<Accounting_CostCenter> Accounting_CostCenter { get; set; }
-        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<OrderDeliverDetail> OrderDeliverDetails { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
     
         public virtual ObjectResult<GetEmployeeListForTeam_Result> GetEmployeeListForTeam(Nullable<int> companyId)
         {
