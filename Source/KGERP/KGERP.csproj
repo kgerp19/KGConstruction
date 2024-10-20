@@ -792,9 +792,6 @@
     <Compile Include="ViewModel\WorkViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AppData\obj\Debug\KGERP.csproj.FileListAbsolute.txt" />
-    <Content Include="AppData\obj\Release\KGERP.csproj.FileListAbsolute.txt" />
-    <Content Include="AppData\obj\Release\Package\PackageTmp\bin\System.Security.Cryptography.Csp.dll" />
     <Content Include="App_Data\log.txt" />
     <Content Include="App_Data\logg.txt" />
     <Content Include="App_Data\Weblog.txt" />
@@ -3229,22 +3226,7 @@
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\img\ABALogo.png" />
-    <Content Include="Content\img\BSLogo.png" />
-    <Content Include="Content\img\EBLogo.png" />
-    <Content Include="Content\img\ISSDEV.png" />
-    <Content Include="Content\img\ISSLogo.png" />
-    <Content Include="Content\img\ISSlogoFinal.jpg" />
-    <Content Include="Content\img\JfERPLogo.png" />
-    <Content Include="Content\img\JSBelgrade.jpeg" />
-    <Content Include="Content\img\kbglogo.png" />
-    <Content Include="Content\img\KG ERP.JPG" />
-    <Content Include="Content\img\KG.jpg" />
-    <Content Include="Content\img\MSLogo.png" />
-    <Content Include="Content\img\SRLogo.png" />
-    <Content Include="Content\img\SSLogo.png" />
     <Content Include="Content\img\TCLLogo.png" />
-    <Content Include="Content\img\UALogo.png" />
     <Content Include="Content\ionicons.min.css" />
     <Content Include="Content\JQGRID\bootstrap-theme.css" />
     <Content Include="Content\JQGRID\bootstrap-theme.min.css" />
@@ -4309,19 +4291,8 @@
     <Content Include="Images\KG3847.jpg" />
     <Content Include="Images\KG4007%281%29.jpg" />
     <Content Include="Images\Logo\45.gif" />
-    <Content Include="Images\Logo\ABALogo.png" />
-    <Content Include="Images\Logo\BSLogo.png" />
-    <Content Include="Images\Logo\ISSLogo.png" />
-    <Content Include="Images\Logo\ISSlogoFinal.jpg" />
-    <Content Include="Images\Logo\JfERPLogo.png" />
-    <Content Include="Images\Logo\JSBelgrade.jpeg" />
-    <Content Include="Images\Logo\kg_logo-150x150.ico" />
     <Content Include="Images\Logo\logo.png" />
-    <Content Include="Images\Logo\MSLogo.png" />
-    <Content Include="Images\Logo\SRLogo.png" />
-    <Content Include="Images\Logo\SSLogo.png" />
     <Content Include="Images\Logo\TCLLogo.png" />
-    <Content Include="Images\Logo\UALogo.png" />
     <Content Include="Images\Muhammad Rais-Ul- Awal.jpg" />
     <Content Include="Images\orderedList0.png" />
     <Content Include="Images\orderedList1.png" />
@@ -6105,6 +6076,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="AppData\obj\Debug\" />
+    <Folder Include="AppData\obj\Release\Package\PackageTmp\bin\" />
     <Folder Include="Content\Login\images\icons\" />
     <Folder Include="Images\Signature\" />
     <Folder Include="Images\Upload\" />

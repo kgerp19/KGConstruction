@@ -392,6 +392,7 @@ namespace KGERP.Services.Procurement
         
         public string CostCenterType { get; set; }
         public string CostCenterName { get; set; }
+        public double PrjectValue { get; set; }
 
         public int DemandId { get; set; } = 0;
         public string DemandNo { get; set; } = "";

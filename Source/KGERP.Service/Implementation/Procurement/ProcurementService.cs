@@ -183,7 +183,7 @@ namespace KGERP.Services.Procurement
         {
             var v = (from t1 in _db.Requisitions.Where(x => x.CompanyId == companyId)
                      join t2 in _db.OrderDetails on t1.OrderDetailsId equals t2.OrderDetailId
-                     join t3 in _db.OrderMasters on t2.OrderMasterId equals t3.OrderMasterId                      
+                     join t3 in _db.OrderMasters on t2.OrderMasterId equals t3.OrderMasterId
                      join t6 in _db.Vendors on t3.CustomerId equals t6.VendorId
 
 
@@ -208,7 +208,7 @@ namespace KGERP.Services.Procurement
             var v = (from t1 in _db.Requisitions
                      join t2 in _db.OrderDetails on t1.OrderDetailsId equals t2.OrderDetailId
                      join t3 in _db.OrderMasters on t2.OrderMasterId equals t3.OrderMasterId
-                      join t6 in _db.Vendors on t3.CustomerId equals t6.VendorId
+                     join t6 in _db.Vendors on t3.CustomerId equals t6.VendorId
                      where t1.IsActive && t1.RequisitionId == requisitionId && t1.CompanyId == companyId
                      select new
                      {
@@ -256,7 +256,7 @@ namespace KGERP.Services.Procurement
         public object GetAutoCompleteStyleNo(int orderMasterId)
         {
             var v = (from t1 in _db.OrderDetails.Where(x => x.OrderMasterId == orderMasterId && x.IsActive && x.Status == (int)EnumPOStatus.Submitted)
-                     
+
                      select new
                      {
                          val = t1.OrderDetailId,
@@ -1944,7 +1944,7 @@ namespace KGERP.Services.Procurement
             model.IsActive = true;
             model.CreatedDate = DateTime.Now;
             model.CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString();
-            
+
 
             if (await _db.SaveChangesAsync() > 0)
             {
@@ -3302,7 +3302,13 @@ namespace KGERP.Services.Procurement
                                                                         Remarks = t1.Remarks,
                                                                         Stockname = t6.Name,
                                                                         StockInfoId = (int)t1.StockInfoId,
-                                                                        SalePersonId = (int)t1.SalePersonId
+                                                                        SalePersonId = (int)t1.SalePersonId,
+                                                                        PrjectValue = (from a in _db.OrderDetails
+                                                                                       join b in _db.OrderMasters on a.OrderMasterId equals b.OrderMasterId
+                                                                                       where a.IsActive && b.IsActive && a.Status == (int)EnumPOStatus.Submitted
+                                                                                       && b.CostCenterId == t1.CostCenterId
+                                                                                       select (a.Qty * ((a.IsVATInclude == true ? a.UnitPrice / (((double)a.VATPercent + 100) / 100) : a.UnitPrice)))
+               ).DefaultIfEmpty(0).Sum()
 
 
 
@@ -3652,7 +3658,7 @@ namespace KGERP.Services.Procurement
                                               IsVATInclude = t1.IsVATInclude,
                                               VATPercent = t1.VATPercent,
                                               TDSPercent = t1.TDSPercent,
-                                             // ReelDirection = t1.ReelDirection,
+                                              // ReelDirection = t1.ReelDirection,
                                               PouchDerection = t1.PouchDerection,
                                               JobOrderDate = t1.OrderDate
                                           }).FirstOrDefault());
@@ -3747,7 +3753,7 @@ namespace KGERP.Services.Procurement
                 CompanyId = vmSalesOrderSlave.CompanyFK,
                 CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
                 CreateDate = DateTime.Now,
-                 
+
                 IsActive = true
             };
             _db.OrderDetails.Add(orderDetail);
@@ -3790,7 +3796,7 @@ namespace KGERP.Services.Procurement
                 CompanyId = model.CompanyId,
                 CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
                 CreateDate = DateTime.Now,
-                 
+
                 IsActive = true
             };
             _db.OrderDetails.Add(orderDetail);
@@ -3823,7 +3829,7 @@ namespace KGERP.Services.Procurement
                 CompanyId = vmSalesOrderSlave.CompanyFK,
                 CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
                 CreateDate = DateTime.Now,
-                 
+
                 IsActive = true
             };
             _db.OrderDetails.Add(orderDetail);
@@ -3890,7 +3896,7 @@ namespace KGERP.Services.Procurement
 
                 JobOrderNo = newJobOrder,
                 OrderMasterId = vmSalesOrderSlave.OrderMasterId,
-                BOQItemName = vmSalesOrderSlave.BOQItemName,                
+                BOQItemName = vmSalesOrderSlave.BOQItemName,
                 Qty = vmSalesOrderSlave.Qty,
                 UnitPrice = vmSalesOrderSlave.UnitPrice,
                 VATPercent = vmSalesOrderSlave.VATPercent,
@@ -3898,7 +3904,7 @@ namespace KGERP.Services.Procurement
                 OrderDate = vmSalesOrderSlave.JobOrderDate,
                 UnitId = vmSalesOrderSlave.UnitId,
                 Remarks = vmSalesOrderSlave.Description,
-                Status = (int)EnumPOStatus.Draft,  
+                Status = (int)EnumPOStatus.Draft,
 
                 CompanyId = vmSalesOrderSlave.CompanyFK,
                 CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
@@ -3906,13 +3912,13 @@ namespace KGERP.Services.Procurement
                 IsActive = true,
 
                 Comsumption = 0,
-                PackQuantity = 0,                
+                PackQuantity = 0,
                 DiscountUnit = 0,
                 DiscountRate = 0,
                 SpecialBaseCommission = 0,
                 TDSPercent = 0,
-                 
-               
+
+
             };
             _db.OrderDetails.Add(orderDetail);
             if (await _db.SaveChangesAsync() > 0)
@@ -4020,7 +4026,7 @@ namespace KGERP.Services.Procurement
             model.PackQuantity = vmSalesOrderSlave.PackQuantity;
             model.DiscountUnit = vmSalesOrderSlave.ProductDiscountUnit;
             model.SpecialBaseCommission = vmSalesOrderSlave.SpecialDiscount;
-             
+
 
 
             model.ModifiedBy = System.Web.HttpContext.Current.User.Identity.Name;
@@ -4345,27 +4351,27 @@ namespace KGERP.Services.Procurement
                 ExpectedDeliveryDate = vmSalesOrderSlave.ExpectedDeliveryDate,
                 StockInfoId = vmSalesOrderSlave.StockInfoId,
                 PaymentMethod = vmSalesOrderSlave.CustomerPaymentMethodEnumFK,
-                TotalAmount = vmSalesOrderSlave.DivisionValue,
+                TotalAmount = 0,
                 FinalDestination = vmSalesOrderSlave.FinalDestination,
                 Remarks = vmSalesOrderSlave.Remarks,
 
                 Status = (int)EnumPOStatus.Draft,
 
 
-                 
+
 
                 ProductType = "F",
-               
+
                 CourierNo = vmSalesOrderSlave.CourierNo,
                 CourierCharge = vmSalesOrderSlave.CourierCharge,
-                CurrentPayable =0,
-              
+                CurrentPayable = 0,
+
                 CompanyId = vmSalesOrderSlave.CompanyFK,
                 CreatedBy = System.Web.HttpContext.Current.User.Identity.Name,// System.Web.HttpContext.Current.User.Identity.Name,
                 CreateDate = DateTime.Now,
                 IsActive = true,
                 OrderStatus = "N",
-               
+
                 IsService = vmSalesOrderSlave.IsService,
 
 
@@ -4534,7 +4540,7 @@ namespace KGERP.Services.Procurement
             VMSalesOrderSlave vmSalesOrderSlave = new VMSalesOrderSlave();
             vmSalesOrderSlave = await Task.Run(() => (from t1 in _db.OrderMasters.Where(x => x.IsActive && x.OrderMasterId == orderMasterId && x.CompanyId == companyId)
                                                       join t2 in _db.Vendors on t1.CustomerId equals t2.VendorId
-                                                      join t4 in _db.HeadGLs on t2.HeadGLId equals t4.Id                                                       
+                                                      join t4 in _db.HeadGLs on t2.HeadGLId equals t4.Id
                                                       join t7 in _db.Employees on t1.SalePersonId equals t7.Id into y
                                                       from t7 in y.DefaultIfEmpty()
                                                       join t3 in _db.Accounting_CostCenter on t1.CostCenterId equals t3.CostCenterId
@@ -4548,31 +4554,31 @@ namespace KGERP.Services.Procurement
                                                           CostCenterType = t5.Name,
                                                           CostCenterId = t1.CostCenterId,
                                                           OrderNo = t1.OrderNo,
-                                                          CustomerPONo = t1.CustomerPONo,                                                           
+                                                          CustomerPONo = t1.CustomerPONo,
                                                           CustomerId = t2.VendorId,
                                                           CommonCustomerName = t2.Name,
                                                           OrderDate = t1.OrderDate,
-                                                          ExpectedDeliveryDate = t1.ExpectedDeliveryDate,                                                          
+                                                          ExpectedDeliveryDate = t1.ExpectedDeliveryDate,
                                                           OfficerNAme = t7.Name,
                                                           Status = t1.Status,
                                                           CustomerPaymentMethodEnumFK = t1.PaymentMethod,
-                                                          DivisionValue = t1.TotalAmount??0,
+                                                          DivisionValue = t1.TotalAmount ?? 0,
                                                           FinalDestination = t1.FinalDestination,
-                                                          Remarks = t1.Remarks,                                                           
+                                                          Remarks = t1.Remarks,
                                                           CommonCustomerCode = t4.AccCode,
                                                           CustomerPhone = t2.Phone,
                                                           CustomerAddress = t2.Address,
                                                           CustomerEmail = t2.Email,
                                                           ContactPerson = t2.ContactName,
                                                           CompanyFK = t1.CompanyId,
-                                                          
-                                                          CreatedDate = t1.CreateDate,   
-                                                          CreatedBy = t1.CreatedBy 
+
+                                                          CreatedDate = t1.CreateDate,
+                                                          CreatedBy = t1.CreatedBy
 
                                                       }).FirstOrDefault());
 
             vmSalesOrderSlave.DataListSlave = await Task.Run(() => (from t1 in _db.OrderDetails.Where(x => x.IsActive && x.OrderMasterId == orderMasterId)
-                                                                     join t6 in _db.Units on t1.UnitId equals t6.UnitId
+                                                                    join t6 in _db.Units on t1.UnitId equals t6.UnitId
                                                                     select new VMSalesOrderSlave
                                                                     {
 
@@ -4582,17 +4588,17 @@ namespace KGERP.Services.Procurement
                                                                         JobOrderNo = t1.JobOrderNo,
                                                                         JobOrderDate = t1.OrderDate,
                                                                         BOQItemName = t1.BOQItemName,
-                                                                        
+
                                                                         Qty = t1.Qty,
                                                                         UnitPrice = (t1.IsVATInclude == true ? t1.UnitPrice / (((double)t1.VATPercent + 100) / 100) : t1.UnitPrice),
 
-                                                                        
+
                                                                         VATPercent = t1.VATPercent,
                                                                         VATAmount = (t1.Qty *
                                                                         (t1.IsVATInclude == true ? t1.UnitPrice / (((double)t1.VATPercent + 100) / 100) : t1.UnitPrice) // Unit Price
                                                                                     ) / 100 * (double)t1.VATPercent,
                                                                         IsVATInclude = t1.IsVATInclude,
-                                                                        UnitName = t6.Name,                                                                         
+                                                                        UnitName = t6.Name,
                                                                         Description = t1.Remarks
                                                                     }).OrderByDescending(x => x.OrderDetailId).AsEnumerable());
 
@@ -4631,7 +4637,7 @@ namespace KGERP.Services.Procurement
                                                                                     ) / 100 * (double)t0.VATPercent,
                                                            IsVATInclude = t0.IsVATInclude,
                                                            UnitName = t6.Name,
-                                                           Description = t0.Remarks,                                                            
+                                                           Description = t0.Remarks,
                                                            CostCenterName = t3.Name,
                                                            CostCenterType = t5.Name,
                                                            CostCenterId = t1.CostCenterId,
@@ -4694,7 +4700,7 @@ namespace KGERP.Services.Procurement
                 IsActive = true,
                 CreatedDate = DateTime.Now,
                 CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
-                
+
 
             };
             _db.FinishProductBOMs.Add(FinishProductBOM);
@@ -4876,7 +4882,7 @@ namespace KGERP.Services.Procurement
             vmSalesOrder.DataList = await Task.Run(() => (from t1 in _db.Requisitions.Where(x => x.IsActive && x.CompanyId == companyId && x.RequisitionType == 3)
                                                           join t2 in _db.OrderDetails.Where(x => x.IsActive) on t1.OrderDetailsId equals t2.OrderDetailId
                                                           join t3 in _db.OrderMasters.Where(x => x.IsActive) on t2.OrderMasterId equals t3.OrderMasterId
-                                                            join t6 in _db.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
+                                                          join t6 in _db.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
                                                           join t7 in _db.StockInfoes.Where(x => x.IsActive) on t1.ToRequisitionId equals t7.StockInfoId
 
 
@@ -5314,11 +5320,11 @@ namespace KGERP.Services.Procurement
         public async Task<VMPackagingPurchaseRequisition> PackagingNotIssueItemList(int companyId)
         {
             VMPackagingPurchaseRequisition vmSalesOrder = new VMPackagingPurchaseRequisition();
-             
+
             vmSalesOrder.DataList = await Task.Run(() => (from t1 in _db.Requisitions.Where(x => x.IsActive && x.CompanyId == companyId && x.RequisitionType == 3 && x.RequisitionStatus == "N" && x.IsSubmitted)
                                                           join t2 in _db.OrderDetails.Where(x => x.IsActive) on t1.OrderDetailsId equals t2.OrderDetailId
                                                           join t3 in _db.OrderMasters.Where(x => x.IsActive) on t2.OrderMasterId equals t3.OrderMasterId
-                                                            join t6 in _db.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
+                                                          join t6 in _db.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
                                                           join t7 in _db.StockInfoes.Where(x => x.IsActive) on t1.ToRequisitionId equals t7.StockInfoId
 
 
@@ -6075,7 +6081,7 @@ namespace KGERP.Services.Procurement
                             CompanyId = vmSalesOrderSlave.CompanyFK,
                             CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
                             CreateDate = DateTime.Now,
-                             
+
                             IsActive = true
                         });
                     }
