@@ -23,7 +23,7 @@
         @if (Model.PurchaseOrderId > 0)
         {
             <span>
-                Purchase Invoice History of:  <a target="_blank" href="~/Report/PackagingPurchaseOrderReports?purchaseOrderId=@Model.PurchaseOrderId&companyId=@Model.CompanyFK&reportName=ISSPurchaseOrderReports">@Model.CID</a>
+                Purchase Invoice History of:  <a target="_blank" href="~/Report/PackagingPurchaseOrderReports?purchaseOrderId=@Model.PurchaseOrderId&companyId=@Model.CompanyFK&reportName=KGCPurchaseOrderReports">@Model.CID</a>
 
             </span>
         }
@@ -420,7 +420,7 @@
                         {
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a style="width:100%" class="col-md-4 btn btn-warning" target="_blank" href="~/Report/PackagingPurchaseOrderReports?purchaseOrderId=@Model.PurchaseOrderId&companyId=@Model.CompanyFK&reportName=ISSPurchaseOrderReports">Purchase Order Print</a>
+                                    <a style="width:100%" class="col-md-4 btn btn-warning" target="_blank" href="~/Report/PackagingPurchaseOrderReports?purchaseOrderId=@Model.PurchaseOrderId&companyId=@Model.CompanyFK&reportName=KGCPurchaseOrderReports">Purchase Order Print</a>
                                 </div>
                                 @if (Model.Status == (int)EnumPOStatus.Submitted)
                                 {
