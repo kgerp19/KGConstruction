@@ -91,6 +91,7 @@ namespace KGERP.Service.Configuration
         public string Name { get; set; }
         public string ProjectType { get; set; }
         public int Priority { get; set; }
+        public double PrjectValue { get; set; }
         public IEnumerable<VMUserMenu> DataList { get; set; }
         public int? LayerNo { get; set; }
         public string ShortName { get; set; }

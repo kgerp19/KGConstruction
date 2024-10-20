@@ -323,7 +323,13 @@ namespace KGERP.Service.Implementation
                                        Name = t1.Name,
                                        ProjectType = t3.Name,
                                        CompanyName = t2.Name,
-                                       CompanyFK = t1.CompanyId
+                                       CompanyFK = t1.CompanyId,
+                                       PrjectValue = (from a in _db.OrderDetails
+                                                      join b in _db.OrderMasters on a.OrderMasterId equals b.OrderMasterId
+                                                      where a.IsActive && b.IsActive && a.Status == (int)EnumPOStatus.Submitted
+                                                      && b.CostCenterId == t1.CostCenterId
+                                                      select (a.Qty * ((a.IsVATInclude == true ? a.UnitPrice / (((double)a.VATPercent + 100) / 100) : a.UnitPrice)))
+                                                      ).DefaultIfEmpty(0).Sum()
                                    }).OrderByDescending(x => x.CostCenterId).AsEnumerable();
             return vmUserMenu;
         }

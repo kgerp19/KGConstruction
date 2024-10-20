@@ -79,9 +79,10 @@
                                             <thead>
                                                 <tr>
                                                     <th>SL</th>
-                                                    
+
                                                     <th>Project Type</th>
-                                                    <th>Project / Cost Center Name</th>                                                   
+                                                    <th>Project / Cost Center Name</th>
+                                                    <th>Project Value</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -98,11 +99,12 @@
                                                         <input type="hidden" id="CostCenterTypeId_@item.CostCenterId" name="CostCenterTypeId_" value="@item.CostCenterTypeId" />
 
                                                     </td>
-                                              
+
                                                     <td id="tdProjectType_@item.CostCenterId">
-                                                         @item.ProjectType
+                                                        @item.ProjectType
                                                     </td>
                                                     <td id="tdMenuName_@item.CostCenterId">@item.Name</td>
+                                                    <td id="tdPrjectValue_@item.PrjectValue">@item.PrjectValue</td>
 
 
                                                     <td>
