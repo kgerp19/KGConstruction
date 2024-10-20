@@ -1438,8 +1438,8 @@ namespace Pos.App.Controllers
             vmCommonCustomer.DistrictList = new SelectList(_service.CommonDistrictsDropDownList(), "Value", "Text");
             vmCommonCustomer.UpazilasList = new SelectList(_service.CommonUpazilasDropDownList(), "Value", "Text");
             vmCommonCustomer.PaymentTypeList = new SelectList(_service.CommonCustomerPaymentType(), "Value", "Text");
-            vmCommonCustomer.ZoneListList = new SelectList(_service.CommonZonesDropDownList(companyId), "Value", "Text");
-            vmCommonCustomer.TerritoryList = new SelectList(_service.CommonSubZonesDropDownList(companyId), "Value", "Text");
+            //vmCommonCustomer.ZoneListList = new SelectList(_service.CommonZonesDropDownList(companyId), "Value", "Text");
+            //vmCommonCustomer.TerritoryList = new SelectList(_service.CommonSubZonesDropDownList(companyId), "Value", "Text");
             vmCommonCustomer.Checkdetail = new SelectList(_service.ChekdetailList(), "Value", "Text");
             vmCommonCustomer.CheckType = new SelectList(_service.ChekdTypeList(), "Value", "Text");
             return View(vmCommonCustomer);

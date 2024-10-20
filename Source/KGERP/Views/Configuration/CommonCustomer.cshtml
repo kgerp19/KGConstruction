@@ -137,11 +137,10 @@
 
                                         <!-- Zone and Territory -->
                                         <div class="col-md-3">
-                                            <div class="form-floating">
-                                                <label for="ddlZoneId">Zone</label>
-                                                @Html.DropDownListFor(model => model.ZoneId, Model.ZoneListList as SelectList, "--Select Zone--", new { id = "ddlZoneId", @class = "form-control", required = "true" })
-
-                                                @Html.ValidationMessageFor(model => model.ZoneId, "", new { @class = "text-danger" })
+                                            <div class="form-group">
+                                                <label for="message-text" class="col-form-label">Customer Type:</label>
+                                                @Html.DropDownListFor(model => model.CustomerTypeFk, Model.CustomerTypeList as SelectList, "--Customer Type--", new { id = "ddCustomerTypeFk", @class = "form-control", required = "true" })
+                                                @Html.ValidationMessageFor(model => model.CustomerTypeFk, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
@@ -149,14 +148,7 @@
 
                                     <!-- Additional Information -->
                                     <div class="row g-4 mt-3">
-                                        <div class="col-md-3">
-                                            <div class="form-floating">
-                                                <label for="ddlSubZoneId">Territory</label>
-                                                @Html.DropDownListFor(model => model.SubZoneId, Model.TerritoryList as SelectList, "--Select Territory--", new { id = "ddlSubZoneId", @class = "form-control", required = "true" })
 
-                                                @Html.ValidationMessageFor(model => model.SubZoneId, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
                                         <div class="col-md-3">
                                             <div class="form-floating">
                                                 <label for="txtContactPerson">Contact Person</label>
@@ -181,12 +173,6 @@
                                                 @Html.ValidationMessageFor(model => model.CustomerStatus, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
-
-                                    </div>
-
-
-
-                                    <div class="row g-4 mt-3">
                                         <div class="col-md-3">
                                             <div class="form-floating">
                                                 <label for="txtPropietor">Propietor</label>
@@ -195,6 +181,13 @@
                                                 @Html.ValidationMessageFor(model => model.Propietor, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
+
+                                    </div>
+
+
+
+                                    <div class="row g-4 mt-3">
+
 
 
                                         <div class="col-md-3">
@@ -207,13 +200,7 @@
                                         </div>
 
 
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="message-text" class="col-form-label">Customer Type:</label>
-                                                @Html.DropDownListFor(model => model.CustomerTypeFk, Model.CustomerTypeList as SelectList, "--Customer Type--", new { id = "ddCustomerTypeFk", @class = "form-control", required = "true" })
-                                                @Html.ValidationMessageFor(model => model.CustomerTypeFk, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
+
 
                                         <div class="col-md-3">
                                             <div class="form-floating">
@@ -221,17 +208,6 @@
                                                 @Html.TextBoxFor(model => model.NID, new { id = "txtPropietor", @class = "form-control", placeholder = "NID" })
 
                                                 @Html.ValidationMessageFor(model => model.NID, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row g-4 mt-3">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="message-text" class="col-form-label">Address:</label>
-                                                @Html.TextAreaFor(model => model.Address, new { id = "txtAddress", @class = "form-control", @placeholder = "Address" })
-                                                @*@Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })*@
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -248,6 +224,18 @@
                                                 <small class="form-text text-muted">Please upload an image file (JPG, PNG, GIF).</small>
                                             </div>
                                         </div>
+
+                                    </div>
+
+                                    <div class="row g-4 mt-6">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="message-text" class="col-form-label">Address:</label>
+                                                @Html.TextAreaFor(model => model.Address, new { id = "txtAddress", @class = "form-control", @placeholder = "Address" })
+                                                @*@Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })*@
+                                            </div>
+                                        </div>
+                                        
 
 
 
@@ -433,9 +421,7 @@
                                                     <th>
                                                         Address
                                                     </th>
-                                                    <th>
-                                                        Zone
-                                                    </th>
+                                                  
 
                                                     <th>
                                                         Security Amount
@@ -486,9 +472,7 @@
                                                         <td>
                                                             @item.Address, @item.Upazila, @item.Division @item.District, @item.Country
                                                         </td>
-                                                        <td>
-                                                            @item.ZoneName (Incharge: @item.ZoneIncharge)
-                                                        </td>
+                                                     
                                                         <td>
                                                             @item.SecurityAmount
                                                         </td>
