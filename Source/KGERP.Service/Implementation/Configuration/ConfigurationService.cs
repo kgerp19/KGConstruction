@@ -3883,11 +3883,11 @@ namespace KGERP.Service.Implementation
                                                               join t2 in _db.Upazilas on t1.UpazilaId equals t2.UpazilaId
                                                               join t3 in _db.Districts on t2.DistrictId equals t3.DistrictId
                                                               join t4 in _db.Divisions on t3.DivisionId equals t4.DivisionId
-                                                              join t5 in _db.SubZones on t1.SubZoneId equals t5.SubZoneId
-                                                              join t6 in _db.Zones on t5.ZoneId equals t6.ZoneId
-                                                              where ((zoneId > 0) && (SubZoneId == 0) ? t6.ZoneId == zoneId :
-                                                                     (zoneId > 0) && (SubZoneId > 0) ? t5.SubZoneId == SubZoneId :
-                                                              t6.ZoneId > 0)
+                                                              //join t5 in _db.SubZones on t1.SubZoneId equals t5.SubZoneId
+                                                              //join t6 in _db.Zones on t5.ZoneId equals t6.ZoneId
+                                                              //where ((zoneId > 0) && (SubZoneId == 0) ? t6.ZoneId == zoneId :
+                                                              //       (zoneId > 0) && (SubZoneId > 0) ? t5.SubZoneId == SubZoneId :
+                                                              //t6.ZoneId > 0)
                                                               select new VMCommonSupplier
                                                               {
                                                                   ID = t1.VendorId,
@@ -3905,8 +3905,8 @@ namespace KGERP.Service.Implementation
                                                                   Remarks = t1.Remarks,
                                                                   CompanyFK = t1.CompanyId,
                                                                   Phone = t1.Phone,
-                                                                  ZoneName = t6.Name + " " + t5.Name,
-                                                                  ZoneIncharge = t6.ZoneIncharge,
+                                                                  //ZoneName = t6.Name + " " + t5.Name,
+                                                                  //ZoneIncharge = t6.ZoneIncharge,
                                                                   CreditLimit = t1.CreditLimit,
                                                                   NID = t1.NID,
                                                                   CustomerTypeFk = t1.CustomerTypeFK,
@@ -4368,8 +4368,7 @@ namespace KGERP.Service.Implementation
                                                      join t2 in _db.Upazilas on t1.UpazilaId equals t2.UpazilaId
                                                      join t3 in _db.Districts on t2.DistrictId equals t3.DistrictId
                                                      join t4 in _db.Divisions on t3.DivisionId equals t4.DivisionId
-                                                     join t5 in _db.SubZones on t1.SubZoneId equals t5.SubZoneId
-                                                     join t6 in _db.Zones on t5.ZoneId equals t6.ZoneId
+                                                  
                                                      select new VMCommonSupplier
                                                      {
                                                          ID = t1.VendorId,
@@ -4388,8 +4387,7 @@ namespace KGERP.Service.Implementation
                                                          Remarks = t1.Remarks,
                                                          CompanyFK = t1.CompanyId,
                                                          Phone = t1.Phone,
-                                                         ZoneName = t5.Name,
-                                                         ZoneIncharge = t6.ZoneIncharge,
+                                                  
                                                          CreditLimit = t1.CreditLimit,
                                                          NID = t1.NID,
                                                          CustomerTypeFk = t1.CustomerTypeFK,
@@ -4517,7 +4515,7 @@ namespace KGERP.Service.Implementation
                 ContactName = vmCommonCustomer.ContactPerson,
                 VendorTypeId = (int)Provider.Customer,
                 Address = vmCommonCustomer.Address,
-                SubZoneId = vmCommonCustomer.SubZoneId,
+              
                 NID = vmCommonCustomer.NID,
                 CreditLimit = vmCommonCustomer.CreditLimit,
                 CustomerTypeFK = vmCommonCustomer.CustomerTypeFk,
@@ -4538,7 +4536,7 @@ namespace KGERP.Service.Implementation
                 IsForeign = false,
                 NomineeName = vmCommonCustomer.NomineeName,
                 NomineePhone = vmCommonCustomer.NomineePhone,
-                ZoneId = vmCommonCustomer.ZoneId,
+           
                 NomineeRelation = vmCommonCustomer.NomineeRelation,
                 NomineeNID = vmCommonCustomer.NomineeNID,
                 BusinessAddress = vmCommonCustomer.BusinessAddress,
@@ -4587,8 +4585,8 @@ namespace KGERP.Service.Implementation
                 //Accounts Receivable Seed Head4 Id = 38116
                 int ParentId = 0;
 
-                var subZones = _db.SubZones.Find(commonCustomer.SubZoneId);
-                ParentId = subZones.AccountHeadId;
+
+                ParentId = 50625476; //HeadGl
 
                 VMHeadIntegration integration = new VMHeadIntegration
                 {
@@ -5135,7 +5133,7 @@ namespace KGERP.Service.Implementation
             commonCustomer.UpazilaId = vmCommonCustomer.Common_UpazilasFk;
             commonCustomer.Address = vmCommonCustomer.Address;
             commonCustomer.Phone = vmCommonCustomer.Phone;
-            commonCustomer.SubZoneId = vmCommonCustomer.SubZoneId;
+           
             commonCustomer.NID = vmCommonCustomer.NID;
             commonCustomer.CreditLimit = vmCommonCustomer.CreditLimit;
             commonCustomer.Email = vmCommonCustomer.Email;
@@ -5150,7 +5148,7 @@ namespace KGERP.Service.Implementation
             commonCustomer.Propietor = vmCommonCustomer.Propietor;
             commonCustomer.NomineeName = vmCommonCustomer.NomineeName;
             commonCustomer.NomineePhone = vmCommonCustomer.NomineePhone;
-            commonCustomer.ZoneId = vmCommonCustomer.ZoneId;
+    
             commonCustomer.BusinessAddress = vmCommonCustomer.BusinessAddress;
             commonCustomer.NomineeNID = vmCommonCustomer.NomineeNID;
             commonCustomer.NomineeRelation = vmCommonCustomer.NomineeRelation;
