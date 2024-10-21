@@ -294,6 +294,80 @@
                                 <div id="PackagingPurchaseOrderSlaveData"></div>
                             </div>
                         }
+                        @if (Model.Status == 0 &&  Model.PurchaseOrderId>0)
+                        {
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group" style="padding:0px">
+                                        <label for="message-text" class="col-form-label">Raw Material:</label>
+
+                                        @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Product Name", @id = "txtProductName",disabled="disabled" } })
+
+                                        @Html.HiddenFor(model => model.Common_ProductFK, new { id = "ddlRProductFK" })
+                                        @Html.ValidationMessageFor(model => model.Common_ProductFK, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Purchasing Qty</label>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(model => model.PurchaseQuantity, new { id = "txtPurchaseQuantity", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Purchase Quantity", required = "Required" })
+                                            @Html.ValidationMessageFor(model => model.PurchaseQuantity, "", new { @class = "text-danger" })
+
+                                            <div class="input-group-addon">
+                                                <span class="txtUnitName"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Unit Price</label>
+                                        @Html.TextBoxFor(model => model.PurchasingPrice, new { id = "txtPurchasingPrice", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Purchasing Price", required = "Required" })
+                                        @Html.ValidationMessageFor(model => model.PurchasingPrice, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+       
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Total Price</label>
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(model => model.PurchasingPrice, new { id = "Totalprice", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Purchasing Price", required = "Required" })
+
+                                            @Html.ValidationMessageFor(model => model.PurchasingPrice, "", new { @class = "text-danger" })
+
+                                            @if (Model.Currencyname == null)
+                                            {
+
+                                                <div class="input-group-addon">
+                                                    <span id="normalCurency" class="">BDT</span>
+                                                    <span id="curenccyy" class=""></span>
+                                                </div>
+                                            }
+                                            else
+                                            { <div class="input-group-addon">
+                                                    <span id="curenccyy" class="">@Model.Currencyname</span>
+                                                </div>
+
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>IsVAT Included</label>
+                                        @Html.CheckBoxFor(model => model.IsVATIncluded, new { @style = "width:100%;border:1px black solid" })
+                                        @Html.ValidationMessageFor(model => model.IsVATIncluded, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        }
 
 
                         @if (Model.Status == 0)
@@ -304,7 +378,7 @@
 
                                     </div>
                                     <div class="col-lg-4 col-md-4">
-                                        <button type="submit" id="poCreateBtn" class="btn btn-primary btn-block">
+                                        <button type="submit" id="poCreateBtn" class="btn btn-primary btn-block hidden">
                                             <i class='fa fa-plus'></i>
                                             @if (Model.PurchaseOrderId > 0)
                                             {
@@ -463,7 +537,7 @@
         </div>
     </section>
 }
-@using (Html.BeginForm("PackagingSubmitPO", "Procurement", FormMethod.Post, new { id = "SubmitProcurementPurchaseOrderFromSlaveFormId", @class = "formValidator" }))
+@using (Html.BeginForm("SubmitPOByRequisition", "Procurement", FormMethod.Post, new { id = "SubmitProcurementPurchaseOrderFromSlaveFormId", @class = "formValidator" }))
 {
     @Html.HiddenFor(model => model.PurchaseOrderDetailId, new { id = "hidSubmitProcurementPurchaseOrderSlaveId" })
     @Html.HiddenFor(model => model.PurchaseOrderId, new { id = "hidSubmitProcurementPurchaseOrderSlaveId" })
@@ -500,7 +574,7 @@
 }
 
 
-@using (Html.BeginForm("DeleteProcurementPurchaseOrderSlave", "Procurement", FormMethod.Post, new { id = "deleteProcurementPurchaseOrderSlaveFormId", @class = "formValidator" }))
+@using (Html.BeginForm("DeletePurchaseOrderDetails", "Procurement", FormMethod.Post, new { id = "deleteProcurementPurchaseOrderSlaveFormId", @class = "formValidator" }))
 {
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="modal fade" id="deleteProcurementPurchaseOrderSlaveModal" data-toggle="modal" data-backdrop="static" data-keyboard="false" role="dialog">
@@ -803,9 +877,9 @@
             datatype: "Json",
             data: { id: rowId },
             success: function (data) {
-                console.log(data);
                 var totalWithVat = data.TotalPrice + (data.TotalPrice * (data.VATAddition / 100));
-                console.log(totalWithVat);
+                let isVat = data.IsVATIncluded;
+                console.log(isVat);
                 $('#poCreateBtn').html("<i class='fa fa-edit'></i>&nbsp;Update");
                 $("#hidPurchaseOrderId").val(data.PurchaseOrderId);
                 $('#ActionId').val(2);
@@ -816,6 +890,8 @@
                 $('#txtPurchasingPrice').val(data.PurchasingPrice);
                 $('#vatAddition').val(data.VATAddition);
                 $('#Totalprice').val(totalWithVat);
+                $('#IsVATIncluded').prop('checked', isVat);
+                $('#poCreateBtn').removeClass('hidden');
                 $("#hidPurchaseOrderDetailId").val(data.PurchaseOrderDetailId)
                 $('.txtUnitName').text(data.UnitName);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
