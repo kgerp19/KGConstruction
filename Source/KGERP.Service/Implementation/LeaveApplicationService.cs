@@ -2215,7 +2215,7 @@ namespace KGERP.Service.Implementation
 
 
 
-        public int DoCSApproval(StstemApprovalVM vm)
+        public int DoCSApproval(SystemApprovalVM vm)
         {
             int result = -1;
             SignatoryApprovalMap dbModel = new SignatoryApprovalMap();
@@ -2269,31 +2269,30 @@ namespace KGERP.Service.Implementation
                     }
                 }
 
-                if (dbModel.IsHRAdmin || dbModel.EmployeeId == Common.GetHRAdminId())
-                {
-                    if (vm.ApprovalStatus == (int)LeaveStatusNewEnum.Denied)
-                    {
-                        leaveApplication.LeaveStatus = (int)LeaveStatusEnum.Denied;
-                        leaveApplication.Status = (int)StatusEnum.Inactive;
+                //if (dbModel.IsHRAdmin || dbModel.EmployeeId == Common.GetHRAdminId())
+                //{
+                //    if (vm.ApprovalStatus == (int)LeaveStatusNewEnum.Denied)
+                //    {
+                        
+                //        cs.Status = (int)StatusEnum.Inactive;
 
-                    }
-                    else
-                    {
-                        leaveApplication.LeaveStatus = (int)LeaveStatusEnum.Approved;
-                        leaveApplication.HrAdminStatus = "Approved";
-                        leaveApplication.ManagerStatus = "Approved";
-                    }
+                //    }
+                //    else
+                //    {
+                //        cs.LeaveStatus = (int)LeaveStatusEnum.Approved;
+                       
+                //    }
 
-                }
-                else
-                {
+                //}
+                //else
+                //{
                     
-                }
+                //}
 
                 if (vm.ApprovalStatus == (int)LeaveStatusNewEnum.Denied)
                 {
-                    cs.LeaveStatus = (int)LeaveStatusEnum.Denied;
-                    cs.Status = (int)LeaveStatusEnum.Denied;
+
+                    cs.Status = true;// (int)LeaveStatusEnum.Denied;
 
                 }
                 if (context.SaveChanges() > 0)

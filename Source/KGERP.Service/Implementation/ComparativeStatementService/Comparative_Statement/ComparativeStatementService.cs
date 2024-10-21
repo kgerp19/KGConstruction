@@ -261,9 +261,9 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
 
 
 
-        public RequisitionApprovalVM GetSignatureList(int companyId, DateTime? fromDate, DateTime? toDate, long? userId, SignatoryStatusEnum? approvalStatus)
+        public SystemApprovalVM GetSignatureList(int companyId, DateTime? fromDate, DateTime? toDate, long? userId, SignatoryStatusEnum? approvalStatus)
         {
-            RequisitionApprovalVM approvalVM = new RequisitionApprovalVM();
+            SystemApprovalVM approvalVM = new SystemApprovalVM();
             approvalVM.DataList = (from a in context.SignatoryApprovalMaps
                                    join emp in context.Employees on a.EmployeeId equals emp.Id
                                    join des in context.Designations on emp.DesignationId equals des.DesignationId
@@ -276,7 +276,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
                                 || (approvalStatus != null && approvalStatus.HasValue && (SignatoryStatusEnum)a.Status == approvalStatus)
                                 )
                                 && ((fromDate == null || toDate == null) || com.CSDate >= fromDate && com.CSDate <= toDate)
-                                   select new RequisitionApprovalVM
+                                   select new SystemApprovalVM
                                    {
                                        IntregratedFromId = a.IntregratedFromId,
                                        CSNO = com.CSNO,
@@ -290,8 +290,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
                                        OrderBy = a.OrderBy,
                                        Comment = a.Comment,
                                        CompanyId = com.CompanyId,
-
-                                       Status = (SignatoryStatusEnum)a.Status,
+                                       Status = a.Status,
                                        StatusString = ((SignatoryStatusEnum)a.Status).ToString(),
                                        ApprovedTime = a.ModifiedDate.HasValue ? a.ModifiedDate.Value.ToString() : "...."
                                    }).AsEnumerable();

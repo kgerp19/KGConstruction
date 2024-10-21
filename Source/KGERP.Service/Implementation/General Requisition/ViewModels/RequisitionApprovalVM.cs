@@ -38,7 +38,7 @@ namespace KGERP.Service.Implementation.General_Requisition.ViewModels
     }
 
 
-    public class StstemApprovalVM
+    public class SystemApprovalVM
     {
         public int ApprovalId { get; set; }
         public int CompanyId { get; set; }
@@ -64,7 +64,7 @@ namespace KGERP.Service.Implementation.General_Requisition.ViewModels
         public int ApprovalStatus { get; set; }
         public long SigID { get; set; }
         public long CSID { get; set; }
-        public IEnumerable<StstemApprovalVM> DataList { get; set; }
+        public IEnumerable<SystemApprovalVM> DataList { get; set; }
 
 
 

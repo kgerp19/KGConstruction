@@ -826,7 +826,7 @@ namespace KGERP.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> CSApproval(RequisitionApprovalVM vm)
+        public async Task<ActionResult> CSApproval(SystemApprovalVM vm)
         {
             long sigId = Common.GetIntUserId();
             if (vm.CSID != 0)
@@ -834,9 +834,9 @@ namespace KGERP.Controllers
                 var res = leaveApplicationService.DoCSApproval(vm);
             }
 
-            vm.FromDate = Convert.ToDateTime(vm.StrFromDate);
-            vm.ToDate = Convert.ToDateTime(vm.StrToDate);
-            return RedirectToAction(nameof(LeaveApprovalNew), new { fromDate = vm.FromDate, toDate = vm.ToDate });
+            //vm.FromDate = Convert.ToDateTime(vm.StrFromDate);
+            //vm.ToDate = Convert.ToDateTime(vm.StrToDate);
+            return RedirectToAction("ComparativeApproval", "ComparativeStatement", new { companyId = vm.CompanyId });
             //return RedirectToAction(nameof(LeaveApprovalNew), new { fromDate = vm.FromDate, toDate = vm.ToDate });
         }
 

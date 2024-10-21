@@ -135,8 +135,8 @@ namespace KGERP.Controllers
             var userId = Common.GetIntUserId();
             ViewBag.CompanyId = companyId;
             //userId = 1028;
-            if (fromDate == null) fromDate = DateTime.Today.AddMonths(-2);
-            if (toDate == null) toDate = DateTime.Today;
+            //if (fromDate == null) fromDate = DateTime.Today.AddMonths(-2);
+            //if (toDate == null) toDate = DateTime.Today;
             var obj = _comparativeStatement.GetSignatureList(companyId, fromDate, toDate, userId, Status);
             return View(obj);
 
