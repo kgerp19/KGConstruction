@@ -239,6 +239,12 @@
     <Compile Include="Models\CaseHistory.cs">
       <DependentUpon>ERPModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ChequeBook.cs">
+      <DependentUpon>ERPModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ChequeRegister.cs">
+      <DependentUpon>ERPModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ClearanceSignatory.cs">
       <DependentUpon>ERPModel.tt</DependentUpon>
     </Compile>

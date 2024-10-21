@@ -33,6 +33,8 @@ namespace KGERP.Services.Procurement
         public decimal TotalPOValue { get; set; }
         [AllowHtml]
         public string TermsAndCondition { get; set; }
+        public string RequisitionNo { get; set; }
+        public int RequisitionId { get; set; }
         public string Description { get; set; }
         public string DeliveryAddress { get; set; }
         public string VendorReferenceNo { get; set; }
@@ -135,6 +137,10 @@ namespace KGERP.Services.Procurement
         public decimal PurchaseQuantity { get; set; }
         public decimal ProcuredQuantity { get; set; }
         public string ProductName { get; set; }
+        public decimal? Qty { get; set; }
+        public decimal UnitePrice { get; set; }
+        public decimal? RemainingQuantity { get; set; }
+        public decimal? PriviousIssueQty { get; set; }
         public string EmployeeName { get; set; }
         public string EmployeeDesignation { get; set; }
         public string EmployeeMobile { get; set; }
@@ -185,6 +191,8 @@ namespace KGERP.Services.Procurement
         public decimal TotalDiscount { get; set; }
         public decimal VATAddition { get; set; }
         public bool IsVATIncluded { get;  set; }
+        public Guid? RequistionItemDetailId { get; set; }
+        public int ProductId { get;  set; }
         #endregion
 
     }

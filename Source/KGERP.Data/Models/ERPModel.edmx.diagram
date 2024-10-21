@@ -519,6 +519,8 @@
         <EntityTypeShape EntityType="ERPModel.OrderDetail" Width="1.5" PointX="8.25" PointY="143.625" />
         <AssociationConnector Association="ERPModel.FK_OrderDetail_OrderMaster" />
         <AssociationConnector Association="ERPModel.FK_OrderDetail_Product" />
+        <EntityTypeShape EntityType="ERPModel.ChequeBook" Width="1.5" PointX="54.375" PointY="48.75" />
+        <EntityTypeShape EntityType="ERPModel.ChequeRegister" Width="1.5" PointX="54.375" PointY="53.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

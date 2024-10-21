@@ -308,6 +308,7 @@
     <Compile Include="HR_Pay_Roll_Service\SpecialAddition\SpecialAdditionPRoll.cs" />
     <Compile Include="HR_Pay_Roll_Service\SpecialAddition\SpecialAdditionDetailsViewModel.cs" />
     <Compile Include="HR_Pay_Roll_Service\SpecialAddition\SpecialAdditionViewModel.cs" />
+    <Compile Include="Implementation\ChequeRegisterService.cs" />
     <Compile Include="Implementation\Audit\AuditService.cs" />
     <Compile Include="Implementation\Audit\IAuditService.cs" />
     <Compile Include="Implementation\Audit\ViewModels\PreservingAuditDocumentVM.cs" />
@@ -500,6 +501,7 @@
     <Compile Include="Interface\IAssetLocationService.cs" />
     <Compile Include="Interface\IAssetService.cs" />
     <Compile Include="Interface\IAssignAssetService.cs" />
+    <Compile Include="Interface\IChequeRegisterService.cs" />
     <Compile Include="Interface\IBagService.cs" />
     <Compile Include="Interface\ICompanyUserMenuService.cs" />
     <Compile Include="Interface\IBoardOfDirectorService.cs" />
@@ -640,6 +642,7 @@
     <Compile Include="ServiceModel\AttendanceModel\AttendanceStatusModel.cs" />
     <Compile Include="ServiceModel\AttendanceModel\CalculativeAttendanceVM.cs" />
     <Compile Include="ServiceModel\AttendanceSummaryVM.cs" />
+    <Compile Include="ServiceModel\ChequeRegisterModel.cs" />
     <Compile Include="ServiceModel\BookingHeadServiceModel.cs" />
     <Compile Include="ServiceModel\BusinessHeadModel.cs" />
     <Compile Include="ServiceModel\DashBoardViewModel.cs" />

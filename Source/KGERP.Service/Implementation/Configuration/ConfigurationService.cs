@@ -5583,6 +5583,37 @@ namespace KGERP.Service.Implementation
             return list;
         }
 
+        public List<object> GetBankBranchesById(int bankId)
+        {
+            var data = (from t1 in _db.Banks.Where(x => x.IsActive)
+                        join t2 in _db.BankBranches on t1.BankId equals t2.BankId into t2_Join
+                        from t2 in t2_Join.DefaultIfEmpty()
+                        where t1.BankId == bankId
+                        select new
+                        {
+                            BankId = t1.BankId > 0 ? t1.BankId : 0,
+                            BranchId = t2.BankBranchId > 0 ? t2.BankBranchId : 0,
+                            BranchName = t2.Name != null ? t2.Name : "",
+                        }).ToList();
+            return data.Where(c => c.BranchId
+
+            > 0).Cast<object>().ToList();
+        }
+
+
+
+        public List<object> GetBankAccountInfoByBankBranchId(int bankId, int bankBranchId)
+        {
+            var data = (from t1 in _db.BankBranches.Where(x=>x.BankBranchId == bankBranchId && x.IsActive)
+                        select new
+                        {
+                            BankBranchId = t1.BankBranchId,
+                            AccountNo = t1.AccountNumber,
+                        }).ToList();
+            return data.Cast<object>().ToList();
+        }
+
+
         public async Task<VMCommonBank> GetBanks(int companyId)
         {
             VMCommonBank vMCommonBank = new VMCommonBank();

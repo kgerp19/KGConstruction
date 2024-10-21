@@ -1,0 +1,117 @@
+﻿@model KGERP.Services.Procurement.VMPurchaseOrderSlave
+
+<div class="row">
+    <div class="col-lg-12">
+        @{
+            int styleScheduleCount = Model.DataListPur.Count();
+
+            if (styleScheduleCount > 0)
+            {
+                int sl = 1;
+                <div class="table-responsive">
+
+                    <table class="table table-bordered text-nowrap">
+
+                        <thead>
+                            <tr class="bg-success">
+                                <th>SLNo</th>
+                                <th>Raw Material</th>
+                                <th>Purchasing Qty</th>
+                                <th>Unit Price</th>
+                                <th>Total Price</th>
+                                <th>IsVAT Included</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tblBodyPar">
+                            @for (int i = 0; i < Model.DataListPur.Count(); i++)
+                            {
+                                <tr>
+                                    <th>
+
+                                        @Html.HiddenFor(model => model.DataListPur[i].ProductId)
+                                        @Html.HiddenFor(model => model.DataListPur[i].RequistionItemDetailId)
+                                        @Html.HiddenFor(model => model.DataListPur[i].RequisitionId)
+
+                                        @(i + 1)
+                                    </th>
+
+                                    <td>
+                                        @Html.DisplayFor(model => model.DataListPur[i].ProductName)
+                                    </td>
+
+                                    <td>
+                                        @Html.TextBoxFor(model => model.DataListPur[i].Qty, new { @class = "form-control QtyVal", type = "number" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.DataListPur[i].UnitePrice, new { @class = "form-control unit-price", type = "number" })
+                                    </td>
+                                    <td>
+                                        <b class=" text-center total-price"></b>
+                                    </td>
+
+                                    <td>
+                                        @Html.CheckBoxFor(model => model.IsVATIncluded, new { @style = "width:100%;border:1px black solid" })
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="col-md-12">
+                    <div class="box box-success box-solid">
+
+                        <!-- /.box-header -->
+                        <div class="box-body">
+
+                            <div class="form-group" style="text-align:center;">
+                                <h3>
+                                    There are no Item yet.
+                                </h3>
+                            </div>
+
+
+
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+            }
+        }
+
+    </div>
+</div>
+
+<script>
+    function calculateTotalPrice(row) {
+        var qty = parseFloat(row.find('.QtyVal').val()) || 0;
+        var unitPrice = parseFloat(row.find('.unit-price').val()) || 0;
+        var totalPrice = qty * unitPrice;
+        row.find('.total-price').text(totalPrice.toFixed(2));
+    }
+    $(document).ready(function () {
+        $('#tblBodyPar').on('input', '.QtyVal, .unit-price', function () {
+            var row = $(this).closest('tr');
+            calculateTotalPrice(row);
+        });
+        //$('.unit-price').on('keyup', function () {
+        //    // Check if any input field with the class .CIssueQty has a value
+        //    if ($('.CIssueQty').filter(function () { return $(this).val().trim() !== ''; }).length > 0) {
+        //        $("#poCreateBtn").removeClass("hidden");
+        //    } else {
+        //        $("#poCreateBtn").addClass("hidden");
+        //    }
+        //});
+    });
+</script>
