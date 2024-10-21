@@ -549,7 +549,14 @@ namespace KG.App.Controllers
             return RedirectToAction(nameof(ProcurementPurchaseOrderSlave), new { companyId = vmPurchaseOrderSlave.CompanyFK, purchaseOrderId = vmPurchaseOrderSlave.PurchaseOrderId });
         }
 
-        
+        [HttpPost]
+        public async Task<ActionResult> DeletePurchaseOrderDetails(VMPurchaseOrderSlave vmPurchaseOrderSlave)
+        {
+            vmPurchaseOrderSlave.PurchaseOrderId = await _service.ProcurementPurchaseOrderSlaveDelete(vmPurchaseOrderSlave.PurchaseOrderDetailId);
+            return RedirectToAction(nameof(PurchaseOrderByRequisition), new { companyId = vmPurchaseOrderSlave.CompanyFK, purchaseOrderId = vmPurchaseOrderSlave.PurchaseOrderId });
+        }
+
+
 
         public JsonResult GetTermNCondition(int id)
         {
@@ -780,6 +787,13 @@ namespace KG.App.Controllers
         {
             vmPurchaseOrderSlave.PurchaseOrderId = await _service.PackagingPurchaseOrderSubmit(vmPurchaseOrderSlave);
             return RedirectToAction(nameof(PackagingPurchaseOrderSlave), "Procurement", new { companyId = vmPurchaseOrderSlave.CompanyFK, purchaseOrderId = vmPurchaseOrderSlave.PurchaseOrderId });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SubmitPOByRequisition(VMPurchaseOrderSlave vmPurchaseOrderSlave)
+        {
+            vmPurchaseOrderSlave.PurchaseOrderId = await _service.PurchaseOrderByRequisitonSubmit(vmPurchaseOrderSlave);
+            return RedirectToAction(nameof(PurchaseOrderByRequisition), new { companyId = vmPurchaseOrderSlave.CompanyFK, purchaseOrderId = vmPurchaseOrderSlave.PurchaseOrderId });
         }
 
         [HttpPost]
@@ -1543,10 +1557,10 @@ namespace KG.App.Controllers
                 {
                     vmPurchaseOrderSlave.PurchaseOrderId = await _service.PurchaseOrderByRequisitionAdd(vmPurchaseOrderSlave);
                 }
-                else
-                {
-                    await _service.PackagingPurchaseOrderSlaveAdd(vmPurchaseOrderSlave);
-                }
+                //else
+                //{
+                //    await _service.PurchaseOrderDetailsRequisitionAdd(vmPurchaseOrderSlave);
+                //}
             }
             else if (vmPurchaseOrderSlave.ActionEum == ActionEnum.Edit)
             {
