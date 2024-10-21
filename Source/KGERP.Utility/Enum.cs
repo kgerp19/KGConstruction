@@ -23,7 +23,26 @@ namespace KGERP.Utility
         KG,
         Pcs,
     }
-
+    public enum EnumChequeRegisterFor
+    {
+        [Display(Name = "General Register")]
+        General = 1,
+        [Display(Name = "Requisition Register")]
+        Requisition
+    }
+    public enum EnumBankAccountType
+    {
+        [Display(Name = "Saving Account")]
+        Saving = 1,
+        [Display(Name = "Current Account")]
+        Current,
+        [Display(Name = "Current Account (JV)")]
+        Current_JV,
+        [Display(Name = "SND Account")]
+        SND,
+        [Display(Name = "SND Account")]
+        FDR
+    }
     //public enum AnnualPerformanceCategory
     //{
     //    Manager = 1,

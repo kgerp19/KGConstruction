@@ -1,0 +1,102 @@
+﻿@model KGERP.Service.ServiceModel.ChequeRegisterModel
+@{
+    ViewData["Title"] = "Cheque Register Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    input, select, textarea {
+        max-width: 100%;
+    }
+</style>
+
+<section class="content-header">
+    <h1>
+        Cheque Register Report
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+        <li class="active">Cheque Register Report</li>
+    </ol>
+</section>
+
+@using (Html.BeginForm("ChequeRegisterReport", "Report", FormMethod.Post, new { id = "ChequeRegisterReportFormId", @class = "formValidator" }))
+{
+    <section class="content">
+        <div class="row">
+            <div class="box">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="box-danger">
+                    <div class="box-body row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Select Project<sup class="text-danger" title="Required">*</sup></label>
+                                @Html.DropDownListFor(model => model.ProjectId, new SelectList(Model.ProjectList, "Value", "Text"), "==Select Project==", new { id = "ddlProjectId", @class = "form-control searchingDropdown" })
+                                @Html.ValidationMessageFor(model => model.ProjectId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Requisition No<sup class="text-danger" title="Required">*</sup></label>
+                                @Html.DropDownListFor(model => model.RequisitionId, new SelectList(Model.RequisitionList, "Value", "Text"), "==Select Requisition==", new { id = "ddlRequisitionId", @class = "form-control searchingDropdown" })
+                                @Html.ValidationMessageFor(model => model.RequisitionId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control" name="ReportType" id="ReportType" style="margin-top:24px; width: 100%">
+                                        <option value="PDF">PDF</option>
+                                        <option value="EXCEL">EXCEL</option>
+                                        <option value="WORD">WORD</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="submit" name="EXPORT" value="EXPORT" class="btn btn-primary" formtarget="_blank" style="margin-top:24px; width: 100%"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/cssjqryUi")
+
+    <script>
+        $(document).ready(function () {
+            "use strict"
+        });
+
+        $('#ddlProjectId').on('change', function (event) {
+            var projectId = $("#ddlProjectId option:selected").val();
+            var showRequisitionList = $("#ddlRequisitionId");
+            $.ajax({
+                type: "GET",
+                url: "/ChequeRegister/RegisteredRequisitionListByProjectId",
+                dataType: "json",
+                data: { projectId: projectId },
+                success: function (data) {
+                    showRequisitionList.empty();
+                    showRequisitionList.append("<option selected disabled>==Select Requisition==</option>");
+
+                    $.each(data, function (index, item) {
+                        showRequisitionList.append($('<option>', {
+                            value: item.Value,
+                            text: item.Text
+                        }));
+                    });
+                }
+            });
+        });
+    </script>
+}
