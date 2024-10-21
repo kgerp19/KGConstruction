@@ -1,105 +1,118 @@
 ﻿@model KGERP.Service.Implementation.ComparativeStatementService.Comparative_Statement.ComparativeStatementVm
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "CS";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<style>
-    .disabled {
-        opacity: 0.5; /* Or any other styling to visually indicate it's disabled */
-        pointer-events: none; /* This prevents clicks on the element */
-        /* You can add additional styling as needed */
-    }
-</style>
-
-
-
-
-@* Display Comparative Statement List here *@
-
+<section class="content-header">
+    <h1>Comparative Satement List</h1>
+    <ol class="breadcrumb">
+        <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+        <li>
+            CS List
+        </li>
+    </ol>
+</section>
 @if (Model.ComparetiveStatemnetList != null && Model.ComparetiveStatemnetList.Any())
 {
-    <h2>Comparative Statement List</h2>
-    <table class="table table-striped" id="KgErpDataTable" >
-        <thead>
-            <tr>
-                <th>Serial Number</th>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            
+            <div class="box-danger">
 
-                <th>CSNO</th>
-
-                <th>Product Name</th>
-           
-                <th>Origin</th>
-                <th>Brand</th>
-                <th>Specification</th>
-
-                <th>CS Date</th>
-                <th>Delivery Date</th>
-                <th>Required Quantity</th>
-                <th>Status</th>
-                <th>Action</th>
+                <!-- /.box-header -->
+                <div class="box-body">
 
 
-                <!-- Add more headers as needed -->
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                var serialNumber = 1;
-            }
+                    <table class="table table-striped" id="KgErpDataTable">
+                        <thead>
+                            <tr>
+                                <th>Serial Number</th>
 
-            @foreach (var item in Model.ComparetiveStatemnetList)
-            {
-                <tr>
-                    <td>@serialNumber</td>
+                                <th>CSNO</th>
 
-                    <td>@item.CSNO</td>
+                                <th>Product Name</th>
 
-                    <td>@item.PrductName</td>
-                  
-                    <td>@item.Origin</td>
-                    <td>@item.Brand</td>
-                    <td>@item.Specification</td>
-                    <td>@item.CSDate.ToString("dd/MM/yyyy")</td>
-                    <td>@(item.DeliveryDate.HasValue ? item.DeliveryDate.Value.ToString("dd/MM/yyyy") : "N/A")</td>
-                    <td>@(item.RequiredQuantity.HasValue ? item.RequiredQuantity.Value.ToString() : "N/A")</td>
+                                <th>Origin</th>
+                                <th>Brand</th>
+                                <th>Specification</th>
 
-                    <td>
-                        @if (item.Status == false)
-                        {
-                            <button class="btn btn-primary btn-sm" onclick="redirectToCreateStatement('@item.CompanyId', '@item.CSID')">Not Submit</button>
+                                <th>CS Date</th>
+                                <th>Delivery Date</th>
+                                <th>Required Quantity</th>
+                                <th>Status</th>
+                                <th>Action</th>
 
 
-                        }
-                        else
-                        {
-                            <button class="btn btn-success btn-sm" disabled> Submit</button>
-                        }
+                                <!-- Add more headers as needed -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var serialNumber = 1;
+                            }
 
-                    </td>
-                    <td>
+                            @foreach (var item in Model.ComparetiveStatemnetList)
+                            {
+                                <tr>
+                                    <td>@serialNumber</td>
 
-                        @if (item.Status == true)
-                        {
-                            <a class="disabled" href="@Url.Action("EditCStament", "ComparativeStatement", new { CsId = item.CSID })"><i class="fa fa-pencil text-warning "></i></a>
-                            <a class="disabled" href="@Url.Action("DelteCStament", "ComparativeStatement", new { CsId = item.CSID, CompanyId = item.CompanyId })"><i class="fa fa-trash text-danger "></i></a>
-                        }
-                        else
-                        {
-                            <a  href="@Url.Action("EditCStament", "ComparativeStatement", new { CsId = item.CSID })"><i class="fa fa-pencil text-warning "></i></a>
-                            <a  href="@Url.Action("DelteCStament", "ComparativeStatement", new { CsId = item.CSID, CompanyId = item.CompanyId })"><i class="fa fa-trash text-danger "></i></a>
-                        }
+                                    <td>@item.CSNO</td>
 
-                        <a href="@Url.Action("CreateStatement", "ComparativeStatement", new { CompanyId = item.CompanyId, CsId = item.CSID })"><i class="fa fa-eye text-primary "></i></a>
+                                    <td>@item.PrductName</td>
 
-                    </td>
+                                    <td>@item.Origin</td>
+                                    <td>@item.Brand</td>
+                                    <td>@item.Specification</td>
+                                    <td>@item.CSDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@(item.DeliveryDate.HasValue ? item.DeliveryDate.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                                    <td>@(item.RequiredQuantity.HasValue ? item.RequiredQuantity.Value.ToString() : "N/A")</td>
 
-                </tr>
-                serialNumber++;
-            }
+                                    <td>
+                                        @if (item.Status == false)
+                                        {
+                                            <button class="btn btn-primary btn-sm" onclick="redirectToCreateStatement('@item.CompanyId', '@item.CSID')">Not Submit</button>
 
 
-        </tbody>
-    </table>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-success btn-sm" disabled> Submit</button>
+                                        }
+
+                                    </td>
+                                    <td>
+
+                                        @if (item.Status == true)
+                                        {
+                                            <a class="disabled" href="@Url.Action("EditCStament", "ComparativeStatement", new { CsId = item.CSID })"><i class="fa fa-pencil text-warning "></i></a>
+                                            <a class="disabled" href="@Url.Action("DelteCStament", "ComparativeStatement", new { CsId = item.CSID, CompanyId = item.CompanyId })"><i class="fa fa-trash text-danger "></i></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("EditCStament", "ComparativeStatement", new { CsId = item.CSID })"><i class="fa fa-pencil text-warning "></i></a>
+                                            <a href="@Url.Action("DelteCStament", "ComparativeStatement", new { CsId = item.CSID, CompanyId = item.CompanyId })"><i class="fa fa-trash text-danger "></i></a>
+                                        }
+
+                                        <a href="@Url.Action("CreateStatement", "ComparativeStatement", new { CompanyId = item.CompanyId, CsId = item.CSID })"><i class="fa fa-eye text-primary "></i></a>
+
+                                    </td>
+
+                                </tr>
+                                serialNumber++;
+                            }
+
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
 }
 
 <script>

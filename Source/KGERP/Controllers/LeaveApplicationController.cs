@@ -4,6 +4,7 @@ using KGERP.Data.CustomModel;
 using KGERP.Data.CustomViewModel;
 using KGERP.Data.Models;
 using KGERP.Service.Implementation;
+using KGERP.Service.Implementation.General_Requisition.ViewModels;
 using KGERP.Service.Implementation.Leave.ViewModels;
 using KGERP.Service.Interface;
 using KGERP.Service.ServiceModel;
@@ -820,6 +821,23 @@ namespace KGERP.Controllers
             vm.FromDate = Convert.ToDateTime(vm.StrFromDate);
             vm.ToDate = Convert.ToDateTime(vm.StrToDate);
             return RedirectToAction(nameof(LeaveApprovalNew), new { fromDate = vm.FromDate, toDate = vm.ToDate });
+        }
+
+
+
+        [HttpPost]
+        public async Task<ActionResult> CSApproval(RequisitionApprovalVM vm)
+        {
+            long sigId = Common.GetIntUserId();
+            if (vm.CSID != 0)
+            {
+                var res = leaveApplicationService.DoCSApproval(vm);
+            }
+
+            vm.FromDate = Convert.ToDateTime(vm.StrFromDate);
+            vm.ToDate = Convert.ToDateTime(vm.StrToDate);
+            return RedirectToAction(nameof(LeaveApprovalNew), new { fromDate = vm.FromDate, toDate = vm.ToDate });
+            //return RedirectToAction(nameof(LeaveApprovalNew), new { fromDate = vm.FromDate, toDate = vm.ToDate });
         }
 
     }

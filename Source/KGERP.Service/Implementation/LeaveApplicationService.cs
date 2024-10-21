@@ -2211,5 +2211,100 @@ namespace KGERP.Service.Implementation
             return managerApprovals;
         }
         #endregion
+
+
+
+
+        public int DoCSApproval(StstemApprovalVM vm)
+        {
+            int result = -1;
+            SignatoryApprovalMap dbModel = new SignatoryApprovalMap();
+            dbModel = context.SignatoryApprovalMaps.Where(x => x.IntregratedFromId == vm.CSID && x.EmployeeId == vm.SigID && x.TableName == "ComparativeStatement").FirstOrDefault();
+
+            var cs = context.ComparativeStatements.Find(dbModel.IntregratedFromId);
+
+            if (dbModel != null)
+            {
+                //var sameOrderSignatories = context.SignatoryApprovalMaps.Where(x => x.IntregratedFromId == vm.LeaveApplicationID && x.OrderBy == dbModel.OrderBy).ToList();
+                var sameOrderSignatories = (from sam in context.SignatoryApprovalMaps
+                                            join e in context.Employees on sam.EmployeeId equals e.Id
+                                            where sam.IntregratedFromId == vm.CSID && sam.OrderBy == dbModel.OrderBy && sam.TableName == "ComparativeStatement"
+                                            select new
+                                            {
+                                                sam,
+                                                EmpID = e.EmployeeId
+                                            }).ToList();
+
+                if (sameOrderSignatories != null)
+                {
+                    foreach (var sameOrder in sameOrderSignatories)
+                    {
+                        if (sameOrder.EmpID == Common.GetUserId() && sameOrder.sam.EmployeeId != Common.GetHRAdminId())
+                        {
+                            sameOrder.sam.Status = vm.ApprovalStatus;
+                            sameOrder.sam.ModifiedBy = Common.GetUserId();
+                            sameOrder.sam.ModifiedDate = DateTime.Now;
+                        }
+                        else if (sameOrder.sam.EmployeeId == Common.GetHRAdminId())
+                        {
+                            sameOrder.sam.Status = vm.ApprovalStatus;
+                            sameOrder.sam.ModifiedBy = Common.GetUserId();
+                            sameOrder.sam.ModifiedDate = DateTime.Now;
+                        }
+                        else
+                        {
+                            sameOrder.sam.Status = vm.ApprovalStatus;
+                            sameOrder.sam.ModifiedBy = Common.GetUserId();
+                        }
+                    }
+                }
+                var immediateHigherSig = context.SignatoryApprovalMaps.Where(x => x.IntregratedFromId == vm.CSID && x.OrderBy == (dbModel.OrderBy + 1) && x.TableName == "ComparativeStatement").ToList();
+                
+                if (immediateHigherSig != null && vm.ApprovalStatus == (int)LeaveStatusNewEnum.Approved)
+                {
+                    foreach (var imSig in immediateHigherSig)
+                    {
+                        imSig.Status = 0;
+
+                    }
+                }
+
+                if (dbModel.IsHRAdmin || dbModel.EmployeeId == Common.GetHRAdminId())
+                {
+                    if (vm.ApprovalStatus == (int)LeaveStatusNewEnum.Denied)
+                    {
+                        leaveApplication.LeaveStatus = (int)LeaveStatusEnum.Denied;
+                        leaveApplication.Status = (int)StatusEnum.Inactive;
+
+                    }
+                    else
+                    {
+                        leaveApplication.LeaveStatus = (int)LeaveStatusEnum.Approved;
+                        leaveApplication.HrAdminStatus = "Approved";
+                        leaveApplication.ManagerStatus = "Approved";
+                    }
+
+                }
+                else
+                {
+                    
+                }
+
+                if (vm.ApprovalStatus == (int)LeaveStatusNewEnum.Denied)
+                {
+                    cs.LeaveStatus = (int)LeaveStatusEnum.Denied;
+                    cs.Status = (int)LeaveStatusEnum.Denied;
+
+                }
+                if (context.SaveChanges() > 0)
+                {
+
+                    
+                }
+
+                result = 1;
+            }
+            return result;
+        }
     }
 }
