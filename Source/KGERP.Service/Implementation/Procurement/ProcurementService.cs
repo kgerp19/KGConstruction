@@ -1434,7 +1434,7 @@ namespace KGERP.Services.Procurement
                         purchaseListAdd.Add(procurementPurchaseOrderDetail);
                     }
 
-                    _db.PurchaseListAdd.AddRange(purchaseListAdd);
+                    _db.PurchaseOrderDetails.AddRange(purchaseListAdd);
                     int rowsAffected = await _db.SaveChangesAsync();
 
                     if (rowsAffected > 0)
