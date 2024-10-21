@@ -1417,19 +1417,19 @@ namespace KGERP.Services.Procurement
                         var procurementPurchaseOrderDetail = new PurchaseOrderDetail
                         {
                             PurchaseOrderId = procurementPurchaseOrder.PurchaseOrderId,
-                            ProductId = item.Common_ProductFK,
-                            PurchaseQty = item.PurchaseQuantity,
-                            PurchaseRate = item.PurchasingPrice,
-                            PurchaseAmount = item.PurchaseQuantity * item.PurchasingPrice,
+                            ProductId = item.ProductId,
+                            PurchaseQty = (decimal)item.Qty,
+                            PurchaseRate = item.UnitePrice,
+                            PurchaseAmount = (decimal)(item.Qty * item.UnitePrice),
                             DemandRate = 0,
                             QCRate = 0,
                             PackSize = 0,
                             CompanyId = item.CompanyFK,
                             CreatedBy = Common.GetUserId(),
                             CreatedDate = DateTime.Now,
-                            VATAddition = vmPurchaseOrderSlave.VATAddition,
+                            VATAddition = item.VATAddition,
                             IsActive = true,
-                            IsVATIncluded = vmPurchaseOrderSlave.IsVATIncluded
+                            IsVATIncluded = item.IsVATIncluded
                         };
                         purchaseListAdd.Add(procurementPurchaseOrderDetail);
                     }
