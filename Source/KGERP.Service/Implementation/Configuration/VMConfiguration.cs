@@ -912,6 +912,9 @@ namespace KGERP.Service.Configuration
         public long IssueDetailsId { get; set; }
         public decimal? IssueQty { get; set; }
         public decimal CostingPrice { get; set; }
+        public decimal UnitePrice { get; set; }
+        public decimal TotalPrice { get; set; }
+        public bool IsVATIncluded { get; set; }
         public decimal CurrenntStock { get; set; }
         public string OrderNo { get; set; }
         public string RequisitionBy { get; set; }

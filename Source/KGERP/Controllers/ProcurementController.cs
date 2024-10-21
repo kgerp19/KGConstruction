@@ -1505,6 +1505,58 @@ namespace KG.App.Controllers
             }
             return View(vmPurchaseOrderSlave);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> PurchaseOrderByRequisition(int companyId = 0, int purchaseOrderId = 0)
+        {
+            VMPurchaseOrderSlave vmPurchaseOrderSlave = new VMPurchaseOrderSlave();
+
+            if (purchaseOrderId == 0)
+            {
+                vmPurchaseOrderSlave.CompanyFK = companyId;
+                vmPurchaseOrderSlave.Status = (int)EnumPOStatus.Draft;
+            }
+            else if (purchaseOrderId > 0)
+            {
+                vmPurchaseOrderSlave = await Task.Run(() => _service.PackagingPurchaseOrderSlaveGet(companyId, purchaseOrderId));
+            }
+            vmPurchaseOrderSlave.TermNCondition = new SelectList(_service.CommonTremsAndConditionDropDownList(companyId), "Value", "Text");
+            vmPurchaseOrderSlave.ShippedByList = new SelectList(_service.ShippedByListDropDownList(companyId), "Value", "Text");
+            vmPurchaseOrderSlave.CountryList = new SelectList(_service.CountriesDropDownList(companyId), "Value", "Text");
+            vmPurchaseOrderSlave.EmployeeList = new SelectList(_service.EmployeesByCompanyDropDownList(companyId), "Value", "Text");
+            vmPurchaseOrderSlave.Businessheadlist = new SelectList(_service.BusinesshedaList(companyId), "Value", "Text");
+
+            if (companyId == (int)CompanyName.KrishibidPackagingLimited)
+            {
+                vmPurchaseOrderSlave.LCList = new SelectList(_service.PackagingLCHeadGLList(companyId), "Value", "Text");
+            }
+            return View(vmPurchaseOrderSlave);
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public async Task<ActionResult> PurchaseOrderByRequisition(VMPurchaseOrderSlave vmPurchaseOrderSlave)
+        {
+            if (vmPurchaseOrderSlave.ActionEum == ActionEnum.Add)
+            {
+                if (vmPurchaseOrderSlave.PurchaseOrderId == 0)
+                {
+                    vmPurchaseOrderSlave.PurchaseOrderId = await _service.PurchaseOrderByRequisitionAdd(vmPurchaseOrderSlave);
+                }
+                else
+                {
+                    await _service.PackagingPurchaseOrderSlaveAdd(vmPurchaseOrderSlave);
+                }
+            }
+            else if (vmPurchaseOrderSlave.ActionEum == ActionEnum.Edit)
+            {
+                //Delete
+                await _service.PackagingPurchaseOrderSlaveEdit(vmPurchaseOrderSlave);
+            }
+
+            return RedirectToAction(nameof(PurchaseOrderByRequisition), new { companyId = vmPurchaseOrderSlave.CompanyFK, purchaseOrderId = vmPurchaseOrderSlave.PurchaseOrderId });
+        }
+
         [HttpPost]
         [ValidateInput(false)]
         public async Task<ActionResult> PackagingPurchaseOrderSlave(VMPurchaseOrderSlave vmPurchaseOrderSlave)
@@ -1905,6 +1957,15 @@ namespace KG.App.Controllers
             return PartialView("_PackagingProductionForStorePartial", model);
 
 
+        }
+
+        public ActionResult ProductionForRequisitionStoreDataList(int RequisitionId)
+        {
+            var model = new VMPurchaseOrderSlave();
+
+            model.DataListPur = _service.ProductionStoreForRequisitionDataList(RequisitionId);
+
+            return PartialView("_ProductionForRequisitionStorePartial", model);
         }
 
         public ActionResult PackagingGProductionStoreDataList(int RequisitionId)

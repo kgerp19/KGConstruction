@@ -19,6 +19,7 @@ using System.Threading;
 using KGERP.CustomModel;
 using System.Runtime.Remoting.Contexts;
 using System.Security.Cryptography;
+using System.Web;
 
 namespace KGERP.Services.Procurement
 {
@@ -1361,6 +1362,105 @@ namespace KGERP.Services.Procurement
 
             }
 
+        }
+
+        public async Task<long> PurchaseOrderByRequisitionAdd(VMPurchaseOrderSlave vmPurchaseOrderSlave)
+        {
+            using (var scope = _db.Database.BeginTransaction())
+            {
+                long result = -1;
+                string poCid = GeneratePurchaseOrderNo(vmPurchaseOrderSlave);
+
+                try
+                {
+                    var procurementPurchaseOrder = new PurchaseOrder
+                    {
+                        PurchaseOrderNo = poCid,
+                        PurchaseDate = vmPurchaseOrderSlave.OrderDate,
+                        SupplierId = vmPurchaseOrderSlave.Common_SupplierFK,
+                        DeliveryDate = vmPurchaseOrderSlave.DeliveryDate,
+                        SupplierPaymentMethodEnumFK = vmPurchaseOrderSlave.SupplierPaymentMethodEnumFK,
+                        DeliveryAddress = vmPurchaseOrderSlave.DeliveryAddress,
+                        Remarks = vmPurchaseOrderSlave.Remarks,
+                        Status = (int)EnumPOStatus.Draft,
+                        PurchaseOrderStatus = EnumPOStatus.Draft.ToString(),
+                        EmpId = vmPurchaseOrderSlave.EmployeeId,
+                        CountryId = vmPurchaseOrderSlave.CountryId,
+                        PINo = vmPurchaseOrderSlave.PINo,
+                        LCHeadGLId = vmPurchaseOrderSlave.LCHeadGLId,
+                        LCNo = vmPurchaseOrderSlave.LCNo,
+                        LCValue = vmPurchaseOrderSlave.LCValue,
+                        InsuranceNo = vmPurchaseOrderSlave.InsuranceNo,
+                        PremiumValue = vmPurchaseOrderSlave.PremiumValue,
+                        ShippedBy = vmPurchaseOrderSlave.ShippedBy,
+                        PortOfLoading = vmPurchaseOrderSlave.PortOfLoading,
+                        FinalDestinationCountryFk = vmPurchaseOrderSlave.FinalDestinationCountryFk,
+                        PortOfDischarge = vmPurchaseOrderSlave.PortOfDischarge,
+                        FreightCharge = vmPurchaseOrderSlave.FreightCharge,
+                        OtherCharge = vmPurchaseOrderSlave.OtherCharge,
+                        TermsAndCondition = vmPurchaseOrderSlave.TermsAndCondition,
+                        LCId = vmPurchaseOrderSlave.LCId,
+                        CompanyId = vmPurchaseOrderSlave.CompanyFK,
+                        CreatedBy = HttpContext.Current?.Session["EmployeeName"]?.ToString() ?? "Unknown",
+                        CreatedDate = DateTime.Now,
+                        TDSDeduction = vmPurchaseOrderSlave.TDSDeduction,
+                        TotalDiscount = vmPurchaseOrderSlave.TotalDiscount,
+                        IsActive = true
+                    };
+
+                    _db.PurchaseOrders.Add(procurementPurchaseOrder);
+                    await _db.SaveChangesAsync();
+
+                    var purchaseListAdd = new List<PurchaseOrderDetail>();
+                    foreach (var item in vmPurchaseOrderSlave.DataListPur)
+                    {
+                        var procurementPurchaseOrderDetail = new PurchaseOrderDetail
+                        {
+                            PurchaseOrderId = procurementPurchaseOrder.PurchaseOrderId,
+                            ProductId = item.Common_ProductFK,
+                            PurchaseQty = item.PurchaseQuantity,
+                            PurchaseRate = item.PurchasingPrice,
+                            PurchaseAmount = item.PurchaseQuantity * item.PurchasingPrice,
+                            DemandRate = 0,
+                            QCRate = 0,
+                            PackSize = 0,
+                            CompanyId = item.CompanyFK,
+                            CreatedBy = Common.GetUserId(),
+                            CreatedDate = DateTime.Now,
+                            VATAddition = vmPurchaseOrderSlave.VATAddition,
+                            IsActive = true,
+                            IsVATIncluded = vmPurchaseOrderSlave.IsVATIncluded
+                        };
+                        purchaseListAdd.Add(procurementPurchaseOrderDetail);
+                    }
+
+                    _db.PurchaseListAdd.AddRange(purchaseListAdd);
+                    int rowsAffected = await _db.SaveChangesAsync();
+
+                    if (rowsAffected > 0)
+                    {
+                        scope.Commit();
+                        return procurementPurchaseOrder.PurchaseOrderId;
+                    }
+                    else
+                    {
+                        scope.Rollback();
+                        return 0;  
+                    }
+                }
+                catch (Exception ex)
+                {
+                    scope.Rollback();
+                    
+                    throw; 
+                }
+            }
+        }
+
+        private string GeneratePurchaseOrderNo(VMPurchaseOrderSlave vmPurchaseOrderSlave)
+        {
+            var poMax = _db.PurchaseOrders.Count(x => x.CompanyId == vmPurchaseOrderSlave.CompanyFK) + 1;
+            return $"PO-{DateTime.Now:yyMMdd}-{poMax:00}";
         }
         public async Task<long> KFMALProcurementPurchaseOrderAdd(VMPurchaseOrderSlave vmPurchaseOrderSlave)
         {
@@ -4938,6 +5038,40 @@ namespace KGERP.Services.Procurement
                 item.CurrenntStock = vMProductStock.ClosingQty;
 
             }
+            return list;
+        }
+
+        public List<VMPurchaseOrderSlave> ProductionStoreForRequisitionDataList(int RequisitionId)
+        {
+            VMPurchaseOrderSlave vmSalesOrder = new VMPurchaseOrderSlave();
+            var list = (from t1 in _db.RequisitionItemDetails.Where(x => x.RequisitionId == RequisitionId)
+                        join t2 in _db.FinishProductBOMs.Where(x => x.IsActive) on t1.FinishProductBOMId equals t2.ID
+                        join t4 in _db.Products.Where(x => x.IsActive) on t1.RProductId equals t4.ProductId
+                        join t5 in _db.ProductSubCategories.Where(x => x.IsActive) on t4.ProductSubCategoryId equals t5.ProductSubCategoryId
+                        join t6 in _db.Requisitions.Where(x => x.IsActive) on t1.RequisitionId equals t6.RequisitionId
+                        select new VMPurchaseOrderSlave
+                        {
+                            CompanyId = t6.CompanyId.Value,
+                            RequisitionId = t1.RequisitionItemId,
+                            RequistionItemDetailId = t1.RequistionItemDetailId,
+                            ProductId = t1.RProductId.Value,
+                            ProductName = t5.Name + " " + t4.ProductName,
+                            Qty = t1.RQty,
+                            RemainingQuantity = t1.RQty - (_db.IssueDetailInfoes.Where(x => x.RequisitionItemDetailId == t1.RequistionItemDetailId && x.IsActive == true).Select(x => x.RMQ).DefaultIfEmpty(0).Sum()),
+                            PriviousIssueQty = (_db.IssueDetailInfoes.Where(x => x.RequisitionItemDetailId == t1.RequistionItemDetailId && x.IsActive == true).Select(x => x.RMQ).DefaultIfEmpty(0).Sum())
+                        }).ToList();
+
+
+            //foreach (VMPackagingPurchaseRequisition item in list)
+            //{
+            //    VMProductStock vMProductStock = new VMProductStock();
+            //    vMProductStock = _db.Database.SqlQuery<VMProductStock>("EXEC GetPackagingRMStockByProductId {0},{1}", item.ProductId, item.CompanyId).FirstOrDefault();
+
+
+            //    item.CurrenntStock = vMProductStock.ClosingQty;
+
+            //}
+
             return list;
         }
 

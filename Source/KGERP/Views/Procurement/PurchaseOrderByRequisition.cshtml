@@ -1,9 +1,10 @@
-﻿@model KGERP.Services.Procurement.VMPurchaseOrderSlave
+﻿
+@model KGERP.Services.Procurement.VMPurchaseOrderSlave
 @using KGERP.Utility;
 
 
 @{
-    ViewData["Title"] = "Purchase Order";
+    ViewData["Title"] = "Purchase Order By Requisition";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     int sl = 0;
@@ -24,13 +25,12 @@
         {
             <span>
                 Purchase Invoice History of:  <a target="_blank" href="~/Report/PackagingPurchaseOrderReports?purchaseOrderId=@Model.PurchaseOrderId&companyId=@Model.CompanyFK&reportName=KGCPurchaseOrderReports">@Model.CID</a>
-
             </span>
         }
         else
         {
             <span>
-                Purchase Invoice
+                Purchase Order By Requisition
             </span>
         }
 
@@ -42,10 +42,10 @@
         <li class="active">
             <a class="btn-link btn btn-primary btn-xs" target="_blank" href="~/Procurement/PackagingPurchaseOrderSlave?companyId=@Model.CompanyFK">Add New Purchase Order</a>
         </li>
-
     </ol>
+
 </section>
-@using (Html.BeginForm("PackagingPurchaseOrderSlave", "Procurement", FormMethod.Post, new { id = "procurementPurchaseOrderSlaveFormId", @class = "formValidator" }))
+@using (Html.BeginForm("PurchaseOrderByRequisition", "Procurement", FormMethod.Post, new { id = "PurchaseOrderByRequisitionFormId", @class = "formValidator" }))
 {
     <section class="content">
         <div class="row">
@@ -129,176 +129,172 @@
                             </table>
 
                         }
-                        <div class="box-body">
+                    <div class="box-body">
 
-                            @if (Model.PurchaseOrderId == 0)
-                            {
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>PO Date</label>
-                                            <input name="OrderDate" asp-for="OrderDate" type="text" value="@DateTime.Today.ToString(" yyyy-MM-dd")" required="required" class="datePicker form-control" id="txtOrderDate" placeholder="Date" autocomplete="off">
-                                            @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
-                                        </div>
+                        @if (Model.PurchaseOrderId == 0)
+                        {
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>PO Date</label>
+                                        <input name="OrderDate" asp-for="OrderDate" type="text" value="@DateTime.Today.ToString(" yyyy-MM-dd")" required="required" class="datePicker form-control" id="txtOrderDate" placeholder="Date" autocomplete="off">
+                                        @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group" style="padding:0px">
-                                            <label>Supplier</label>
-                                            @Html.EditorFor(model => model.SupplierName, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Supplier Name", @id = "txtSupplierName" } })
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group" style="padding:0px">
+                                        <label>Supplier</label>
+                                        @Html.EditorFor(model => model.SupplierName, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Supplier Name", @id = "txtSupplierName" } })
 
-                                            @Html.HiddenFor(model => model.Common_SupplierFK, new { id = "ddlCommon_SupplierFK" })
-                                            @Html.ValidationMessageFor(model => model.Common_SupplierFK, "", new { @class = "text-danger" })
-                                        </div>
+                                        @Html.HiddenFor(model => model.Common_SupplierFK, new { id = "ddlCommon_SupplierFK" })
+                                        @Html.ValidationMessageFor(model => model.Common_SupplierFK, "", new { @class = "text-danger" })
                                     </div>
-
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Payment Method</label>
-                                            @Html.DropDownListFor(model => model.SupplierPaymentMethodEnumFK, Model.POPaymentMethodList as SelectList, "==Select Payment Method==", new { id = "ddlSupplierPaymentMethodEnumFK", @class = "form-control ddlReset", style = "width:100%", required = "required" })
-                                            @Html.ValidationMessageFor(model => model.SupplierPaymentMethodEnumFK, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
                                 </div>
 
 
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Expected Delivery Date</label>
-                                            <input name="DeliveryDate" asp-for="DeliveryDate" type="text" required="required" class="datePicker form-control" id="txtDeliveryDate" placeholder="Delivery Date" autocomplete="off">
-                                            @Html.ValidationMessageFor(model => model.DeliveryDate, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <label>Delivery Address</label>
-                                            @Html.TextAreaFor(model => model.DeliveryAddress, new { id = "txtDeliveryAddress", @class = "form-control", placeholder = "Delivery Address", rows = 1 })
-                                            @Html.ValidationMessageFor(model => model.DeliveryAddress, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="message-text" class="col-form-label">Purchaser:</label>
-                                            @Html.DropDownListFor(model => model.EmployeeId, Model.EmployeeList as SelectList, "---Select Employee---", new { id = "ddlEmployeeId", @class = "form-control", required = "required" })
-                                            @Html.ValidationMessageFor(model => model.EmployeeId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <!-- /.box-body -->
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <label for="txtDescription" class="col-form-label">Remarks:</label>
-                                            @Html.TextAreaFor(model => model.Description, new { id = "txtDescription", placeholder = "Remarks", @class = "form-control", rows = 1 })
-                                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Terms & Condition Type</label>
-                                            @Html.DropDownListFor(model => model.TermsConditionTypeId, new SelectList(Model.TermNCondition, "Value", "Text"), "---Select---", new { @class = "dropdownsize form-control", @id = "termsAndConditionType", @onchange = "loadTermAndCondition()" })
-                                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Payment Method</label>
+                                        @Html.DropDownListFor(model => model.SupplierPaymentMethodEnumFK, Model.POPaymentMethodList as SelectList, "==Select Payment Method==", new { id = "ddlSupplierPaymentMethodEnumFK", @class = "form-control ddlReset", style = "width:100%", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.SupplierPaymentMethodEnumFK, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
+
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Expected Delivery Date</label>
+                                        <input name="DeliveryDate" asp-for="DeliveryDate" type="text" required="required" class="datePicker form-control" id="txtDeliveryDate" placeholder="Delivery Date" autocomplete="off">
+                                        @Html.ValidationMessageFor(model => model.DeliveryDate, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label>Delivery Address</label>
+                                        @Html.TextAreaFor(model => model.DeliveryAddress, new { id = "txtDeliveryAddress", @class = "form-control", placeholder = "Delivery Address", rows = 1 })
+                                        @Html.ValidationMessageFor(model => model.DeliveryAddress, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Purchaser:</label>
+                                        @Html.DropDownListFor(model => model.EmployeeId, Model.EmployeeList as SelectList, "---Select Employee---", new { id = "ddlEmployeeId", @class = "form-control", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.EmployeeId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <!-- /.box-body -->
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="txtDescription" class="col-form-label">Remarks:</label>
+                                        @Html.TextAreaFor(model => model.Description, new { id = "txtDescription", placeholder = "Remarks", @class = "form-control", rows = 1 })
+                                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Terms & Condition Type</label>
+                                        @Html.DropDownListFor(model => model.TermsConditionTypeId, new SelectList(Model.TermNCondition, "Value", "Text"), "---Select---", new { @class = "dropdownsize form-control", @id = "termsAndConditionType", @onchange = "loadTermAndCondition()" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Terms & Condition</label>
+                                    @Html.TextAreaFor(model => model.TermsAndCondition, new { id = "summernote", placeholder = "Terms and Condition", @class = "summernote form-control", rows = 1 })
+                                    @Html.ValidationMessageFor(model => model.TermAndCondition, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Terms & Condition</label>
-                                        @Html.TextAreaFor(model => model.TermsAndCondition, new { id = "summernote", placeholder = "Terms and Condition", @class = "summernote form-control", rows = 1 })
-                                        @Html.ValidationMessageFor(model => model.TermAndCondition, "", new { @class = "text-danger" })
+                                        <label class="required">Requisition No</label>
+                                        @Html.EditorFor(model => model.RequisitionNo, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Supplier Name", @id = "txtRequisitionNo" } })
+
+                                        @Html.HiddenFor(model => model.RequisitionId, new { id = "ddlRequisitionId" })
+                                        @Html.ValidationMessageFor(model => model.RequisitionId, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-                            }
+                            </div>
+                            <div id="RequisitionMasteData" class="hidden">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <td>Job Order No</td>
+                                        <td>:</td>
+                                        <td>
+                                            <span id="txtJobOrderNo">
+                                            </span>
+                                        </td>
+                                        <td>Order Date</td>
+                                        <td>:</td>
 
-                            @if (Model.Status == 0)
-                            {
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group" style="padding:0px">
-                                            <label for="message-text" class="col-form-label">Raw Material:</label>
+                                        <td>
+                                            <span id="txtOrderDate">
+                                            </span>
+                                        </td>
+                                    </tr>
 
-                                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Product Name", @id = "txtProductName" } })
+                                    <tr>
+                                        <td>Job No</td>
+                                        <td>:</td>
 
-                                            @Html.HiddenFor(model => model.Common_ProductFK, new { id = "ddlRProductFK" })
-                                            @Html.ValidationMessageFor(model => model.Common_ProductFK, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
+                                        <td>
+                                            <span id="txtOrderMasterNo">
+                                            </span>
+                                        </td>
+                                        <td>Quantity</td>
+                                        <td>:</td>
 
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label>Purchasing Qty</label>
-                                            <div class="input-group">
-                                                @Html.TextBoxFor(model => model.PurchaseQuantity, new { id = "txtPurchaseQuantity", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Purchase Quantity", required = "Required" })
-                                                @Html.ValidationMessageFor(model => model.PurchaseQuantity, "", new { @class = "text-danger" })
+                                        <td>
+                                            <span id="txtQty">
+                                            </span>
+                                        </td>
+                                    </tr>
 
-                                                <div class="input-group-addon">
-                                                    <span class="txtUnitName"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <tr>
+                                        <td>Structure</td>
+                                        <td>:</td>
 
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label>Unit Price</label>
-                                            @Html.TextBoxFor(model => model.PurchasingPrice, new { id = "txtPurchasingPrice", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Purchasing Price", required = "Required" })
-                                            @Html.ValidationMessageFor(model => model.PurchasingPrice, "", new { @class = "text-danger" })
+                                        <td>
+                                            <span id="txtStucture">
+                                            </span>
+                                        </td>
+                                        <td>Product Name</td>
+                                        <td>:</td>
 
-                                        </div>
-                                    </div>
-                                    @*<div class="col-md-1">
-                                            <div class="form-group">
-                                                <label>Vat(%)</label>
-                                                @Html.TextBoxFor(model => model.VATAddition, new { id = "vatAddition", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Vat", required = "Required" })
-                                                @Html.ValidationMessageFor(model => model.VATAddition, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>*@
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label>Total Price</label>
-                                            <div class="input-group">
-                                                @Html.TextBoxFor(model => model.PurchasingPrice, new { id = "Totalprice", @class = "form-control", @style = "width:100%;border:1px black solid", placeholder = "Purchasing Price", required = "Required" })
-
-                                                @Html.ValidationMessageFor(model => model.PurchasingPrice, "", new { @class = "text-danger" })
-
-                                                @if (Model.Currencyname == null)
-                                                {
-
-                                                    <div class="input-group-addon">
-                                                        <span id="normalCurency" class="">BDT</span>
-                                                        <span id="curenccyy" class=""></span>
-                                                    </div>
-                                                }
-                                                else
-                                                { <div class="input-group-addon">
-                                                        <span id="curenccyy" class="">@Model.Currencyname</span>
-                                                    </div>
-
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label>IsVAT Included</label>
-                                            @Html.CheckBoxFor(model => model.IsVATIncluded, new {  @style = "width:100%;border:1px black solid"})
-                                            @Html.ValidationMessageFor(model => model.IsVATIncluded, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
+                                        <td>
+                                            <span id="txtProductName">
+                                            </span>
+                                        </td>
+                                    </tr>
 
 
 
-                                </div>
-                            }
+                                    <tr>
+                                        <td>Remarks</td>
+                                        <td>:</td>
+                                        <td colspan="4">
+                                            <span id="txtRemarks">
+                                            </span>
+                                        </td>
 
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="box-body">
+                                <div id="PackagingPurchaseOrderSlaveData"></div>
+                            </div>
+                        }
 
-                        </div>
 
                         @if (Model.Status == 0)
                         {
@@ -550,21 +546,70 @@
 
     <script type="text/javascript">
 
-    function makeDeletale(rowId) {
-        $('#hidDeleteProcurementPurchaseOrderSlaveId').val(rowId);
-        $('#deleteActionId').val(3);
-    }
-    function resetProcurementPurchaseRequisitionSlaveForm() {
-        $('#procurementPurchaseRequisitionSlaveFormId')[0].reset();
-        $('#ActionId').val(1);
+        function makeDeletale(rowId) {
+            $('#hidDeleteProcurementPurchaseOrderSlaveId').val(rowId);
+            $('#deleteActionId').val(3);
         }
-        $("#btnsave1").click(function () {
-            var a = $("#totalDiscount").val();
-            $("#totalDiscountModalField").val(a);
-        });
+        function resetProcurementPurchaseRequisitionSlaveForm() {
+            $('#procurementPurchaseRequisitionSlaveFormId')[0].reset();
+            $('#ActionId').val(1);
+            }
+            $("#btnsave1").click(function () {
+                var a = $("#totalDiscount").val();
+                $("#totalDiscountModalField").val(a);
+            }
+        );
+        function updatePackagingData(requisitionId) {
+        // Set the value of the dropdown
+            $("#ddlRequisitionId").val(requisitionId);
+        
+            // Call the function that handles getting data for the requisition
+            RequisitionMasterGETData(requisitionId);
+        
+            // Make the AJAX request to fetch and display packaging data
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ProductionForRequisitionStoreDataList", "Procurement")",
+                data: { RequisitionId: requisitionId },
+                success: function(response) {
+                    // Update the HTML of the target element with the response
+                    $("#PackagingPurchaseOrderSlaveData").html(response);
+        
+                    // Remove the 'hidden' class from buttons and other elements
+                    $("#poCreateBtn").removeClass("hidden");
+                    $("#RequisitionMasteData").removeClass("hidden");
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error occurred while fetching packaging data:", error);
+                }
+            });
+        }
+        let RequisitionMasterGETData = (requisitionId) => {
+
+            let rData = HttpRequest.AjaxData("POST", '/Procurement/GetResuisitionDataByRequisitionId', { 'requisitionId': requisitionId });
+            if (rData != null) {
+                $(".ui-datepicker-trigger").addClass("hidden");
+                $("#RequisitionDate").val(rData.RequisitionDateMsg);
+                $("#FromDepartmentReqId").val(rData.FromRequisitionId);
+                $("#ToDepartmentReqId").val(rData.ToRequisitionId);
+                $("#ToDepartmentIssueId").val(rData.FromRequisitionId);
+                $("#hdnToDepartmentIssueId").val(rData.FromRequisitionId);
+
+
+                $("#txtJobOrderNo").text(rData.JobOrderNo)
+                $("#txtQty").text(rData.Qty)
+                $("#txtStucture").text(rData.Structure);
+                var ppppODate = DateCustom(rData.OrderDate);
+                $('#txtOrderDate').text(ppppODate);
+                $("#txtRemarks").text(rData.Description);
+                $("#txtOrderMasterNo").text(rData.OrderNo);
+                $("#txtProductName").text(rData.ProductName);
+
+            }
+        }
 
         $(document).ready(function () {
-            
+
             $('#summernote').summernote({
                 // placeholder: 'Hello Bootstrap 4',
                 tabsize: 2,
@@ -574,6 +619,38 @@
         $('.formValidator').bootstrapValidator();
 
         $("#ddlFinalDestinationCountryFk").val(19).change();
+                $("#txtRequisitionNo").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Url.Action("GetAutoCompleteOrderNoGetRequsitionId", "Procurement")",
+                    data: { prefix: request.term, companyId: "@Model.CompanyFK" },
+                    dataType: "json",
+                    type: "get",
+                    cache: true,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                       response($.map(data, function (item) {
+                           return item;
+                       }))
+                    },
+                    error: function (response) {
+                    },
+                    failure: function (response) {
+                    }
+                });
+            },
+
+            select: function (e, i) {
+                updatePackagingData(i.item.val);
+            },
+            minLength: 1,
+            cache: true
+
+        }).focus(function () {
+            $(this).autocomplete("search");
+        });
+
+
         $("#txtProductName").autocomplete({
             source: function (request, response) {
                 //console.log(request);
@@ -629,9 +706,11 @@
         }).focus(function () {
             $(this).autocomplete("search");
         });
-
         $("#txtSupplierName").autocomplete({
             source: function (request, response) {
+                //console.log(request);
+                //console.log(response);
+
                 $.ajax({
                     url: "@Url.Action("GetAutoCompleteSupplierGet", "Procurement")",// '/AccountHeads/AutoComplete/',
                     //data: "{ 'prefix': '" + request.term + "'}",
@@ -754,7 +833,27 @@
         });
 
 
+        //$("#txtPurchaseQuantity").keyup(function () {
+        //    var qty = $("#txtPurchaseQuantity").val();
+        //    var unitPrice = $("#txtPurchasingPrice").val();
+        //    var qtyConvert = parseFloat(qty);
+        //    var UnitPriceConvert = parseFloat(unitPrice);
+        //    var total = qtyConvert * UnitPriceConvert;
+        //    $("#Totalprice").val(total);
+        //});
+
+        //$("#txtPurchasingPrice").keyup(function () {
+        //    var qty = $("#txtPurchaseQuantity").val();
+        //    var unitPrice = $("#txtPurchasingPrice").val();
+        //    var qtyConvert = parseFloat(qty);
+        //    var UnitPriceConvert = parseFloat(unitPrice);
+        //    var total = qtyConvert * UnitPriceConvert;
+        //    $("#Totalprice").val(total);
+        //});
+
+
     function makeSubmitble(rowId) {
+        // console.log(rowId);
         $.ajax({
             type: "get",
             url: "@Url.Action("PackagingSinglePurchaseOrder", "Procurement")",
@@ -788,7 +887,8 @@
             return date;
         }
 
-        function loadTermAndCondition() {
+         function loadTermAndCondition() {
+            //var termsAndConditionid = $('#termsAndConditionType').val();
             var termsAndConditionid = $('#termsAndConditionType').val();
             $.ajax({
                 type: "GET",
@@ -805,3 +905,5 @@
 
     </script>
 }
+
+
