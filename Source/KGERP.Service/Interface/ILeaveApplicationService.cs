@@ -1,5 +1,6 @@
 ﻿using KGERP.Data.CustomModel;
 using KGERP.Data.Models;
+using KGERP.Service.Implementation.General_Requisition.ViewModels;
 using KGERP.Service.Implementation.Leave.ViewModels;
 using KGERP.Service.ServiceModel;
 using KGERP.Service.ServiceModel.Approval_Process_Model;
@@ -53,6 +54,7 @@ namespace KGERP.Service.Interface
         Task<LeaveAllDetailVM> GetLeaveApprovalRelatedAllInfo(long SigId, DateTime? fromDate, DateTime? toDate);
         Task<SignatoryApprovalDetails> GetSignatoriesApprovalInfo(long applicationId, long sigId);
         int DoLeaveApproval(LeaveAllDetailVM vm);
+        int DoCSApproval(RequisitionApprovalVM vm);
         Task<LeaveApplicationVm> GetLeaveListByEmployee(long EmpID, DateTime? fromDate, DateTime? toDate);
         #endregion
         #region check manager change and sig update

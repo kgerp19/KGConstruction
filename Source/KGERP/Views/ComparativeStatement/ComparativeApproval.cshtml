@@ -1,8 +1,8 @@
-﻿@model IEnumerable<KGERP.Service.Implementation.General_Requisition.ViewModels.RequisitionApprovalVM>
+﻿@model KGERP.Service.Implementation.General_Requisition.ViewModels.RequisitionApprovalVM
 @using KGERP.Utility
 @{
     var message = TempData["successMessage"];
-    ViewBag.Title = "Generral Requisition Approval";
+    ViewBag.Title = "Requisition Approval";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int sl = 1;
     int companyId = ViewBag.CompanyId ?? 0;
@@ -15,14 +15,12 @@
 </style>
 <section class="content-header">
     <h1>Comparative Satement Approval List</h1>
-    @*<ol class="breadcrumb">
+    <ol class="breadcrumb">
             <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i>Dashboard</a></li>
             <li>
-                <a href="@Url.Action("AddOrUpdate", new { CompanyId = companyId })" class="btn btn-primary pull-right">
-                    <span class="fa fa-plus"></span> New Requisition
-                </a>
+                Approval
             </li>
-        </ol>*@
+        </ol>
 </section>
 <div class="content">
     <div class="row">
@@ -37,7 +35,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="GeneralRequisitionType" class="control-label">Signatory Status</label>
-                                        @Html.EnumDropDownListFor(model => model.FirstOrDefault().Status, htmlAttributes: new { @class = "form-control", required = "false" })
+                                        @Html.EnumDropDownListFor(model => model.Status, htmlAttributes: new { @class = "form-control", required = "false" })
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -65,7 +63,7 @@
                             </div>
                         }
                         <hr />
-                        @if (Model != null && Model.Any())
+                        @if (Model != null && Model.DataList.Any())
                         {
                             <div class="table-responsive">
                                 <table id="KgErpDataTable" style="width:100%; background-color:#ddd;" class="table table-responsive table-striped">
@@ -81,7 +79,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in Model)
+                                        @foreach (var item in Model.DataList)
                                         {
                                             <tr>
                                                 <td>
@@ -94,28 +92,39 @@
                                                 <td>@item.ProductName</td>
                                                 <td>@item.RequirQuantity</td>
                                                 <td>@item.Comment</td>
-                                             
-                                           
+
+
                                                 <td>
+
                                                     @if (item.Status == KGERP.Utility.SignatoryStatusEnum.Pending)
                                                     {
-                                                        @*<a href="@Url.Action("UpdateApprovalStatus", "GeneralRequisition", new { companyId = item.UserCompanyId, requisitionSignatoryId = item.RequisitionSignatoryId, status =  KGERP.Utility.SignatoryStatusEnum.Approved})"> <span class="glyphicon glyphicon-ok text-primary" aria-hidden="true"></span></a>*@
-                                                        <a onclick="loadActionModal(@item.CompanyId, @item.IntregratedFromId,@((int)KGERP.Utility.SignatoryStatusEnum.Approved),'@item.CSNO');" data-toggle="modal" data-target="#actionModal" title="Approved" data-placement="top"> <span class="glyphicon glyphicon-ok text-primary" aria-hidden="true"></span></a>
-                                                        @*<a href="@Url.Action("UpdateApprovalStatus", "GeneralRequisition", new { companyId = item.UserCompanyId, requisitionSignatoryId = item.RequisitionSignatoryId, status = KGERP.Utility.SignatoryStatusEnum.Rejected })">  <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></a>*@
-                                                        <a onclick="loadActionModal(@item.CompanyId, @item.IntregratedFromId,@((int)KGERP.Utility.SignatoryStatusEnum.Rejected),'@item.CSNO');" data-toggle="modal" data-target="#actionModal" title="Reject" data-placement="top">  <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></a>
-                                                        @*<a onclick="loadSignatory(@item.Id);" data-toggle="modal" data-target="#signatoryModal" title="View" data-placement="top">  <span class="glyphicon glyphicon-eye-open text-info" aria-hidden="true"></span></a>*@
+                                                        <a class="btn btn-primary btn-sm" onclick="AprroveCS(@item.EmployeeId, @item.IntregratedFromId)" data-toggle="modal" data-target="#exampleModal" style="width: 147px; margin-right: 5px;">
+                                                            Approve
+                                                        </a>
                                                     }
-                                                    else
+                                                    else if (item.Status == KGERP.Utility.SignatoryStatusEnum.Approved)
                                                     {
-                                                        <button class="btn btn-sm pr-1">@item.Status</button>
+                                                        <span class="badge badge-success" style="margin-right: 5px;">Approved</span>
                                                     }
+                                                    else if (item.Status == KGERP.Utility.SignatoryStatusEnum.Rejected)
+                                                    {
+                                                        <span class="badge badge-danger" style="margin-right: 5px;">Rejected</span>
+                                                    }
+                                                    else if (item.Status < KGERP.Utility.SignatoryStatusEnum.Pending)
+                                                    {
+                                                        <span class="badge badge-warning" style="margin-right: 5px;">-</span>
+                                                    }
+
+
+
+                                                  
                                                     <a onclick="loadSignatory(@item.IntregratedFromId);" data-toggle="modal" data-target="#signatoryModal" title="View" data-placement="top">  <span class="glyphicon glyphicon-eye-open text-info" aria-hidden="true"></span></a>
                                                 </td>
                                                 @*<td>
-                                                        <a href="@Url.Action("UpdateApprovalStatus", "GeneralRequisition", new { companyId = item.UserCompanyId, requisitionSignatoryId = item.RequisitionSignatoryId, status = KGERP.Utility.GeneralRequisitionStatusEnum.Approved })"> <span class="glyphicon glyphicon-ok text-primary" aria-hidden="true"></span></a>
-                                                        <a href="@Url.Action("UpdateApprovalStatus", "GeneralRequisition", new { companyId = item.UserCompanyId, requisitionSignatoryId = item.RequisitionSignatoryId, status = KGERP.Utility.GeneralRequisitionStatusEnum.Reject })">  <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></a>
-                                                        <a onclick="loadSignatory(@item.Id);" data-toggle="modal" data-target="#signatoryModal" title="View" data-placement="top">  <span class="glyphicon glyphicon-eye-open text-info" aria-hidden="true"></span></a>
-                                                    </td>*@
+                                            <a href="@Url.Action("UpdateApprovalStatus", "GeneralRequisition", new { companyId = item.UserCompanyId, requisitionSignatoryId = item.RequisitionSignatoryId, status = KGERP.Utility.GeneralRequisitionStatusEnum.Approved })"> <span class="glyphicon glyphicon-ok text-primary" aria-hidden="true"></span></a>
+                                            <a href="@Url.Action("UpdateApprovalStatus", "GeneralRequisition", new { companyId = item.UserCompanyId, requisitionSignatoryId = item.RequisitionSignatoryId, status = KGERP.Utility.GeneralRequisitionStatusEnum.Reject })">  <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></a>
+                                            <a onclick="loadSignatory(@item.Id);" data-toggle="modal" data-target="#signatoryModal" title="View" data-placement="top">  <span class="glyphicon glyphicon-eye-open text-info" aria-hidden="true"></span></a>
+                                        </td>*@
                                             </tr>
                                         }
                                     </tbody>
@@ -188,18 +197,18 @@
                                     </thead>
                                     <tbody id="sigantoryTableBody">
                                         @*@if (Model.RequisitionApprovalLIst != null)
-                                            {
-                                                int ii = 1;
-                                                foreach (var item in Model.RequisitionApprovalLIst)
-                                                {
-                                                    <tr>
-                                                        <td>@(ii++)</td>
-                                                        <td>@item.EmployeeName</td>
-                                                        <td>@item.DesignationName</td>
-                                                        <td>@item.Status</td>
-                                                    </tr>
-                                                }
-                                            }*@
+                                {
+                                    int ii = 1;
+                                    foreach (var item in Model.RequisitionApprovalLIst)
+                                    {
+                                        <tr>
+                                            <td>@(ii++)</td>
+                                            <td>@item.EmployeeName</td>
+                                            <td>@item.DesignationName</td>
+                                            <td>@item.Status</td>
+                                        </tr>
+                                    }
+                                }*@
                                     </tbody>
                                 </table>
                             </div>
@@ -209,6 +218,40 @@
                         </div>
                     </div>
                 </div>
+
+
+
+                @using (Html.BeginForm("CSApproval", "LeaveApplication", FormMethod.Post))
+                {
+                    @Html.HiddenFor(m => m.SigID, new { @id = "EmployeeID" })
+                    @Html.HiddenFor(m => m.CSID, new { @id = "HidCSID" })
+                     
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Select Approval Status</label>
+                                        <select class="form-control" id="ApprovalStatus" name="ApprovalStatus">
+                                            <option value="1">Approve</option>
+                                            <option value="2">Reject</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <input type="submit" value="Save Change" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
 
             </div>
         </div>
@@ -220,6 +263,12 @@
     @Styles.Render("~/Content/cssjqryUi")
 
     <script type="text/javascript">
+        function AprroveCS(empId, leaveID) {
+            $("#EmployeeID").val(empId);
+            $("#HidCSID").val(leaveID);
+        }
+
+
         $(document).ready(function () {
         $("#toDate").val("@(DateTime.Today.ToString("yyyy/MM/dd"))");
         $("#fromDate").val("@(DateTime.Today.AddMonths(-2).ToString("yyyy/MM/dd"))");

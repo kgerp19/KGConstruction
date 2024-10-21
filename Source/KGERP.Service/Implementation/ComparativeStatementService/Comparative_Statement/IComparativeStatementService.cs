@@ -22,7 +22,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
         bool MakeRecomended(long csDetailID);
          bool Submitstatus(ComparativeStatementVm vm);
         ComparativeStatementVm GetForEdit(long? CSID);
-        IEnumerable<RequisitionApprovalVM> GetSignatureList(int companyId, DateTime? fromDate, DateTime? toDate, long? userId, SignatoryStatusEnum? approvalStatus);
+        RequisitionApprovalVM GetSignatureList(int companyId, DateTime? fromDate, DateTime? toDate, long? userId, SignatoryStatusEnum? approvalStatus);
         IEnumerable<RequisitionApprovalVM> GetAllApproval(int CSID);
          bool Deletecs(long? CSID);
         bool UpdateCSSignatoryApprovalStatus(long id, int statusId, string comment);

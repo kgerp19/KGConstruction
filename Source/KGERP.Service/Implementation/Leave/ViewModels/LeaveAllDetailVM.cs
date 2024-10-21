@@ -21,11 +21,12 @@ namespace KGERP.Service.Implementation.Leave.ViewModels
         public int LeaveDays { get; set; }
         public string LeaveCategory { get; set; }
         public int Status { get; set; }
+        public int LeaveStatus { get; set; }
+
         public int ApprovalStatus { get; set; }
         public int? CompanyID { get; set; }
         public List<LeaveAllDetailVM> LeaveApprovalDataList { get; set; }
         public List<SignatoryApprovalDetails> SignatoriesApprovalList { get; set; }
-        public int LeaveStatus { get; set; }
         public string StrFromDate { get; set; }
         public string StrToDate { get; set; }
         public DateTime FromDate { get; set; }

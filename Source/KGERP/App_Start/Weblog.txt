@@ -6863,3 +6863,5 @@ ERROR 2024-10-14 09:21:54,881 25591ms UserController         Login              
    at System.Data.Entity.Infrastructure.DbQuery`1.System.Linq.IQueryable.get_Provider()
    at System.Linq.Queryable.Where[TSource](IQueryable`1 source, Expression`1 predicate)
    at KGERP.Controllers.UserController.Login(UserLogin userLogin, String returnUrl) in D:\KGC\KGConstruction\Source\KGERP\Controllers\UserController.cs:line 129
+ERROR 2024-10-20 16:12:28,607 148986ms UserController         Login              - System.NullReferenceException: Object reference not set to an instance of an object.
+   at KGERP.Controllers.UserController.Login(UserLogin userLogin, String returnUrl) in D:\KGC\KGConstruction\Source\KGERP\Controllers\UserController.cs:line 154

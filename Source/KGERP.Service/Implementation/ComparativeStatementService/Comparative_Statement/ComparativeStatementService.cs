@@ -36,7 +36,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
                                                CreatedBy = CS.CreatedBy,
                                                Status = CS.Status,
                                                CompanyId = CS.CompanyId
-                                           }).OrderByDescending(c=>c.CSID).ToList();
+                                           }).OrderByDescending(c => c.CSID).ToList();
 
 
 
@@ -238,7 +238,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
             vm.RADataList = (from a in context.SignatoryApprovalMaps
                              join emp in context.Employees on a.EmployeeId equals emp.Id
                              join des in context.Designations on emp.DesignationId equals des.DesignationId
-                            
+
                              where a.IntregratedFromId == CsId && a.TableName == "ComparativeStatement"
                              select new RequisitionApprovalVM
                              {
@@ -249,7 +249,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
                                  OrderBy = a.OrderBy,
                                  Comment = a.Comment,
                                  Status = (SignatoryStatusEnum)a.Status,
-                                 StatusString = ((SignatoryStatusEnum)a.Status).ToString() ,
+                                 StatusString = ((SignatoryStatusEnum)a.Status).ToString(),
 
 
                                  ApprovedTime = a.ModifiedDate.HasValue ? a.ModifiedDate.Value.ToString() : "...."
@@ -261,40 +261,44 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
 
 
 
-            public IEnumerable<RequisitionApprovalVM> GetSignatureList(int companyId, DateTime?fromDate, DateTime? toDate, long?userId, SignatoryStatusEnum? approvalStatus)
+        public RequisitionApprovalVM GetSignatureList(int companyId, DateTime? fromDate, DateTime? toDate, long? userId, SignatoryStatusEnum? approvalStatus)
         {
-            var obj= (from a in context.SignatoryApprovalMaps
-                                join emp in context.Employees on a.EmployeeId equals emp.Id
-                                join des in context.Designations on emp.DesignationId equals des.DesignationId
-                                join com in context.ComparativeStatements on a.IntregratedFromId equals  com.CSID
-                                join Pro in context.Products on com.ProductID equals Pro.ProductId
-                                where a.EmployeeId == userId && a.TableName == "ComparativeStatement"
-                               && a.IsActive           
-                             && (
-                             (approvalStatus == null && a.Status == (int)SignatoryStatusEnum.Pending)
-                             || (approvalStatus != null && approvalStatus.HasValue && (SignatoryStatusEnum)a.Status == approvalStatus)
-                             )
-                             && ((fromDate == null || toDate == null) || com.CSDate >= fromDate && com.CSDate <= toDate)
-                                select new RequisitionApprovalVM
-                                {   IntregratedFromId=a.IntregratedFromId,
-                                    CSNO=com.CSNO,
-                                    CSDate=com.CSDate,
-                                    ProductName=Pro.ProductName,
-                                    RequirQuantity=com.RequiredQuantity,
-                                    EmployeeId = emp.Id,
-                                    EmployeeIdString = emp.EmployeeId,
-                                    EmployeeName = emp.Name,
-                                    DesignationName = des.Name,
-                                    OrderBy = a.OrderBy,
-                                    Comment = a.Comment,
-                                    CompanyId=com.CompanyId,
-                                    Status = (SignatoryStatusEnum)a.Status,
-                                    StatusString = ((SignatoryStatusEnum)a.Status).ToString(),
-                                    ApprovedTime = a.ModifiedDate.HasValue ? a.ModifiedDate.Value.ToString() : "...."
-                                }).AsEnumerable();
+            RequisitionApprovalVM approvalVM = new RequisitionApprovalVM();
+            approvalVM.DataList = (from a in context.SignatoryApprovalMaps
+                                   join emp in context.Employees on a.EmployeeId equals emp.Id
+                                   join des in context.Designations on emp.DesignationId equals des.DesignationId
+                                   join com in context.ComparativeStatements on a.IntregratedFromId equals com.CSID
+                                   join Pro in context.Products on com.ProductID equals Pro.ProductId
+                                   where a.EmployeeId == userId && a.TableName == "ComparativeStatement"
+                                  && a.IsActive
+                                && (
+                                (approvalStatus == null && a.Status == (int)SignatoryStatusEnum.Pending)
+                                || (approvalStatus != null && approvalStatus.HasValue && (SignatoryStatusEnum)a.Status == approvalStatus)
+                                )
+                                && ((fromDate == null || toDate == null) || com.CSDate >= fromDate && com.CSDate <= toDate)
+                                   select new RequisitionApprovalVM
+                                   {
+                                       IntregratedFromId = a.IntregratedFromId,
+                                       CSNO = com.CSNO,
+                                       CSDate = com.CSDate,
+                                       ProductName = Pro.ProductName,
+                                       RequirQuantity = com.RequiredQuantity,
+                                       EmployeeId = emp.Id,
+                                       EmployeeIdString = emp.EmployeeId,
+                                       EmployeeName = emp.Name,
+                                       DesignationName = des.Name,
+                                       OrderBy = a.OrderBy,
+                                       Comment = a.Comment,
+                                       CompanyId = com.CompanyId,
+
+                                       Status = (SignatoryStatusEnum)a.Status,
+                                       StatusString = ((SignatoryStatusEnum)a.Status).ToString(),
+                                       ApprovedTime = a.ModifiedDate.HasValue ? a.ModifiedDate.Value.ToString() : "...."
+                                   }).AsEnumerable();
 
 
-            return obj;
+
+            return approvalVM;
         }
 
 
@@ -333,7 +337,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
 
 
 
-            [HttpPost]
+        [HttpPost]
         public bool DeleteComparativeStateMentDetails(long csDetailID)
         {
 
@@ -399,7 +403,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
                     {
                         SignatoryApprovalMap signatoryApprovalMap = new SignatoryApprovalMap
                         {
-                            
+
                             EmployeeId = item.EmployeeId,
                             IntregratedFromId = obj.CSID,
                             IsActive = true,
@@ -464,9 +468,9 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
 
             return false;
         }
-        public  bool UpdateCSSignatoryApprovalStatus(long id, int statusId, string comment)
+        public bool UpdateCSSignatoryApprovalStatus(long id, int statusId, string comment)
         {
-            var exist =  context.SignatoryApprovalMaps.FirstOrDefault(x => x.IntregratedFromId == id);
+            var exist = context.SignatoryApprovalMaps.FirstOrDefault(x => x.SignatoryApprovalMapId == id);
             if (exist != null)
             {
                 exist.Status = statusId;
