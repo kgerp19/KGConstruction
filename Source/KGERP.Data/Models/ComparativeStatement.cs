@@ -30,5 +30,6 @@ namespace KGERP.Data.Models
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public bool IsActive { get; set; }
         public int CompanyId { get; set; }
+        public int ApprovalStatus { get; set; }
     }
 }

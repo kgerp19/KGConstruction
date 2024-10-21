@@ -245,7 +245,7 @@
 
                                     <thead>
                                         <tr>
-                                            <th>Serial Number</th>
+                                            <th>SL</th>
                                             <th>Vendor Name</th>
                                             <th>Quoted Price</th>
                                             <th>Total Price</th>
@@ -349,16 +349,24 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                         }
 
 
                         else
                         {
+                            <div class="row">
+                                <div class="col-md-8">
 
-                            <div class="form-group" style="margin-top: 40px;">
-                                <button class="btn btn-success disabled " style="width: 450px;">Submitted</button>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <button class="btn btn-success disabled " style="width: 100%;">Submitted</button>
+                                    </div>
+                                </div>
                             </div>
+
+                            
 
                         }
 
@@ -390,7 +398,20 @@
                                     <td>@item.EmployeeIdString</td>
                                     <td>@item.EmployeeName</td>
                                     <td>@item.DesignationName</td>
-                                    <td>@item.StatusString</td>
+                                    <td>
+                                        @if (item.Status < 0)
+                                        {
+                                            <span class="badge badge-warning">
+                                                ---
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-success">
+                                                @item.StatusString
+                                            </span>
+                                        }
+                                    </td>
                                     <td>@item.ApprovedTime</td>
                                     <td>@item.Comment</td>
                                 </tr>

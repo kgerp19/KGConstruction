@@ -283,7 +283,6 @@ namespace KGERP.Data.Models
         public virtual DbSet<PRoll_Sheet> PRoll_Sheet { get; set; }
         public virtual DbSet<OfficerSalesTarget> OfficerSalesTargets { get; set; }
         public virtual DbSet<ComparativeStatementDetail> ComparativeStatementDetails { get; set; }
-        public virtual DbSet<ComparativeStatement> ComparativeStatements { get; set; }
         public virtual DbSet<GeneralRequisition> GeneralRequisitions { get; set; }
         public virtual DbSet<GeneralRequisitionDetail> GeneralRequisitionDetails { get; set; }
         public virtual DbSet<Proll_AdvanceeType> Proll_AdvanceeType { get; set; }
@@ -364,6 +363,7 @@ namespace KGERP.Data.Models
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<ChequeBook> ChequeBooks { get; set; }
         public virtual DbSet<ChequeRegister> ChequeRegisters { get; set; }
+        public virtual DbSet<ComparativeStatement> ComparativeStatements { get; set; }
     
         public virtual ObjectResult<GetEmployeeListForTeam_Result> GetEmployeeListForTeam(Nullable<int> companyId)
         {

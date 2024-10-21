@@ -23,6 +23,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
                                            where CS.IsActive && CS.CompanyId == CompanyId
                                            select new ComparativeStatementVm
                                            {
+                                               ApprovalStatus = CS.ApprovalStatus,
                                                ProductID = CS.ProductID,
                                                CSID = CS.CSID,
                                                CSNO = CS.CSNO,
@@ -278,6 +279,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
                                 && ((fromDate == null || toDate == null) || com.CSDate >= fromDate && com.CSDate <= toDate)
                                    select new SystemApprovalVM
                                    {
+                                        SignatoryApprovalMapId = a.SignatoryApprovalMapId,
                                        IntregratedFromId = a.IntregratedFromId,
                                        CSNO = com.CSNO,
                                        CSDate = com.CSDate,
@@ -391,31 +393,31 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
             if (obj != null)
             {
                 obj.Status = true;
+                
                 if (context.SaveChanges() > 0)
                 {
-
-                    List<RequisitionSignatory> requisitionSignatorieList = context.RequisitionSignatories.Where(x => x.CompanyId == obj.CompanyId && x.IsActive && x.IntegrateWith == "ComparativeStatement").ToList();
-
-                    List<SignatoryApprovalMap> signatoryApprovalMapList = new List<SignatoryApprovalMap>();
-
-                    foreach (var item in requisitionSignatorieList)
+                    long employeeId = vm.EmpId;
+                    var requisitions = context.RequisitionSignatories.Where(r => r.IsActive == true && r.IntegrateWith == "ComparativeStatement").OrderBy(x => x.OrderBy).ToList();
+                    int status = 0;
+                    foreach (var req in requisitions)
                     {
-                        SignatoryApprovalMap signatoryApprovalMap = new SignatoryApprovalMap
+                        status = (req.OrderBy != 1) ? -1 : 0;
+                        var signatoryApprovalMap = new SignatoryApprovalMap
                         {
-
-                            EmployeeId = item.EmployeeId,
-                            IntregratedFromId = obj.CSID,
-                            IsActive = true,
-                            Status = 0,
-                            TableName = "ComparativeStatement",
-                            CreatedBy = System.Web.HttpContext.Current.User.Identity.Name,
+                            EmployeeId = req.EmployeeId,
+                            TableName = req.IntegrateWith,
+                            IntregratedFromId = vm.CSID,
+                            OrderBy = req.OrderBy,
+                            Status = status,
+                            IsHRAdmin = req.IsHRAdmin,
                             CreatedDate = DateTime.Now,
-
+                            
+                            CreatedBy = System.Web.HttpContext.Current.User.Identity.Name,
+                            IsActive = true
                         };
-                        signatoryApprovalMapList.Add(signatoryApprovalMap);
 
+                        context.SignatoryApprovalMaps.Add(signatoryApprovalMap);
                     }
-                    context.SignatoryApprovalMaps.AddRange(signatoryApprovalMapList);
                     context.SaveChanges();
                 }
 
@@ -426,6 +428,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
 
             return false;
         }
+         
         public ComparativeStatementVm GetForEdit(long? CSID)
         {
             ComparativeStatementVm comparativeStatement = new ComparativeStatementVm();

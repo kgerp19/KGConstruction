@@ -357,7 +357,6 @@
         <EntityTypeShape EntityType="ERPModel.PRoll_Sheet" Width="1.5" PointX="40.375" PointY="48.75" />
         <EntityTypeShape EntityType="ERPModel.OfficerSalesTarget" Width="1.5" PointX="49.375" PointY="4.75" />
         <EntityTypeShape EntityType="ERPModel.ComparativeStatementDetail" Width="1.5" PointX="43.375" PointY="49.75" />
-        <EntityTypeShape EntityType="ERPModel.ComparativeStatement" Width="1.5" PointX="5.375" PointY="49.75" />
         <EntityTypeShape EntityType="ERPModel.GeneralRequisition" Width="1.5" PointX="0.75" PointY="50.75" />
         <EntityTypeShape EntityType="ERPModel.GeneralRequisitionDetail" Width="1.5" PointX="50.375" PointY="9.75" />
         <EntityTypeShape EntityType="ERPModel.Proll_AdvanceeType" Width="1.5" PointX="28.375" PointY="40.75" />
@@ -521,6 +520,7 @@
         <AssociationConnector Association="ERPModel.FK_OrderDetail_Product" />
         <EntityTypeShape EntityType="ERPModel.ChequeBook" Width="1.5" PointX="54.375" PointY="48.75" />
         <EntityTypeShape EntityType="ERPModel.ChequeRegister" Width="1.5" PointX="54.375" PointY="53.75" />
+        <EntityTypeShape EntityType="ERPModel.ComparativeStatement" Width="1.5" PointX="5.375" PointY="49.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -1,4 +1,5 @@
 ﻿@model KGERP.Service.Implementation.ComparativeStatementService.Comparative_Statement.ComparativeStatementVm
+@using KGERP.Utility
 @{
     ViewBag.Title = "CS";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -14,105 +15,111 @@
 </section>
 @if (Model.ComparetiveStatemnetList != null && Model.ComparetiveStatemnetList.Any())
 {
-<section class="content">
-    <div class="row">
-        <div class="box">
-            
-            <div class="box-danger">
+    <section class="content">
+        <div class="row">
+            <div class="box">
 
-                <!-- /.box-header -->
-                <div class="box-body">
+                <div class="box-danger">
 
-
-                    <table class="table table-striped" id="KgErpDataTable">
-                        <thead>
-                            <tr>
-                                <th>Serial Number</th>
-
-                                <th>CSNO</th>
-
-                                <th>Product Name</th>
-
-                                <th>Origin</th>
-                                <th>Brand</th>
-                                <th>Specification</th>
-
-                                <th>CS Date</th>
-                                <th>Delivery Date</th>
-                                <th>Required Quantity</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                    <!-- /.box-header -->
+                    <div class="box-body">
 
 
-                                <!-- Add more headers as needed -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                var serialNumber = 1;
-                            }
-
-                            @foreach (var item in Model.ComparetiveStatemnetList)
-                            {
+                        <table class="table table-striped" id="KgErpDataTable">
+                            <thead>
                                 <tr>
-                                    <td>@serialNumber</td>
+                                    <th>SL</th>
 
-                                    <td>@item.CSNO</td>
+                                    <th>CSNO</th>
 
-                                    <td>@item.PrductName</td>
+                                    <th>Product Name</th>
 
-                                    <td>@item.Origin</td>
-                                    <td>@item.Brand</td>
-                                    <td>@item.Specification</td>
-                                    <td>@item.CSDate.ToString("dd/MM/yyyy")</td>
-                                    <td>@(item.DeliveryDate.HasValue ? item.DeliveryDate.Value.ToString("dd/MM/yyyy") : "N/A")</td>
-                                    <td>@(item.RequiredQuantity.HasValue ? item.RequiredQuantity.Value.ToString() : "N/A")</td>
+                                    <th>Origin</th>
+                                    <th>Brand</th>
+                                    <th>Specification</th>
 
-                                    <td>
-                                        @if (item.Status == false)
-                                        {
-                                            <button class="btn btn-primary btn-sm" onclick="redirectToCreateStatement('@item.CompanyId', '@item.CSID')">Not Submit</button>
+                                    <th>CS Date</th>
+                                    <th>Delivery Date</th>
+                                    <th>Required Quantity</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
 
 
-                                        }
-                                        else
-                                        {
-                                            <button class="btn btn-success btn-sm" disabled> Submit</button>
-                                        }
-
-                                    </td>
-                                    <td>
-
-                                        @if (item.Status == true)
-                                        {
-                                            <a class="disabled" href="@Url.Action("EditCStament", "ComparativeStatement", new { CsId = item.CSID })"><i class="fa fa-pencil text-warning "></i></a>
-                                            <a class="disabled" href="@Url.Action("DelteCStament", "ComparativeStatement", new { CsId = item.CSID, CompanyId = item.CompanyId })"><i class="fa fa-trash text-danger "></i></a>
-                                        }
-                                        else
-                                        {
-                                            <a href="@Url.Action("EditCStament", "ComparativeStatement", new { CsId = item.CSID })"><i class="fa fa-pencil text-warning "></i></a>
-                                            <a href="@Url.Action("DelteCStament", "ComparativeStatement", new { CsId = item.CSID, CompanyId = item.CompanyId })"><i class="fa fa-trash text-danger "></i></a>
-                                        }
-
-                                        <a href="@Url.Action("CreateStatement", "ComparativeStatement", new { CompanyId = item.CompanyId, CsId = item.CSID })"><i class="fa fa-eye text-primary "></i></a>
-
-                                    </td>
-
+                                    <!-- Add more headers as needed -->
                                 </tr>
-                                serialNumber++;
-                            }
+                            </thead>
+                            <tbody>
+                                @{
+                                    var serialNumber = 1;
+                                }
+
+                                @foreach (var item in Model.ComparetiveStatemnetList)
+                                {
+                                    <tr>
+                                        <td>@serialNumber</td>
+
+                                        <td>@item.CSNO</td>
+
+                                        <td>@item.PrductName</td>
+
+                                        <td>@item.Origin</td>
+                                        <td>@item.Brand</td>
+                                        <td>@item.Specification</td>
+                                        <td>@item.CSDate.ToString("dd/MM/yyyy")</td>
+                                        <td>@(item.DeliveryDate.HasValue ? item.DeliveryDate.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                                        <td>@(item.RequiredQuantity.HasValue ? item.RequiredQuantity.Value.ToString() : "N/A")</td>
+
+                                       
+                                        <td>
+
+                                            @if (item.ApprovalStatus == (int)LeaveStatusNewEnum.Pending)
+                                            {
+                                                <span class="badge badge-warning">Pending</span>
+                                            }
+                                            else if (item.ApprovalStatus == (int)LeaveStatusNewEnum.Denied)
+                                            {
+                                                <span class="badge badge-danger">Rejected</span>
+                                            }
+                                            else if (item.ApprovalStatus == (int)LeaveStatusNewEnum.Approved)
+                                            {
+                                                <span class="badge badge-success">Approved</span>
+                                            }
 
 
-                        </tbody>
-                    </table>
+                                        </td>
 
+                                        <td>
+
+                                            @if (item.Status == true)
+                                            {
+                                                <a class="disabled" href="@Url.Action("EditCStament", "ComparativeStatement", new { CsId = item.CSID })"><i class="fa fa-pencil text-warning "></i></a>
+                                                <a class="disabled" href="@Url.Action("DelteCStament", "ComparativeStatement", new { CsId = item.CSID, CompanyId = item.CompanyId })"><i class="fa fa-trash text-danger "></i></a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("EditCStament", "ComparativeStatement", new { CsId = item.CSID })"><i class="fa fa-pencil text-warning "></i></a>
+                                                <a href="@Url.Action("DelteCStament", "ComparativeStatement", new { CsId = item.CSID, CompanyId = item.CompanyId })"><i class="fa fa-trash text-danger "></i></a>
+                                            }
+
+                                            <a href="@Url.Action("CreateStatement", "ComparativeStatement", new { CompanyId = item.CompanyId, CsId = item.CSID })"><i class="fa fa-eye text-primary "></i></a>
+
+                                        </td>
+
+                                    </tr>
+                                    serialNumber++;
+                                }
+
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
 
                 </div>
-
             </div>
         </div>
-    </div>
-</section>
+    </section>
 }
 
 <script>

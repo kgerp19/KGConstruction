@@ -40,6 +40,7 @@ namespace KGERP.Service.Implementation.General_Requisition.ViewModels
 
     public class SystemApprovalVM
     {
+        public long SignatoryApprovalMapId { get; set; }
         public int ApprovalId { get; set; }
         public int CompanyId { get; set; }
         public long EmployeeId { get; set; }
