@@ -6020,17 +6020,11 @@ warning 6002: The table/view 'KGConstructionDB.Erp.FormulaHistory' does not have
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="TPPrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'KGConstructionDB.Erp.RequisitionItemDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="RequisitionItemDetail">
           <Key>
-            <PropertyRef Name="RequistionItemDetailId" />
-            <PropertyRef Name="RequisitionItemId" />
-            <PropertyRef Name="RequisitionId" />
-            <PropertyRef Name="RUnitPrice" />
-            <PropertyRef Name="IsActive" />
-            <PropertyRef Name="FinishProductBOMId" />
+            <PropertyRef Name="ReqItemDetailId" />
           </Key>
+          <Property Name="ReqItemDetailId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RequistionItemDetailId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RequisitionItemId" Type="int" Nullable="false" />
           <Property Name="RequisitionId" Type="int" Nullable="false" />
@@ -8943,6 +8937,7 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <EntitySet Name="RentProductionDetail" EntityType="Self.RentProductionDetail" Schema="Erp" store:Type="Tables" />
           <EntitySet Name="Requisition" EntityType="Self.Requisition" Schema="Erp" store:Type="Tables" />
           <EntitySet Name="RequisitionItem" EntityType="Self.RequisitionItem" Schema="Erp" store:Type="Tables" />
+          <EntitySet Name="RequisitionItemDetail" EntityType="Self.RequisitionItemDetail" Schema="Erp" store:Type="Tables" />
           <EntitySet Name="RequisitionSignatory" EntityType="Self.RequisitionSignatory" Schema="Erp" store:Type="Tables" />
           <EntitySet Name="RequisitionSignatoryApproval" EntityType="Self.RequisitionSignatoryApproval" Schema="Erp" store:Type="Tables" />
           <EntitySet Name="SaleReturn" EntityType="Self.SaleReturn" Schema="Erp" store:Type="Tables" />
@@ -9126,23 +9121,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
     [FormulaHistory].[CreatedBy] AS [CreatedBy], 
     [FormulaHistory].[CompanyId] AS [CompanyId]
     FROM [Erp].[FormulaHistory] AS [FormulaHistory]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="RequisitionItemDetail" EntityType="Self.RequisitionItemDetail" store:Type="Tables" store:Schema="Erp">
-            <DefiningQuery>SELECT 
-    [RequisitionItemDetail].[RequistionItemDetailId] AS [RequistionItemDetailId], 
-    [RequisitionItemDetail].[RequisitionItemId] AS [RequisitionItemId], 
-    [RequisitionItemDetail].[RequisitionId] AS [RequisitionId], 
-    [RequisitionItemDetail].[RProductId] AS [RProductId], 
-    [RequisitionItemDetail].[RProcessLoss] AS [RProcessLoss], 
-    [RequisitionItemDetail].[RQty] AS [RQty], 
-    [RequisitionItemDetail].[RExtraQty] AS [RExtraQty], 
-    [RequisitionItemDetail].[RTotalQty] AS [RTotalQty], 
-    [RequisitionItemDetail].[FProductId] AS [FProductId], 
-    [RequisitionItemDetail].[FQty] AS [FQty], 
-    [RequisitionItemDetail].[RUnitPrice] AS [RUnitPrice], 
-    [RequisitionItemDetail].[IsActive] AS [IsActive], 
-    [RequisitionItemDetail].[FinishProductBOMId] AS [FinishProductBOMId]
-    FROM [Erp].[RequisitionItemDetail] AS [RequisitionItemDetail]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="ShereMember" EntityType="Self.ShereMember" store:Type="Tables" store:Schema="Kmcsl">
             <DefiningQuery>SELECT 
@@ -10694,7 +10672,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           </AssociationSet>
           <EntitySet Name="MaterialReceives" EntityType="ERPModel.MaterialReceive" />
           <EntitySet Name="RequisitionSignatories" EntityType="ERPModel.RequisitionSignatory" />
-          <EntitySet Name="RequisitionItemDetails" EntityType="ERPModel.RequisitionItemDetail" />
           <EntitySet Name="IssueMasterInfoes" EntityType="ERPModel.IssueMasterInfo" />
           <EntitySet Name="StockAdjusts" EntityType="ERPModel.StockAdjust" />
           <AssociationSet Name="FK_StockAdjustDetail_StockAdjust" Association="ERPModel.FK_StockAdjustDetail_StockAdjust">
@@ -10942,6 +10919,7 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <EntitySet Name="ChequeBooks" EntityType="ERPModel.ChequeBook" />
           <EntitySet Name="ChequeRegisters" EntityType="ERPModel.ChequeRegister" />
           <EntitySet Name="ComparativeStatements" EntityType="ERPModel.ComparativeStatement" />
+          <EntitySet Name="RequisitionItemDetails" EntityType="ERPModel.RequisitionItemDetail" />
           </EntityContainer>
         <ComplexType Name="GetEmployeeListForTeam_Result">
           <Property Type="Int64" Name="Id" Nullable="false" />
@@ -18151,29 +18129,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityType Name="RequisitionItemDetail">
-          <Key>
-            <PropertyRef Name="RequistionItemDetailId" />
-            <PropertyRef Name="RequisitionItemId" />
-            <PropertyRef Name="RequisitionId" />
-            <PropertyRef Name="RUnitPrice" />
-            <PropertyRef Name="IsActive" />
-            <PropertyRef Name="FinishProductBOMId" />
-          </Key>
-          <Property Name="RequistionItemDetailId" Type="Guid" Nullable="false" />
-          <Property Name="RequisitionItemId" Type="Int32" Nullable="false" />
-          <Property Name="RequisitionId" Type="Int32" Nullable="false" />
-          <Property Name="RProductId" Type="Int32" />
-          <Property Name="RProcessLoss" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="RQty" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="RExtraQty" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="RTotalQty" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="FProductId" Type="Int32" />
-          <Property Name="FQty" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="RUnitPrice" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="FinishProductBOMId" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="IssueMasterInfo">
           <Key>
             <PropertyRef Name="IssueMasterId" />
@@ -20149,6 +20104,25 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="CompanyId" Type="Int32" Nullable="false" />
           <Property Name="ApprovalStatus" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RequisitionItemDetail">
+          <Key>
+            <PropertyRef Name="ReqItemDetailId" />
+          </Key>
+          <Property Name="ReqItemDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RequistionItemDetailId" Type="Guid" Nullable="false" />
+          <Property Name="RequisitionItemId" Type="Int32" Nullable="false" />
+          <Property Name="RequisitionId" Type="Int32" Nullable="false" />
+          <Property Name="RProductId" Type="Int32" />
+          <Property Name="RProcessLoss" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="RQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="RExtraQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="RTotalQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="FProductId" Type="Int32" />
+          <Property Name="FQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="RUnitPrice" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="FinishProductBOMId" Type="Int32" Nullable="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -25699,25 +25673,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="RequisitionItemDetails">
-            <EntityTypeMapping TypeName="ERPModel.RequisitionItemDetail">
-              <MappingFragment StoreEntitySet="RequisitionItemDetail">
-                <ScalarProperty Name="FinishProductBOMId" ColumnName="FinishProductBOMId" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="RUnitPrice" ColumnName="RUnitPrice" />
-                <ScalarProperty Name="FQty" ColumnName="FQty" />
-                <ScalarProperty Name="FProductId" ColumnName="FProductId" />
-                <ScalarProperty Name="RTotalQty" ColumnName="RTotalQty" />
-                <ScalarProperty Name="RExtraQty" ColumnName="RExtraQty" />
-                <ScalarProperty Name="RQty" ColumnName="RQty" />
-                <ScalarProperty Name="RProcessLoss" ColumnName="RProcessLoss" />
-                <ScalarProperty Name="RProductId" ColumnName="RProductId" />
-                <ScalarProperty Name="RequisitionId" ColumnName="RequisitionId" />
-                <ScalarProperty Name="RequisitionItemId" ColumnName="RequisitionItemId" />
-                <ScalarProperty Name="RequistionItemDetailId" ColumnName="RequistionItemDetailId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="IssueMasterInfoes">
             <EntityTypeMapping TypeName="ERPModel.IssueMasterInfo">
               <MappingFragment StoreEntitySet="IssueMasterInfo">
@@ -27128,6 +27083,26 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
                 <ScalarProperty Name="CSDate" ColumnName="CSDate" />
                 <ScalarProperty Name="CSNO" ColumnName="CSNO" />
                 <ScalarProperty Name="CSID" ColumnName="CSID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RequisitionItemDetails">
+            <EntityTypeMapping TypeName="ERPModel.RequisitionItemDetail">
+              <MappingFragment StoreEntitySet="RequisitionItemDetail">
+                <ScalarProperty Name="FinishProductBOMId" ColumnName="FinishProductBOMId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="RUnitPrice" ColumnName="RUnitPrice" />
+                <ScalarProperty Name="FQty" ColumnName="FQty" />
+                <ScalarProperty Name="FProductId" ColumnName="FProductId" />
+                <ScalarProperty Name="RTotalQty" ColumnName="RTotalQty" />
+                <ScalarProperty Name="RExtraQty" ColumnName="RExtraQty" />
+                <ScalarProperty Name="RQty" ColumnName="RQty" />
+                <ScalarProperty Name="RProcessLoss" ColumnName="RProcessLoss" />
+                <ScalarProperty Name="RProductId" ColumnName="RProductId" />
+                <ScalarProperty Name="RequisitionId" ColumnName="RequisitionId" />
+                <ScalarProperty Name="RequisitionItemId" ColumnName="RequisitionItemId" />
+                <ScalarProperty Name="RequistionItemDetailId" ColumnName="RequistionItemDetailId" />
+                <ScalarProperty Name="ReqItemDetailId" ColumnName="ReqItemDetailId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

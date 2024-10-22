@@ -304,7 +304,6 @@ namespace KGERP.Data.Models
         public virtual DbSet<LeaveApplicationDetail> LeaveApplicationDetails { get; set; }
         public virtual DbSet<MaterialReceive> MaterialReceives { get; set; }
         public virtual DbSet<RequisitionSignatory> RequisitionSignatories { get; set; }
-        public virtual DbSet<RequisitionItemDetail> RequisitionItemDetails { get; set; }
         public virtual DbSet<IssueMasterInfo> IssueMasterInfoes { get; set; }
         public virtual DbSet<StockAdjust> StockAdjusts { get; set; }
         public virtual DbSet<Prod_ReferenceSlaveConsumption> Prod_ReferenceSlaveConsumption { get; set; }
@@ -364,6 +363,7 @@ namespace KGERP.Data.Models
         public virtual DbSet<ChequeBook> ChequeBooks { get; set; }
         public virtual DbSet<ChequeRegister> ChequeRegisters { get; set; }
         public virtual DbSet<ComparativeStatement> ComparativeStatements { get; set; }
+        public virtual DbSet<RequisitionItemDetail> RequisitionItemDetails { get; set; }
     
         public virtual ObjectResult<GetEmployeeListForTeam_Result> GetEmployeeListForTeam(Nullable<int> companyId)
         {

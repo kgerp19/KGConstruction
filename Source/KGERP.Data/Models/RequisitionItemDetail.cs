@@ -14,6 +14,7 @@ namespace KGERP.Data.Models
     
     public partial class RequisitionItemDetail
     {
+        public long ReqItemDetailId { get; set; }
         public System.Guid RequistionItemDetailId { get; set; }
         public int RequisitionItemId { get; set; }
         public int RequisitionId { get; set; }

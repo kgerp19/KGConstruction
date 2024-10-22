@@ -4961,7 +4961,7 @@ namespace KGERP.Services.Procurement
             int result = -1;
             if (vmRequisition != null)
             {
-                var poMax = _db.Requisitions.Where(x => x.CompanyId == 20).Count() + 1;
+                var poMax = _db.Requisitions.Where(x => x.CompanyId == vmRequisition.CompanyFK).Count() + 1;
                 string poCid = "";
                 poCid = @"RQ-" + DateTime.Now.ToString("yy") + DateTime.Now.ToString("MM") +
                         DateTime.Now.ToString("dd") + "-" + poMax.ToString();
