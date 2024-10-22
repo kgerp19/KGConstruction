@@ -105,7 +105,7 @@ namespace KGERP.Service.Implementation
             var maxOrderBy = context.RequisitionSignatories.Where(x => x.EmployeeId == obj.EmployeeId && x.IsActive == true && x.IntegrateWith == "LeaveApplication" && x.IsHRAdmin == false).Select(x => x.OrderBy).Max();
             var sameLevelSignatories = context.RequisitionSignatories.Where(x => x.EmployeeId == obj.EmployeeId && x.OrderBy == obj.OrderBy && x.IntegrateWith == "LeaveApplication" && x.IsActive == true).ToList();
             var maxLevelSig = context.RequisitionSignatories.Where(x => x.EmployeeId == obj.EmployeeId && x.OrderBy == obj.OrderBy && obj.OrderBy == maxOrderBy && x.IsActive == true && x.IntegrateWith == "LeaveApplication").ToList();
-            if(sameLevelSignatories.Count > 1)
+            if (sameLevelSignatories.Count > 1)
             {
                 isSingleSignatory = false;
             }
@@ -1690,7 +1690,7 @@ namespace KGERP.Service.Implementation
             List<DateTime> leaves = new List<DateTime>();
 
             var leaveApplications = context.LeaveApplications
-                .Where(x => x.Id == empId && x.Status==1)
+                .Where(x => x.Id == empId && x.Status == 1)
                 .Select(y => new { y.StartDate, y.EndDate })
                 .ToList();
 
@@ -1888,7 +1888,7 @@ namespace KGERP.Service.Implementation
                             sameOrder.sam.ModifiedBy = Common.GetUserId();
                             sameOrder.sam.ModifiedDate = DateTime.Now;
                         }
-                        else if(sameOrder.sam.EmployeeId == Common.GetHRAdminId())
+                        else if (sameOrder.sam.EmployeeId == Common.GetHRAdminId())
                         {
                             sameOrder.sam.Status = vm.ApprovalStatus;
                             sameOrder.sam.ModifiedBy = Common.GetUserId();
@@ -1915,7 +1915,7 @@ namespace KGERP.Service.Implementation
                 {
                     foreach (var imSig in immediateHigherSig)
                     {
-                        if(Common.GetIntUserId() == Common.GetHRAdminId() && imSig.EmployeeId == Common.GetHRAdminId())
+                        if (Common.GetIntUserId() == Common.GetHRAdminId() && imSig.EmployeeId == Common.GetHRAdminId())
                         {
                             imSig.Status = 1;
                         }
@@ -1923,7 +1923,7 @@ namespace KGERP.Service.Implementation
                         {
                             imSig.Status = 0;
                         }
-                        
+
                     }
                 }
 
@@ -2219,91 +2219,48 @@ namespace KGERP.Service.Implementation
         {
             int result = -1;
             SignatoryApprovalMap dbModel = new SignatoryApprovalMap();
-            dbModel = context.SignatoryApprovalMaps.Where(x => x.IntregratedFromId == vm.CSID && x.EmployeeId == vm.SigID && x.TableName == "ComparativeStatement").FirstOrDefault();
+            dbModel = context.SignatoryApprovalMaps.Where(x =>x.SignatoryApprovalMapId == vm.SignatoryApprovalMapId && x.IntregratedFromId == vm.CSID && x.EmployeeId == vm.SigID && x.TableName == "ComparativeStatement").FirstOrDefault();
 
             var cs = context.ComparativeStatements.Find(dbModel.IntregratedFromId);
 
             if (dbModel != null)
             {
-                //var sameOrderSignatories = context.SignatoryApprovalMaps.Where(x => x.IntregratedFromId == vm.LeaveApplicationID && x.OrderBy == dbModel.OrderBy).ToList();
-                var sameOrderSignatories = (from sam in context.SignatoryApprovalMaps
-                                            join e in context.Employees on sam.EmployeeId equals e.Id
-                                            where sam.IntregratedFromId == vm.CSID && sam.OrderBy == dbModel.OrderBy && sam.TableName == "ComparativeStatement"
-                                            select new
-                                            {
-                                                sam,
-                                                EmpID = e.EmployeeId
-                                            }).ToList();
 
-                if (sameOrderSignatories != null)
-                {
-                    foreach (var sameOrder in sameOrderSignatories)
-                    {
-                        if (sameOrder.EmpID == Common.GetUserId() && sameOrder.sam.EmployeeId != Common.GetHRAdminId())
-                        {
-                            sameOrder.sam.Status = vm.ApprovalStatus;
-                            sameOrder.sam.ModifiedBy = Common.GetUserId();
-                            sameOrder.sam.ModifiedDate = DateTime.Now;
-                        }
-                        else if (sameOrder.sam.EmployeeId == Common.GetHRAdminId())
-                        {
-                            sameOrder.sam.Status = vm.ApprovalStatus;
-                            sameOrder.sam.ModifiedBy = Common.GetUserId();
-                            sameOrder.sam.ModifiedDate = DateTime.Now;
-                        }
-                        else
-                        {
-                            sameOrder.sam.Status = vm.ApprovalStatus;
-                            sameOrder.sam.ModifiedBy = Common.GetUserId();
-                        }
-                    }
-                }
-                var immediateHigherSig = context.SignatoryApprovalMaps.Where(x => x.IntregratedFromId == vm.CSID && x.OrderBy == (dbModel.OrderBy + 1) && x.TableName == "ComparativeStatement").ToList();
-                
-                if (immediateHigherSig != null && vm.ApprovalStatus == (int)LeaveStatusNewEnum.Approved)
-                {
-                    foreach (var imSig in immediateHigherSig)
-                    {
-                        imSig.Status = 0;
+                dbModel.Status = vm.ApprovalStatus;
+                dbModel.Comment = vm.Comment;
+                dbModel.ModifiedBy = Common.GetUserId();
+                dbModel.ModifiedDate = DateTime.Now;
 
-                    }
-                }
 
-                //if (dbModel.IsHRAdmin || dbModel.EmployeeId == Common.GetHRAdminId())
-                //{
-                //    if (vm.ApprovalStatus == (int)LeaveStatusNewEnum.Denied)
-                //    {
-                        
-                //        cs.Status = (int)StatusEnum.Inactive;
-
-                //    }
-                //    else
-                //    {
-                //        cs.LeaveStatus = (int)LeaveStatusEnum.Approved;
-                       
-                //    }
-
-                //}
-                //else
-                //{
-                    
-                //}
-
-                if (vm.ApprovalStatus == (int)LeaveStatusNewEnum.Denied)
-                {
-
-                    cs.Status = true;// (int)LeaveStatusEnum.Denied;
-
-                }
-                if (context.SaveChanges() > 0)
-                {
-
-                    
-                }
-
-                result = 1;
             }
+            var immediateHigherSig = context.SignatoryApprovalMaps.Where(x => x.IntregratedFromId == vm.CSID && x.OrderBy == (dbModel.OrderBy + 1) && x.TableName == "ComparativeStatement").FirstOrDefault();
+
+            if (immediateHigherSig != null && vm.ApprovalStatus == (int)LeaveStatusNewEnum.Approved)
+            {
+                immediateHigherSig.Status = 0;
+                
+
+            }
+            else if (vm.ApprovalStatus == (int)LeaveStatusNewEnum.Denied)
+            {
+                immediateHigherSig.Status = (int)LeaveStatusNewEnum.Denied;
+
+            }
+            else
+            {
+                cs.ApprovalStatus = (int)LeaveStatusNewEnum.Approved;
+            }
+
+
+            if (context.SaveChanges() > 0)
+            {
+
+               // cs.Status
+            }
+
+            result = 1;
+        
             return result;
         }
-    }
+}
 }

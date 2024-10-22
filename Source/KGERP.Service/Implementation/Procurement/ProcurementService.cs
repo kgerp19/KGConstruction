@@ -1424,7 +1424,7 @@ namespace KGERP.Services.Procurement
                             DemandRate = 0,
                             QCRate = 0,
                             PackSize = 0,
-                            CompanyId = item.CompanyFK,
+                            CompanyId = vmPurchaseOrderSlave.CompanyFK,
                             CreatedBy = Common.GetUserId(),
                             CreatedDate = DateTime.Now,
                             VATAddition = item.VATAddition,
@@ -1745,6 +1745,43 @@ namespace KGERP.Services.Procurement
         }
 
         public async Task<long> PackagingPurchaseOrderSubmit(VMPurchaseOrderSlave vmPurchaseOrderSlave)
+        {
+            long result = -1;
+
+
+            PurchaseOrder procurementPurchaseOrder = await _db.PurchaseOrders.FindAsync(vmPurchaseOrderSlave.PurchaseOrderId);
+            procurementPurchaseOrder.TotalDiscount = vmPurchaseOrderSlave.TotalDiscount;
+            await _db.SaveChangesAsync();
+
+            if (procurementPurchaseOrder != null)
+            {
+                if (procurementPurchaseOrder.Status == (int)EnumPOStatus.Draft)
+                {
+                    procurementPurchaseOrder.Status = (int)EnumPOStatus.Submitted;
+
+                    List<PurchaseOrderDetail> ListDetail = _db.PurchaseOrderDetails.Where(x => x.PurchaseOrderId == procurementPurchaseOrder.PurchaseOrderId
+                     && x.IsActive).ToList();
+                    decimal totalValue = ListDetail.Select(x => x.PurchaseQty * x.PurchaseRate).DefaultIfEmpty(0).Sum();
+
+                    ListDetail.ForEach(x => x.ProductDiscount = (procurementPurchaseOrder.TotalDiscount / totalValue) * (x.PurchaseQty * x.PurchaseRate));
+                    //await _db.SaveChangesAsync();
+                }
+                else
+                {
+                    procurementPurchaseOrder.Status = (int)EnumPOStatus.Draft;
+
+                }
+                procurementPurchaseOrder.ModifiedBy = System.Web.HttpContext.Current.User.Identity.Name;
+                procurementPurchaseOrder.ModifiedDate = DateTime.Now;
+                if (await _db.SaveChangesAsync() > 0)
+                {
+                    result = procurementPurchaseOrder.PurchaseOrderId;
+                }
+            }
+            return result;
+        }
+
+        public async Task<long> PurchaseOrderByRequisitonSubmit(VMPurchaseOrderSlave vmPurchaseOrderSlave)
         {
             long result = -1;
 
@@ -2741,7 +2778,8 @@ namespace KGERP.Services.Procurement
                                               PurchaseAmount = t1.PurchaseAmount,
                                               UnitName = t3.Name,
                                               CompanyFK = t1.CompanyId,
-                                              VATAddition = t1.VATAddition
+                                              VATAddition = t1.VATAddition,
+                                              IsVATIncluded=t1.IsVATIncluded
 
                                           }).FirstOrDefault());
             return v;
@@ -2841,6 +2879,7 @@ namespace KGERP.Services.Procurement
             model.PurchaseAmount = (vmPurchaseOrderSlave.PurchaseQuantity * vmPurchaseOrderSlave.PurchasingPrice);
             model.VATAddition = vmPurchaseOrderSlave.VATAddition;
             model.ModifiedBy = System.Web.HttpContext.Current.User.Identity.Name;
+            model.IsVATIncluded = vmPurchaseOrderSlave.IsVATIncluded;
             model.ModifiedDate = DateTime.Now;
             if (await _db.SaveChangesAsync() > 0)
             {
@@ -2895,9 +2934,11 @@ namespace KGERP.Services.Procurement
             if (procurementPurchaseOrderSlave != null)
             {
                 procurementPurchaseOrderSlave.IsActive = false;
+                procurementPurchaseOrderSlave.ModifiedDate = DateTime.Now;
+                procurementPurchaseOrderSlave.ModifiedBy = Common.GetUserId();
                 if (await _db.SaveChangesAsync() > 0)
                 {
-                    result = procurementPurchaseOrderSlave.PurchaseOrderDetailId;
+                    result = (long)procurementPurchaseOrderSlave.PurchaseOrderId;
                 }
             }
             return result;
@@ -4813,6 +4854,36 @@ namespace KGERP.Services.Procurement
         }
 
         public async Task<long> PackagingPurchaseOrderSlaveAdd(VMPurchaseOrderSlave vmPurchaseOrderSlave)
+        {
+            long result = -1;
+            PurchaseOrderDetail procurementPurchaseOrderSlave = new PurchaseOrderDetail
+            {
+                PurchaseOrderId = vmPurchaseOrderSlave.PurchaseOrderId,
+                ProductId = vmPurchaseOrderSlave.Common_ProductFK,
+                PurchaseQty = vmPurchaseOrderSlave.PurchaseQuantity,
+                PurchaseRate = vmPurchaseOrderSlave.PurchasingPrice,
+                PurchaseAmount = (vmPurchaseOrderSlave.PurchaseQuantity * vmPurchaseOrderSlave.PurchasingPrice),
+                VATAddition = vmPurchaseOrderSlave.VATAddition,
+
+                DemandRate = 0,
+                QCRate = 0,
+                PackSize = 0,
+
+                CompanyId = vmPurchaseOrderSlave.CompanyFK,
+                CreatedBy = System.Web.HttpContext.Current.Session["EmployeeName"].ToString(),
+                CreatedDate = DateTime.Now,
+                IsActive = true,
+                IsVATIncluded = vmPurchaseOrderSlave.IsVATIncluded
+            };
+            _db.PurchaseOrderDetails.Add(procurementPurchaseOrderSlave);
+            if (await _db.SaveChangesAsync() > 0)
+            {
+                result = procurementPurchaseOrderSlave.PurchaseOrderDetailId;
+            }
+
+            return result;
+        }
+        public async Task<long> PurchaseOrderDetailsRequisitionAdd(VMPurchaseOrderSlave vmPurchaseOrderSlave)
         {
             long result = -1;
             PurchaseOrderDetail procurementPurchaseOrderSlave = new PurchaseOrderDetail

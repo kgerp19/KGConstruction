@@ -108,6 +108,7 @@ namespace KGERP.Controllers
         [HttpPost]
         public ActionResult SubmitCS(ComparativeStatementVm Model)
         {
+            Model.EmpId =  Common.GetIntUserId();
             var result=_comparativeStatement.Submitstatus(Model);
             return RedirectToAction("CreateStatement", new { CompanyId = Model.CompanyId, CsId = Model.CSID });
         }

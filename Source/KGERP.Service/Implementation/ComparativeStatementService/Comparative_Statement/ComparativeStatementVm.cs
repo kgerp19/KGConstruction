@@ -14,6 +14,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
     public class ComparativeStatementVm
     {
         public long CSID { get; set; }
+        public long EmpId { get; set; }
         public string CSNO { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public System.DateTime CSDate { get; set; }
@@ -40,6 +41,7 @@ namespace KGERP.Service.Implementation.ComparativeStatementService.Comparative_S
         public IEnumerable<ComparativeStatementVm> ComparetiveStatemnetList { get; set; }
         public List<SelectModelPr> ProductList { get; set; }
         public int CompanyId { get; set; }
+        public int ApprovalStatus { get; set; }
         public string PrductName { get; set; }
 
 

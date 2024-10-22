@@ -7,9 +7,9 @@
     </am:CreatedBy>
     <am:UpdatedBy>
       <am:Name>SSDTRS</am:Name>
-      <am:Version>17.6.33723.286</am:Version>
+      <am:Version>17.11.35327.3</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2024-10-20T04:02:36.0250720Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2024-10-21T10:22:41.7013864Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
@@ -2661,8 +2661,8 @@ Where purchaseOrder.IsActive = 1 AND purchaseOrder.PurchaseOrderId = @PurchaseOr
               </Style>
             </Textbox>
             <Image Name="Image1">
-              <Source>Embedded</Source>
-              <Value>http://103.132.94.84:125/Images/Logo/BSLogo.png</Value>
+              <Source>External</Source>
+              <Value>=First(Fields!CompanyLogo.Value, "CompanyDSet")</Value>
               <Sizing>FitProportional</Sizing>
               <Top>0.15569in</Top>
               <Left>0.07167in</Left>

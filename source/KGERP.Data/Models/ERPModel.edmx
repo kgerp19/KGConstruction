@@ -1010,6 +1010,7 @@ warning 6002: The table/view 'KGConstructionDB.dbo.AttendanceType' does not have
           <Property Name="ModifiedDate" Type="datetime" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="CompanyId" Type="int" Nullable="false" />
+          <Property Name="ApprovalStatus" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ComparativeStatementDetail">
           <Key>
@@ -10528,7 +10529,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <EntitySet Name="PRoll_Sheet" EntityType="ERPModel.PRoll_Sheet" />
           <EntitySet Name="OfficerSalesTargets" EntityType="ERPModel.OfficerSalesTarget" />
           <EntitySet Name="ComparativeStatementDetails" EntityType="ERPModel.ComparativeStatementDetail" />
-          <EntitySet Name="ComparativeStatements" EntityType="ERPModel.ComparativeStatement" />
           <EntitySet Name="GeneralRequisitions" EntityType="ERPModel.GeneralRequisition" />
           <EntitySet Name="GeneralRequisitionDetails" EntityType="ERPModel.GeneralRequisitionDetail" />
           <EntitySet Name="Proll_AdvanceeType" EntityType="ERPModel.Proll_AdvanceeType" />
@@ -10941,6 +10941,7 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           </AssociationSet>
           <EntitySet Name="ChequeBooks" EntityType="ERPModel.ChequeBook" />
           <EntitySet Name="ChequeRegisters" EntityType="ERPModel.ChequeRegister" />
+          <EntitySet Name="ComparativeStatements" EntityType="ERPModel.ComparativeStatement" />
           </EntityContainer>
         <ComplexType Name="GetEmployeeListForTeam_Result">
           <Property Type="Int64" Name="Id" Nullable="false" />
@@ -17180,27 +17181,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityType Name="ComparativeStatement">
-          <Key>
-            <PropertyRef Name="CSID" />
-          </Key>
-          <Property Name="CSID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CSNO" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CSDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DeliveryDate" Type="DateTime" Precision="3" />
-          <Property Name="ProductID" Type="Int32" />
-          <Property Name="Origin" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Specification" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="RequiredQuantity" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Status" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="CompanyId" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="GeneralRequisition">
           <Key>
             <PropertyRef Name="Id" />
@@ -20147,6 +20127,28 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="RequestedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="RequestedOn" Type="DateTime" Precision="3" />
           <Property Name="BankAccountInfoId" Type="Int64" />
+        </EntityType>
+        <EntityType Name="ComparativeStatement">
+          <Key>
+            <PropertyRef Name="CSID" />
+          </Key>
+          <Property Name="CSID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CSNO" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CSDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DeliveryDate" Type="DateTime" Precision="3" />
+          <Property Name="ProductID" Type="Int32" />
+          <Property Name="Origin" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Specification" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="RequiredQuantity" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CompanyId" Type="Int32" Nullable="false" />
+          <Property Name="ApprovalStatus" Type="Int32" Nullable="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -25188,28 +25190,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ComparativeStatements">
-            <EntityTypeMapping TypeName="ERPModel.ComparativeStatement">
-              <MappingFragment StoreEntitySet="ComparativeStatement">
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="RequiredQuantity" ColumnName="RequiredQuantity" />
-                <ScalarProperty Name="Specification" ColumnName="Specification" />
-                <ScalarProperty Name="Brand" ColumnName="Brand" />
-                <ScalarProperty Name="Origin" ColumnName="Origin" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
-                <ScalarProperty Name="CSDate" ColumnName="CSDate" />
-                <ScalarProperty Name="CSNO" ColumnName="CSNO" />
-                <ScalarProperty Name="CSID" ColumnName="CSID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="GeneralRequisitions">
             <EntityTypeMapping TypeName="ERPModel.GeneralRequisition">
               <MappingFragment StoreEntitySet="GeneralRequisition">
@@ -27125,6 +27105,29 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
                 <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
                 <ScalarProperty Name="RequisitionMasterId" ColumnName="RequisitionMasterId" />
                 <ScalarProperty Name="ChequeRegisterId" ColumnName="ChequeRegisterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ComparativeStatements">
+            <EntityTypeMapping TypeName="ERPModel.ComparativeStatement">
+              <MappingFragment StoreEntitySet="ComparativeStatement">
+                <ScalarProperty Name="ApprovalStatus" ColumnName="ApprovalStatus" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="RequiredQuantity" ColumnName="RequiredQuantity" />
+                <ScalarProperty Name="Specification" ColumnName="Specification" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="Origin" ColumnName="Origin" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="CSDate" ColumnName="CSDate" />
+                <ScalarProperty Name="CSNO" ColumnName="CSNO" />
+                <ScalarProperty Name="CSID" ColumnName="CSID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
