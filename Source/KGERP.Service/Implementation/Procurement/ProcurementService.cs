@@ -1429,7 +1429,8 @@ namespace KGERP.Services.Procurement
                             CreatedDate = DateTime.Now,
                             VATAddition = item.VATAddition,
                             IsActive = true,
-                            IsVATIncluded = item.IsVATIncluded
+                            IsVATIncluded = item.IsVATIncluded,
+                            
                         };
                         purchaseListAdd.Add(procurementPurchaseOrderDetail);
                     }
