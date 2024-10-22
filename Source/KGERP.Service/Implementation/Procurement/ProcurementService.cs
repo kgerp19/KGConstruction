@@ -4943,7 +4943,7 @@ namespace KGERP.Services.Procurement
                      null,
                      null,
                      null,
-                     0,
+                     item.UnitePrice,
                      true,
                      item.FinishProductBOMId);
 

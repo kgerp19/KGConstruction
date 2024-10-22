@@ -20,6 +20,7 @@
                                         <th>Allocated Qty</th>
                                         <th>Requested Qty</th>
                                         <th>Request Qty</th>
+                                        <th>Unit Price</th>
                                         <th>Unit</th>
 
                                     </tr>
@@ -48,7 +49,10 @@
                                     @Html.TextBoxFor(model => model.DataListPur[i].RequiredQuantity, new { id = "txtRequiredQuantity", @Value = Model.DataListPur[i].RequiredQuantity, @class = "form-control" })
 
                                 </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.DataListPur[i].UnitePrice, new { id = "txtUnitPrice", @Value = Model.DataListPur[i].UnitePrice, @class = "form-control" })
 
+                                </td>
                                 <td>
                                     @Html.DisplayFor(model => model.DataListPur[i].UnitName)
                                 </td>

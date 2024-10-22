@@ -614,7 +614,7 @@ namespace KGERP.Service.Implementation
                             null,
                             null,
                             null,
-                            0,
+                            model.UnitePrice,
                             true,
                             0);
 
@@ -764,7 +764,9 @@ namespace KGERP.Service.Implementation
                                                           ProductName = pc.Name + " " + psc.Name + " " + p.ProductName,
                                                           RequisitionId = d.RequisitionId,
                                                           RequistionItemDetailId = d.RequistionItemDetailId,
-                                                          RProductId = d.RProductId.Value
+                                                          RProductId = d.RProductId.Value,
+                                                          UnitPrice=d.RUnitPrice
+                                                          
                                                       }).OrderByDescending(x => x.RequisitionId).ToListAsync(cancellationToken); ;
 
                 return result;
@@ -1154,7 +1156,8 @@ namespace KGERP.Service.Implementation
                                                                     RQty = d.RQty.Value,
                                                                     ProductName = psc.Name + " " + p.ProductName,
                                                                     RProductId = d.RProductId.Value,
-                                                                    RequistionItemDetailId = d.RequistionItemDetailId
+                                                                    RequistionItemDetailId = d.RequistionItemDetailId,
+                                                                    UnitePrice=d.RUnitPrice
                                                                 }).ToListAsync();
 
             return vMPackagingPurchaseRequisition;

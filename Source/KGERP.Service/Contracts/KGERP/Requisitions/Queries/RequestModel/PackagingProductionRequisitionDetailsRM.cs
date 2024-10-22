@@ -54,5 +54,6 @@ namespace KGERP.Service.Contracts.KGERP.Requisitions.Queries.RequestModel
         public bool IsActive { get; set; }
         public Guid RequistionItemDetailId { get; set; }
         public decimal AllocatedQty { get;  set; }
+        public decimal UnitPrice { get;  set; }
     }
 }

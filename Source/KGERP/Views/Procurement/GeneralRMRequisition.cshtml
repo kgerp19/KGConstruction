@@ -134,38 +134,48 @@
                         </div>
 
                     }
-                    <div class="row">
-                        <div class="col-md-7">
-                            <div class="form-group" style="padding:0px">
-                                <label for="message-text" class="col-form-label">Raw Item:</label>
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-group" style="padding:0px">
+                        <label for="message-text" class="col-form-label">Raw Item:</label>
 
-                                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Product Name", @id = "txtProductName" } })
+                        @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Product Name", @id = "txtProductName" } })
 
-                                @Html.HiddenFor(model => model.RProductId, new { id = "ddlRProductId" })
-                                @Html.ValidationMessageFor(model => model.RProductId, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-
-
-
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <label>Purchasing Qty</label>
-                                <div class="input-group">
-                                    @Html.EditorFor(model => model.Qty, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @id = "txtQty", type = "number" } })
-                                    @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
-                                    <div class="input-group-addon">
-                                        <span class="txtUnitName"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
+                        @Html.HiddenFor(model => model.RProductId, new { id = "ddlRProductId" })
+                        @Html.ValidationMessageFor(model => model.RProductId, "", new { @class = "text-danger" })
                     </div>
+                </div>
+
+
+
+
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label>Purchasing Qty</label>
+                        <div class="input-group">
+                            @Html.EditorFor(model => model.Qty, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @id = "txtQty", type = "number" } })
+                            @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
+                            <div class="input-group-addon">
+                                <span class="txtUnitName"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label>Purchase Rate</label>
+                        <div class="input-group">
+                            @Html.EditorFor(model => model.UnitePrice, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control", @id = "txtUnitPrice", type = "number" } })
+                            @Html.ValidationMessageFor(model => model.UnitePrice, "", new { @class = "text-danger" })
+                          
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
 
                     <div class="row">
                         <div class="col-md-8">
@@ -214,6 +224,7 @@
                             <th>Product Name</th>
 
                             <th>Requisition Qty</th>
+                            <th>Purchase Rate</th>
                             <th style="text-align:center">Action</th>
 
 
@@ -230,8 +241,9 @@
                                 <td>@item.ProductName</td>
 
                                 <td>@item.RQty</td>
+                                <td>@item.UnitePrice</td>
                                 <td style="text-align:center">
-                                    <a onclick="makeEditble('@item.ProductName','@item.RequistionItemDetailId','@item.RQty','@Model.RequisitionId','@Model.CompanyFK','@item.RProductId')" class="linkPointer" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                    <a onclick="makeEditble('@item.ProductName','@item.RequistionItemDetailId','@item.RQty','@Model.RequisitionId','@Model.CompanyFK','@item.RProductId','@item.UnitePrice')" class="linkPointer" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></a>
                                     &nbsp;
                                     <a onclick="makeDeletale('@item.RequistionItemDetailId','@Model.RequisitionId')" data-toggle="modal" style="width:100%" data-target="#RequisitionItemDetailDeleteModal" data-placement="top" class="linkPointer" title="Delete" data-placement="top"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
                                 </td>
@@ -345,13 +357,14 @@
 <script type="text/javascript">
 
 
-    const makeEditble = (RawItemName, RequistionItemDetailId, RQty, RequisitionId, CompayIdFK, RProductId) => {
+    const makeEditble = (RawItemName, RequistionItemDetailId, RQty, RequisitionId, CompayIdFK, RProductId,UnitPrice) => {
             /* $('#btnDiv').html('');*/
             $('#btnDivUpdate').text('Update');
             $('#txtProductName').val(RawItemName);
             $('#hidRequistionItemDetailIdAdd').val(RequistionItemDetailId);
             $('#ddlRProductId').val(RProductId);
             $('#txtQty').val(RQty);
+        $('#txtUnitPrice').val(UnitPrice);
             $('#ActionId').val(2);
             
             

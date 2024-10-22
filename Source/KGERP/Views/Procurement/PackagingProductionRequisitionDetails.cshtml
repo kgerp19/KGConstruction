@@ -3,6 +3,7 @@
     ViewBag.Title = "Product Requisition";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int sl = 0;
+    decimal total1 = 0;
 }
 <style type="text/css">
 
@@ -124,6 +125,7 @@
                                 <th>Estimated Qty</th>
                                 <th>Requisition Qty</th>
                                 <th>Remaining Qty</th>
+                                <th>Unit  Price</th>
                                 @if (!Model.IsSubmited)
                                 {
                                     <th style="text-align:center">Action</th>
@@ -137,27 +139,37 @@
 
                             @foreach (var item in Model.RequisitionItemDetail)
                             {
+                                
+                                total1 += item.UnitPrice;
+                                <tr>
+                                    <td>@(++sl)</td>
 
-                            <tr>
-                                <td>@(++sl)</td>
-
-                                <td>@item.ProductName</td>
-                                <td>@item.AllocatedQty</td>
-                                <td>@item.RQty</td>
-                                <td>@(item.AllocatedQty - item.RQty  )</td>
-                                @if (!Model.IsSubmited)
-                                {
-                                    <td style="text-align:center">
-                                        @*<a onclick="makeEditble('@item.RequistionItemDetailId','@item.RQty','@item.RProductId','@item.ProductName')" class="linkPointer" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.AllocatedQty</td>
+                                    <td>@item.RQty</td>
+                                    <td>@(item.AllocatedQty - item.RQty  )</td>
+                                    <td>@item.UnitPrice</td>
+                               
+                                    @if (!Model.IsSubmited)
+                                    {
+                                        <td style="text-align:center">
+                                            @*<a onclick="makeEditble('@item.RequistionItemDetailId','@item.RQty','@item.RProductId','@item.ProductName')" class="linkPointer" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></a>
                 &nbsp;*@
-                                        <a onclick="makeDeletale('@item.RequistionItemDetailId')" class="linkPointer" title="Delete" data-placement="top"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
-                                    </td>
-                                }
+                                            <a onclick="makeDeletale('@item.RequistionItemDetailId')" class="linkPointer" title="Delete" data-placement="top"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
+                                        </td>
+                                    }
 
-                            </tr>
+                                </tr>
+
                             }
+
+                        <tr>
+                            <td colspan="4" class="text-right"></td>
+                            <td ><b>Total</b> </td>
+                            <td colspan="5"><b>@total1</b> </td> <!-- Display total here -->
+                        </tr>
                         </tbody>
-                    </table>
+                        </table>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
