@@ -223,7 +223,7 @@ namespace KGERP.Controllers
                                                  Parameter = t2.Param,
                                                  CompanyName=t4.Name
 
-                                             }).OrderBy(x => x.MenuOrderNo).ThenBy(x => x.SubmenuShortName).ToList();
+                                             }).OrderBy(x => x.MenuOrderNo).ThenBy(x => x.SubMenuOrderNo).ToList();
 
 
                     string str = "";

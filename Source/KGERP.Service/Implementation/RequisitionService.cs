@@ -585,7 +585,7 @@ namespace KGERP.Service.Implementation
                             CreatedBy = model.CreatedBy,
                             CreatedDate = DateTime.Now,
                             RequisitionBy = model.CreatedBy,
-                            RequisitionStatus="N",
+                            RequisitionStatus = "N",
                             IsActive = true,
                             IsSubmitted = false,
                             OrderDetailsId = 0,
@@ -694,7 +694,7 @@ namespace KGERP.Service.Implementation
             return rResult;
         }
 
-        public async Task<int> PackagingGeneralRequisitionSubmit(int RequisitionId, bool isSubmited = false)
+        public async Task<int> PackagingGeneralRequisitionSubmit(int RequisitionId, long EmployeeId, string EmployeeStrId, bool isSubmited = false)
         {
             int requisitionId = 0;
 
@@ -708,6 +708,32 @@ namespace KGERP.Service.Implementation
                 if (await context.SaveChangesAsync() > 0)
                 {
                     requisitionId = requisitions.RequisitionId;
+
+
+
+                    long employeeId = EmployeeId;
+                    var requisitionSignatory = context.RequisitionSignatories.Where(r => r.IsActive == true && r.IntegrateWith == "Requisition").OrderBy(x => x.OrderBy).ToList();
+                    int status = 0;
+                    foreach (var req in requisitionSignatory)
+                    {
+                        status = (req.OrderBy != 1) ? -1 : 0;
+                        var signatoryApprovalMap = new SignatoryApprovalMap
+                        {
+                            EmployeeId = req.EmployeeId,
+                            TableName = req.IntegrateWith,
+                            IntregratedFromId = requisitions.RequisitionId,
+                            OrderBy = req.OrderBy,
+                            Status = status,
+                            IsHRAdmin = req.IsHRAdmin,
+                            CreatedDate = DateTime.Now,
+
+                            CreatedBy = EmployeeStrId,
+                            IsActive = true
+                        };
+
+                        context.SignatoryApprovalMaps.Add(signatoryApprovalMap);
+                    }
+                    context.SaveChanges();
                 }
             }
             return requisitionId;
@@ -723,7 +749,7 @@ namespace KGERP.Service.Implementation
                        join c in context.Companies on r.CompanyId equals c.CompanyId
                        join s in context.StockInfoes on r.FromRequisitionId equals s.StockInfoId
                        join s1 in context.StockInfoes on r.ToRequisitionId equals s1.StockInfoId
-                       join od in context.OrderDetails.Where(x => x.IsActive) on r.OrderDetailsId equals od.OrderDetailId                       
+                       join od in context.OrderDetails.Where(x => x.IsActive) on r.OrderDetailsId equals od.OrderDetailId
                        join om in context.OrderMasters on od.OrderMasterId equals om.OrderMasterId
                        join e in context.Employees on r.RequisitionBy.Trim().ToLower() equals e.EmployeeId.Trim().ToLower()
                        join v in context.Vendors on om.CustomerId equals v.VendorId
@@ -747,7 +773,7 @@ namespace KGERP.Service.Implementation
                            ExpectedDeliveryDate = om.ExpectedDeliveryDate,
                            StockName = s.Name,
                            OrderMasterId = om.OrderMasterId
-                            
+
                        }).OrderByDescending(x => x.RequisitionId).FirstOrDefaultAsync(cancellationToken);
 
 
@@ -766,29 +792,29 @@ namespace KGERP.Service.Implementation
                                                           RequisitionId = d.RequisitionId,
                                                           RequistionItemDetailId = d.RequistionItemDetailId,
                                                           RProductId = d.RProductId.Value,
-                                                          UnitPrice=d.RUnitPrice
-                                                          
+                                                          UnitPrice = d.RUnitPrice
+
                                                       }).OrderByDescending(x => x.RequisitionId).ToListAsync(cancellationToken); ;
 
                 result.RADataList = (from a in context.SignatoryApprovalMaps
-                                 join emp in context.Employees on a.EmployeeId equals emp.Id
-                                 join des in context.Designations on emp.DesignationId equals des.DesignationId
+                                     join emp in context.Employees on a.EmployeeId equals emp.Id
+                                     join des in context.Designations on emp.DesignationId equals des.DesignationId
 
-                                 where a.IntregratedFromId == RequisitionId && a.TableName == "Requisition"
+                                     where a.IntregratedFromId == RequisitionId && a.TableName == "Requisition"
                                      select new RequisitionApprovalVM
-                                 {
-                                     EmployeeId = emp.Id,
-                                     EmployeeIdString = emp.EmployeeId,
-                                     EmployeeName = emp.Name,
-                                     DesignationName = des.Name,
-                                     OrderBy = a.OrderBy,
-                                     Comment = a.Comment,
-                                     Status = (SignatoryStatusEnum)a.Status,
-                                     StatusString = ((SignatoryStatusEnum)a.Status).ToString(),
+                                     {
+                                         EmployeeId = emp.Id,
+                                         EmployeeIdString = emp.EmployeeId,
+                                         EmployeeName = emp.Name,
+                                         DesignationName = des.Name,
+                                         OrderBy = a.OrderBy,
+                                         Comment = a.Comment,
+                                         Status = (SignatoryStatusEnum)a.Status,
+                                         StatusString = ((SignatoryStatusEnum)a.Status).ToString(),
 
 
-                                     ApprovedTime = a.ModifiedDate.HasValue ? a.ModifiedDate.Value.ToString() : "...."
-                                 }).AsEnumerable();
+                                         ApprovedTime = a.ModifiedDate.HasValue ? a.ModifiedDate.Value.ToString() : "...."
+                                     }).AsEnumerable();
 
                 return result;
             }
@@ -884,7 +910,7 @@ namespace KGERP.Service.Implementation
             return rResult;
         }
 
-        public async Task<int> RequisitionSubmitied(int requisitionId,long EmployeeId, CancellationToken cancellationToken = default)
+        public async Task<int> RequisitionSubmitied(int requisitionId, long EmployeeId, CancellationToken cancellationToken = default)
         {
             int rResult = -1;
             var requisitions = context.Requisitions.Find(requisitionId);
@@ -933,7 +959,7 @@ namespace KGERP.Service.Implementation
                  from t1 in context.Requisitions.Where(x => x.IsActive && x.RequisitionType == 3)
                  join t2 in context.OrderDetails.Where(x => x.IsActive) on t1.OrderDetailsId equals t2.OrderDetailId
                  join t3 in context.OrderMasters.Where(x => x.IsActive) on t2.OrderMasterId equals t3.OrderMasterId
-                 
+
                  join t6 in context.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
                  join t7 in context.StockInfoes.Where(x => x.IsActive) on t1.ToRequisitionId equals t7.StockInfoId
 
@@ -968,7 +994,7 @@ namespace KGERP.Service.Implementation
             if (result != null)
             {
                 result.DDLGerOrderList = (from t1 in context.OrderDetails.Where(x => x.OrderMasterId == result.OrderMasterId)
-                                          
+
                                           join t6 in context.FinishProductBOMs on t1.OrderDetailId equals t6.OrderDetailId
                                           where t1.IsActive
                                           select new SelectListItem
@@ -987,7 +1013,7 @@ namespace KGERP.Service.Implementation
             var result = await (
                  from t1 in context.Requisitions.Where(x => x.IsActive && x.RequisitionType == 3)
                  join t2 in context.OrderDetails.Where(x => x.IsActive) on t1.OrderDetailsId equals t2.OrderDetailId
-                 join t3 in context.OrderMasters.Where(x => x.IsActive) on t2.OrderMasterId equals t3.OrderMasterId                  
+                 join t3 in context.OrderMasters.Where(x => x.IsActive) on t2.OrderMasterId equals t3.OrderMasterId
                  join t6 in context.StockInfoes.Where(x => x.IsActive) on t1.FromRequisitionId equals t6.StockInfoId
                  join t7 in context.StockInfoes.Where(x => x.IsActive) on t1.ToRequisitionId equals t7.StockInfoId
 
@@ -1022,7 +1048,7 @@ namespace KGERP.Service.Implementation
             if (result != null)
             {
                 result.DDLGerOrderList = (from t1 in context.OrderDetails.Where(x => x.OrderMasterId == result.OrderMasterId)
-                                          
+
                                           join t6 in context.FinishProductBOMs on t1.OrderDetailId equals t6.OrderDetailId
                                           where t1.IsActive
                                           select new SelectListItem
@@ -1205,8 +1231,28 @@ namespace KGERP.Service.Implementation
                                                                     ProductName = psc.Name + " " + p.ProductName,
                                                                     RProductId = d.RProductId.Value,
                                                                     RequistionItemDetailId = d.RequistionItemDetailId,
-                                                                    UnitePrice=d.RUnitPrice
+                                                                    UnitePrice = d.RUnitPrice
                                                                 }).ToListAsync();
+
+            vMPackagingPurchaseRequisition.RADataList = (from a in context.SignatoryApprovalMaps
+                                                         join emp in context.Employees on a.EmployeeId equals emp.Id
+                                                         join des in context.Designations on emp.DesignationId equals des.DesignationId
+
+                                                         where a.IntregratedFromId == requisitionId && a.TableName == "Requisition"
+                                                         select new RequisitionApprovalVM
+                                                         {
+                                                             EmployeeId = emp.Id,
+                                                             EmployeeIdString = emp.EmployeeId,
+                                                             EmployeeName = emp.Name,
+                                                             DesignationName = des.Name,
+                                                             OrderBy = a.OrderBy,
+                                                             Comment = a.Comment,
+                                                             Status = (SignatoryStatusEnum)a.Status,
+                                                             StatusString = ((SignatoryStatusEnum)a.Status).ToString(),
+
+
+                                                             ApprovedTime = a.ModifiedDate.HasValue ? a.ModifiedDate.Value.ToString() : "...."
+                                                         }).AsEnumerable();
 
             return vMPackagingPurchaseRequisition;
         }

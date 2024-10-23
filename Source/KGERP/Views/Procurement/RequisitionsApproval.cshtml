@@ -218,7 +218,7 @@
 
 
 
-                @using (Html.BeginForm("CSApproval", "LeaveApplication", FormMethod.Post))
+                @using (Html.BeginForm("RequisitionApproval", "LeaveApplication", FormMethod.Post))
                 {
                     @Html.HiddenFor(m => m.SigID, new { @id = "EmployeeID" })
                     @Html.HiddenFor(m => m.CSID, new { @id = "HidCSID" })

@@ -38,7 +38,7 @@ namespace KGERP.Service.Interface
 
        // Task<RResult> RequisitionSaveForPKL(RequisitionMasterDetailsRM model);
         Task<int> PackagingGeneralRequisition(VMPackagingPurchaseRequisition model);
-        Task<int> PackagingGeneralRequisitionSubmit(int requisitionId,bool isSubmited=false);
+        Task<int> PackagingGeneralRequisitionSubmit(int requisitionId,long EmployeeId,string EmployeeStrId, bool isSubmited=false);
         Task<int> RequisitionItemDetailDeleteConfirm(int RequisitionId,Guid? RequistionItemDetailId);
         Task<int> RequisitionItemDetailUpdate(int requisitionId, decimal RQuantity,int RproductionId, Guid? RequistionItemDetailId);
         int RequisitionItemDetailSave(int requisitionId, decimal RQuantity, int RProductId, int FinishProductBOMId);

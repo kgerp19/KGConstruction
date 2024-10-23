@@ -2281,7 +2281,7 @@ namespace KGERP.Service.Implementation
 
 
             }
-            var immediateHigherSig = context.SignatoryApprovalMaps.Where(x => x.IntregratedFromId == vm.CSID && x.OrderBy == (dbModel.OrderBy + 1) && x.TableName == "ComparativeStatement").FirstOrDefault();
+            var immediateHigherSig = context.SignatoryApprovalMaps.Where(x => x.IntregratedFromId == vm.CSID && x.OrderBy == (dbModel.OrderBy + 1) && x.TableName == "Requisition").FirstOrDefault();
 
             if (immediateHigherSig != null && vm.ApprovalStatus == (int)LeaveStatusNewEnum.Approved)
             {

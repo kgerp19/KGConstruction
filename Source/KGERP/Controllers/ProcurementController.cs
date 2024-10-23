@@ -1698,9 +1698,10 @@ namespace KG.App.Controllers
         [HttpPost]
         public async Task<ActionResult> GeneralRMRequisitionSubmit(VMPackagingPurchaseRequisition vmRequisition)
         {
-            // vmRequisition.CreatedBy = Common.GetUserId();
+            long EmployeeId = Common.GetIntUserId();
+            string EmployeeStrId = Common.GetUserId();
 
-            vmRequisition.RequisitionId = await Task.Run(() => _requisitionService.PackagingGeneralRequisitionSubmit(vmRequisition.RequisitionId, vmRequisition.IsSubmited));
+            vmRequisition.RequisitionId = await Task.Run(() => _requisitionService.PackagingGeneralRequisitionSubmit(vmRequisition.RequisitionId, EmployeeId, EmployeeStrId, vmRequisition.IsSubmited));
 
             return RedirectToAction(nameof(GeneralRMRequisition), new { companyId = vmRequisition.CompanyFK, requisitionId = vmRequisition.RequisitionId });
         }

@@ -846,7 +846,7 @@ namespace KGERP.Controllers
             long sigId = Common.GetIntUserId();
             if (vm.CSID != 0)
             {
-                var res = leaveApplicationService.DoCSApproval(vm);
+                var res = leaveApplicationService.DoRequisitionApproval(vm);
             }
 
             //vm.FromDate = Convert.ToDateTime(vm.StrFromDate);
