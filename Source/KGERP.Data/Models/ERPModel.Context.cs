@@ -357,13 +357,13 @@ namespace KGERP.Data.Models
         public virtual DbSet<OrderMaster> OrderMasters { get; set; }
         public virtual DbSet<Accounting_CostCenter> Accounting_CostCenter { get; set; }
         public virtual DbSet<OrderDeliverDetail> OrderDeliverDetails { get; set; }
-        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<ChequeBook> ChequeBooks { get; set; }
         public virtual DbSet<ChequeRegister> ChequeRegisters { get; set; }
         public virtual DbSet<ComparativeStatement> ComparativeStatements { get; set; }
         public virtual DbSet<RequisitionItemDetail> RequisitionItemDetails { get; set; }
         public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
         public virtual DbSet<Requisition> Requisitions { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
     
         public virtual ObjectResult<GetEmployeeListForTeam_Result> GetEmployeeListForTeam(Nullable<int> companyId)
         {

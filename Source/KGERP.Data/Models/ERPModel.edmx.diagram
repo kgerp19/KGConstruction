@@ -509,9 +509,6 @@
         <EntityTypeShape EntityType="ERPModel.Accounting_CostCenter" Width="1.5" PointX="28.375" PointY="35.75" />
         <EntityTypeShape EntityType="ERPModel.OrderDeliverDetail" Width="1.5" PointX="10.5" PointY="96.875" />
         <AssociationConnector Association="ERPModel.FK_OrderDeliverDetail_OrderDeliver" />
-        <EntityTypeShape EntityType="ERPModel.OrderDetail" Width="1.5" PointX="8.25" PointY="143.625" />
-        <AssociationConnector Association="ERPModel.FK_OrderDetail_OrderMaster" />
-        <AssociationConnector Association="ERPModel.FK_OrderDetail_Product" />
         <EntityTypeShape EntityType="ERPModel.ChequeBook" Width="1.5" PointX="54.375" PointY="48.75" />
         <EntityTypeShape EntityType="ERPModel.ChequeRegister" Width="1.5" PointX="54.375" PointY="53.75" />
         <EntityTypeShape EntityType="ERPModel.ComparativeStatement" Width="1.5" PointX="5.375" PointY="49.75" />
@@ -521,6 +518,9 @@
         <EntityTypeShape EntityType="ERPModel.Requisition" Width="1.5" PointX="47.375" PointY="56.125" />
         <AssociationConnector Association="ERPModel.FK_RequisitionItem_Requisition" />
         <AssociationConnector Association="ERPModel.FK_Store_Requisition" />
+        <EntityTypeShape EntityType="ERPModel.OrderDetail" Width="1.5" PointX="8.25" PointY="143.5" />
+        <AssociationConnector Association="ERPModel.FK_OrderDetail_OrderMaster" />
+        <AssociationConnector Association="ERPModel.FK_OrderDetail_Product" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
