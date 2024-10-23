@@ -1826,8 +1826,8 @@ namespace KG.App.Controllers
         [HttpPost]
         public async Task<ActionResult> RequisitionSubmitied(PackagingProductionRequisitionDetailsRM vmProductionRequisition)
         {
-           
-            await _requisitionService.RequisitionSubmitied(vmProductionRequisition.RequisitionId);
+            vmProductionRequisition.EmployeeId = Common.GetIntUserId();
+            await _requisitionService.RequisitionSubmitied(vmProductionRequisition.RequisitionId, vmProductionRequisition.EmployeeId);
             return RedirectToAction(nameof(PackagingProductionRequisitionDetails), new { companyId = vmProductionRequisition.CompanyId, requisitionId = vmProductionRequisition.RequisitionId });
 
         }

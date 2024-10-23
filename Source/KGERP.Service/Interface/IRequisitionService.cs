@@ -48,7 +48,7 @@ namespace KGERP.Service.Interface
         Task<PackagingProductionRequisitionDetailsRM> PackagingProductionRequisitionDetails(int RequisitionId,int CompanyId,CancellationToken cancellationToken=default);
 
         Task<RResult> RequisitionItemDetailDelete(Guid? RequistionItemDetailId);
-        Task<int> RequisitionSubmitied(int requisitionId,  CancellationToken cancellationToken=default);
+        Task<int> RequisitionSubmitied(int requisitionId, long EmployeeId, CancellationToken cancellationToken=default);
 
         Task<RResult> UpdateProductAndQuantityInRequisitionItemDetail(int ProductId,decimal Quentity, Guid? RequistionItemDetailId);
 

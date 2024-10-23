@@ -4,6 +4,7 @@ using KGERP.Service.CommonModels.Model;
 using KGERP.Service.Configuration;
 using KGERP.Service.Contracts.KGERP.Requisitions.Command.RequestResponseModel;
 using KGERP.Service.Contracts.KGERP.Requisitions.Queries.RequestModel;
+using KGERP.Service.Implementation.General_Requisition.ViewModels;
 using KGERP.Service.Interface;
 using KGERP.Service.ServiceModel;
 using KGERP.Utility;
@@ -769,6 +770,26 @@ namespace KGERP.Service.Implementation
                                                           
                                                       }).OrderByDescending(x => x.RequisitionId).ToListAsync(cancellationToken); ;
 
+                result.RADataList = (from a in context.SignatoryApprovalMaps
+                                 join emp in context.Employees on a.EmployeeId equals emp.Id
+                                 join des in context.Designations on emp.DesignationId equals des.DesignationId
+
+                                 where a.IntregratedFromId == RequisitionId && a.TableName == "Requisition"
+                                     select new RequisitionApprovalVM
+                                 {
+                                     EmployeeId = emp.Id,
+                                     EmployeeIdString = emp.EmployeeId,
+                                     EmployeeName = emp.Name,
+                                     DesignationName = des.Name,
+                                     OrderBy = a.OrderBy,
+                                     Comment = a.Comment,
+                                     Status = (SignatoryStatusEnum)a.Status,
+                                     StatusString = ((SignatoryStatusEnum)a.Status).ToString(),
+
+
+                                     ApprovedTime = a.ModifiedDate.HasValue ? a.ModifiedDate.Value.ToString() : "...."
+                                 }).AsEnumerable();
+
                 return result;
             }
             catch (Exception ex)
@@ -863,7 +884,7 @@ namespace KGERP.Service.Implementation
             return rResult;
         }
 
-        public async Task<int> RequisitionSubmitied(int requisitionId, CancellationToken cancellationToken = default)
+        public async Task<int> RequisitionSubmitied(int requisitionId,long EmployeeId, CancellationToken cancellationToken = default)
         {
             int rResult = -1;
             var requisitions = context.Requisitions.Find(requisitionId);
@@ -874,6 +895,33 @@ namespace KGERP.Service.Implementation
                 if (await context.SaveChangesAsync() > 0)
                 {
                     rResult = requisitions.RequisitionId;
+
+                    long employeeId = EmployeeId;
+                    var requisitionSignatory = context.RequisitionSignatories.Where(r => r.IsActive == true && r.IntegrateWith == "Requisition").OrderBy(x => x.OrderBy).ToList();
+                    int status = 0;
+                    foreach (var req in requisitionSignatory)
+                    {
+                        status = (req.OrderBy != 1) ? -1 : 0;
+                        var signatoryApprovalMap = new SignatoryApprovalMap
+                        {
+                            EmployeeId = req.EmployeeId,
+                            TableName = req.IntegrateWith,
+                            IntregratedFromId = requisitions.RequisitionId,
+                            OrderBy = req.OrderBy,
+                            Status = status,
+                            IsHRAdmin = req.IsHRAdmin,
+                            CreatedDate = DateTime.Now,
+
+                            CreatedBy = System.Web.HttpContext.Current.User.Identity.Name,
+                            IsActive = true
+                        };
+
+                        context.SignatoryApprovalMaps.Add(signatoryApprovalMap);
+                    }
+                    context.SaveChanges();
+
+
+
                 }
                 return rResult;
             }
