@@ -5820,6 +5820,7 @@ warning 6002: The table/view 'KGConstructionDB.Erp.FormulaHistory' does not have
           <Property Name="VATAddition" Type="decimal" Precision="18" Scale="9" Nullable="false" />
           <Property Name="ProductDiscount" Type="decimal" Precision="18" Scale="9" Nullable="false" />
           <Property Name="CompanyId" Type="int" />
+          <Property Name="RequisitionItemDetailId" Type="bigint" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -10783,11 +10784,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             <End Role="PurchaseReturn" EntitySet="PurchaseReturns" />
             <End Role="PurchaseReturnDetail" EntitySet="PurchaseReturnDetails" />
           </AssociationSet>
-          <EntitySet Name="PurchaseOrderDetails" EntityType="ERPModel.PurchaseOrderDetail" />
-          <AssociationSet Name="FK_PurchaseOrderDetail_PurchaseOrder" Association="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder">
-            <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
-            <End Role="PurchaseOrderDetail" EntitySet="PurchaseOrderDetails" />
-          </AssociationSet>
           <EntitySet Name="ProductCategories" EntityType="ERPModel.ProductCategory" />
           <AssociationSet Name="FK_Product_ProductCategory" Association="ERPModel.FK_Product_ProductCategory">
             <End Role="ProductCategory" EntitySet="ProductCategories" />
@@ -10920,6 +10916,11 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <EntitySet Name="ChequeRegisters" EntityType="ERPModel.ChequeRegister" />
           <EntitySet Name="ComparativeStatements" EntityType="ERPModel.ComparativeStatement" />
           <EntitySet Name="RequisitionItemDetails" EntityType="ERPModel.RequisitionItemDetail" />
+          <EntitySet Name="PurchaseOrderDetails" EntityType="ERPModel.PurchaseOrderDetail" />
+          <AssociationSet Name="FK_PurchaseOrderDetail_PurchaseOrder" Association="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder">
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
+            <End Role="PurchaseOrderDetail" EntitySet="PurchaseOrderDetails" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="GetEmployeeListForTeam_Result">
           <Property Type="Int64" Name="Id" Nullable="false" />
@@ -18956,8 +18957,8 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <NavigationProperty Name="DropDownItem1" Relationship="ERPModel.FK_PurchaseOrder_ProductOrigin" FromRole="PurchaseOrder" ToRole="DropDownItem" />
           <NavigationProperty Name="Demand" Relationship="ERPModel.FK_PurchaseOrder_Demand" FromRole="PurchaseOrder" ToRole="Demand" />
           <NavigationProperty Name="MaterialReceives" Relationship="ERPModel.FK_MaterialReceive_PurchaseOrder" FromRole="PurchaseOrder" ToRole="MaterialReceive" />
-          <NavigationProperty Name="PurchaseOrderDetails" Relationship="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" FromRole="PurchaseOrder" ToRole="PurchaseOrderDetail" />
           <NavigationProperty Name="Vendor" Relationship="ERPModel.FK_PurchaseOrder_Vendor" FromRole="PurchaseOrder" ToRole="Vendor" />
+          <NavigationProperty Name="PurchaseOrderDetails" Relationship="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" FromRole="PurchaseOrder" ToRole="PurchaseOrderDetail" />
         </EntityType>
         <Association Name="FK_PurchaseOrder_ModeOfPurchase">
           <End Type="ERPModel.DropDownItem" Role="DropDownItem" Multiplicity="0..1" />
@@ -19161,44 +19162,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             </Principal>
             <Dependent Role="PurchaseReturnDetail">
               <PropertyRef Name="PurchaseReturnId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="PurchaseOrderDetail">
-          <Key>
-            <PropertyRef Name="PurchaseOrderDetailId" />
-          </Key>
-          <Property Name="PurchaseOrderDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PurchaseOrderId" Type="Int64" />
-          <Property Name="ProductId" Type="Int32" Nullable="false" />
-          <Property Name="UnitId" Type="Int32" />
-          <Property Name="PurchaseQty" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="DemandRate" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="PurchaseRate" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="QCRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="PurchaseAmount" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="PackSize" Type="Int32" Nullable="false" />
-          <Property Name="FinishProductBOMId" Type="Int32" />
-          <Property Name="IsVATIncluded" Type="Boolean" Nullable="false" />
-          <Property Name="VATAddition" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="ProductDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="CompanyId" Type="Int32" />
-          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="PurchaseOrder" Relationship="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" FromRole="PurchaseOrderDetail" ToRole="PurchaseOrder" />
-        </EntityType>
-        <Association Name="FK_PurchaseOrderDetail_PurchaseOrder">
-          <End Type="ERPModel.PurchaseOrder" Role="PurchaseOrder" Multiplicity="0..1" />
-          <End Type="ERPModel.PurchaseOrderDetail" Role="PurchaseOrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PurchaseOrder">
-              <PropertyRef Name="PurchaseOrderId" />
-            </Principal>
-            <Dependent Role="PurchaseOrderDetail">
-              <PropertyRef Name="PurchaseOrderId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -20124,6 +20087,45 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="FinishProductBOMId" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="PurchaseOrderDetail">
+          <Key>
+            <PropertyRef Name="PurchaseOrderDetailId" />
+          </Key>
+          <Property Name="PurchaseOrderDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PurchaseOrderId" Type="Int64" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="UnitId" Type="Int32" />
+          <Property Name="PurchaseQty" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="DemandRate" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="PurchaseRate" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="QCRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PurchaseAmount" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="PackSize" Type="Int32" Nullable="false" />
+          <Property Name="FinishProductBOMId" Type="Int32" />
+          <Property Name="IsVATIncluded" Type="Boolean" Nullable="false" />
+          <Property Name="VATAddition" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="ProductDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="CompanyId" Type="Int32" />
+          <Property Name="RequisitionItemDetailId" Type="Int64" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="PurchaseOrder" Relationship="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" FromRole="PurchaseOrderDetail" ToRole="PurchaseOrder" />
+        </EntityType>
+        <Association Name="FK_PurchaseOrderDetail_PurchaseOrder">
+          <End Type="ERPModel.PurchaseOrder" Role="PurchaseOrder" Multiplicity="0..1" />
+          <End Type="ERPModel.PurchaseOrderDetail" Role="PurchaseOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrder">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Principal>
+            <Dependent Role="PurchaseOrderDetail">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -26506,32 +26508,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PurchaseOrderDetails">
-            <EntityTypeMapping TypeName="ERPModel.PurchaseOrderDetail">
-              <MappingFragment StoreEntitySet="PurchaseOrderDetail">
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="ProductDiscount" ColumnName="ProductDiscount" />
-                <ScalarProperty Name="VATAddition" ColumnName="VATAddition" />
-                <ScalarProperty Name="IsVATIncluded" ColumnName="IsVATIncluded" />
-                <ScalarProperty Name="FinishProductBOMId" ColumnName="FinishProductBOMId" />
-                <ScalarProperty Name="PackSize" ColumnName="PackSize" />
-                <ScalarProperty Name="PurchaseAmount" ColumnName="PurchaseAmount" />
-                <ScalarProperty Name="QCRate" ColumnName="QCRate" />
-                <ScalarProperty Name="PurchaseRate" ColumnName="PurchaseRate" />
-                <ScalarProperty Name="DemandRate" ColumnName="DemandRate" />
-                <ScalarProperty Name="PurchaseQty" ColumnName="PurchaseQty" />
-                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
-                <ScalarProperty Name="PurchaseOrderDetailId" ColumnName="PurchaseOrderDetailId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ProductCategories">
             <EntityTypeMapping TypeName="ERPModel.ProductCategory">
               <MappingFragment StoreEntitySet="ProductCategory">
@@ -27103,6 +27079,33 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
                 <ScalarProperty Name="RequisitionItemId" ColumnName="RequisitionItemId" />
                 <ScalarProperty Name="RequistionItemDetailId" ColumnName="RequistionItemDetailId" />
                 <ScalarProperty Name="ReqItemDetailId" ColumnName="ReqItemDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseOrderDetails">
+            <EntityTypeMapping TypeName="ERPModel.PurchaseOrderDetail">
+              <MappingFragment StoreEntitySet="PurchaseOrderDetail">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="RequisitionItemDetailId" ColumnName="RequisitionItemDetailId" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="ProductDiscount" ColumnName="ProductDiscount" />
+                <ScalarProperty Name="VATAddition" ColumnName="VATAddition" />
+                <ScalarProperty Name="IsVATIncluded" ColumnName="IsVATIncluded" />
+                <ScalarProperty Name="FinishProductBOMId" ColumnName="FinishProductBOMId" />
+                <ScalarProperty Name="PackSize" ColumnName="PackSize" />
+                <ScalarProperty Name="PurchaseAmount" ColumnName="PurchaseAmount" />
+                <ScalarProperty Name="QCRate" ColumnName="QCRate" />
+                <ScalarProperty Name="PurchaseRate" ColumnName="PurchaseRate" />
+                <ScalarProperty Name="DemandRate" ColumnName="DemandRate" />
+                <ScalarProperty Name="PurchaseQty" ColumnName="PurchaseQty" />
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
+                <ScalarProperty Name="PurchaseOrderDetailId" ColumnName="PurchaseOrderDetailId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
