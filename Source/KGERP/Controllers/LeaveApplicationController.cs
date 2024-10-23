@@ -840,5 +840,20 @@ namespace KGERP.Controllers
             //return RedirectToAction(nameof(LeaveApprovalNew), new { fromDate = vm.FromDate, toDate = vm.ToDate });
         }
 
+        [HttpPost]
+        public async Task<ActionResult> RequisitionApproval(SystemApprovalVM vm)
+        {
+            long sigId = Common.GetIntUserId();
+            if (vm.CSID != 0)
+            {
+                var res = leaveApplicationService.DoCSApproval(vm);
+            }
+
+            //vm.FromDate = Convert.ToDateTime(vm.StrFromDate);
+            //vm.ToDate = Convert.ToDateTime(vm.StrToDate);
+            return RedirectToAction("RequisitionsApproval", "Procurement", new { companyId = vm.CompanyId });
+            //return RedirectToAction(nameof(LeaveApprovalNew), new { fromDate = vm.FromDate, toDate = vm.ToDate });
+        }
+
     }
 }

@@ -224,7 +224,6 @@ namespace KGERP.Data.Models
         public virtual DbSet<RealStateMessage> RealStateMessages { get; set; }
         public virtual DbSet<RentProduction> RentProductions { get; set; }
         public virtual DbSet<RentProductionDetail> RentProductionDetails { get; set; }
-        public virtual DbSet<Requisition> Requisitions { get; set; }
         public virtual DbSet<RequisitionItem> RequisitionItems { get; set; }
         public virtual DbSet<RequisitionSignatoryApproval> RequisitionSignatoryApprovals { get; set; }
         public virtual DbSet<SaleReturn> SaleReturns { get; set; }
@@ -364,6 +363,7 @@ namespace KGERP.Data.Models
         public virtual DbSet<ComparativeStatement> ComparativeStatements { get; set; }
         public virtual DbSet<RequisitionItemDetail> RequisitionItemDetails { get; set; }
         public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
+        public virtual DbSet<Requisition> Requisitions { get; set; }
     
         public virtual ObjectResult<GetEmployeeListForTeam_Result> GetEmployeeListForTeam(Nullable<int> companyId)
         {

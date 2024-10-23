@@ -2262,5 +2262,53 @@ namespace KGERP.Service.Implementation
         
             return result;
         }
-}
+
+        public int DoRequisitionApproval(SystemApprovalVM vm)
+        {
+            int result = -1;
+            SignatoryApprovalMap dbModel = new SignatoryApprovalMap();
+            dbModel = context.SignatoryApprovalMaps.Where(x => x.SignatoryApprovalMapId == vm.SignatoryApprovalMapId && x.IntregratedFromId == vm.CSID && x.EmployeeId == vm.SigID && x.TableName == "Requisition").FirstOrDefault();
+
+            var cs = context.Requisitions.Find(dbModel.IntregratedFromId);
+
+            if (dbModel != null)
+            {
+
+                dbModel.Status = vm.ApprovalStatus;
+                dbModel.Comment = vm.Comment;
+                dbModel.ModifiedBy = Common.GetUserId();
+                dbModel.ModifiedDate = DateTime.Now;
+
+
+            }
+            var immediateHigherSig = context.SignatoryApprovalMaps.Where(x => x.IntregratedFromId == vm.CSID && x.OrderBy == (dbModel.OrderBy + 1) && x.TableName == "ComparativeStatement").FirstOrDefault();
+
+            if (immediateHigherSig != null && vm.ApprovalStatus == (int)LeaveStatusNewEnum.Approved)
+            {
+                immediateHigherSig.Status = 0;
+
+
+            }
+            else if (vm.ApprovalStatus == (int)LeaveStatusNewEnum.Denied)
+            {
+                immediateHigherSig.Status = (int)LeaveStatusNewEnum.Denied;
+
+            }
+            else
+            {
+                cs.ApprovalStatus = (int)LeaveStatusNewEnum.Approved;
+            }
+
+
+            if (context.SaveChanges() > 0)
+            {
+
+                // cs.Status
+            }
+
+            result = 1;
+
+            return result;
+        }
+    }
 }

@@ -5993,6 +5993,7 @@ warning 6002: The table/view 'KGConstructionDB.Erp.FormulaHistory' does not have
           <Property Name="DeliveryNo" Type="varchar" MaxLength="50" />
           <Property Name="CompanyId" Type="int" />
           <Property Name="RequisitionType" Type="int" />
+          <Property Name="ApprovalStatus" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="RequisitionItem">
           <Key>
@@ -10073,7 +10074,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <EntitySet Name="RealStateMessages" EntityType="ERPModel.RealStateMessage" />
           <EntitySet Name="RentProductions" EntityType="ERPModel.RentProduction" />
           <EntitySet Name="RentProductionDetails" EntityType="ERPModel.RentProductionDetail" />
-          <EntitySet Name="Requisitions" EntityType="ERPModel.Requisition" />
           <EntitySet Name="RequisitionItems" EntityType="ERPModel.RequisitionItem" />
           <EntitySet Name="RequisitionSignatoryApprovals" EntityType="ERPModel.RequisitionSignatoryApproval" />
           <EntitySet Name="SaleReturns" EntityType="ERPModel.SaleReturn" />
@@ -10417,14 +10417,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <AssociationSet Name="FK_RentProductionDetail_RentProduction" Association="ERPModel.FK_RentProductionDetail_RentProduction">
             <End Role="RentProduction" EntitySet="RentProductions" />
             <End Role="RentProductionDetail" EntitySet="RentProductionDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RequisitionItem_Requisition" Association="ERPModel.FK_RequisitionItem_Requisition">
-            <End Role="Requisition" EntitySet="Requisitions" />
-            <End Role="RequisitionItem" EntitySet="RequisitionItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Store_Requisition" Association="ERPModel.FK_Store_Requisition">
-            <End Role="Requisition" EntitySet="Requisitions" />
-            <End Role="Store" EntitySet="Stores" />
           </AssociationSet>
           <AssociationSet Name="FK_StockTransfer_StockInfo" Association="ERPModel.FK_StockTransfer_StockInfo">
             <End Role="StockInfo" EntitySet="StockInfoes" />
@@ -10920,6 +10912,15 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <AssociationSet Name="FK_PurchaseOrderDetail_PurchaseOrder" Association="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder">
             <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
             <End Role="PurchaseOrderDetail" EntitySet="PurchaseOrderDetails" />
+          </AssociationSet>
+          <EntitySet Name="Requisitions" EntityType="ERPModel.Requisition" />
+          <AssociationSet Name="FK_RequisitionItem_Requisition" Association="ERPModel.FK_RequisitionItem_Requisition">
+            <End Role="Requisition" EntitySet="Requisitions" />
+            <End Role="RequisitionItem" EntitySet="RequisitionItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Store_Requisition" Association="ERPModel.FK_Store_Requisition">
+            <End Role="Requisition" EntitySet="Requisitions" />
+            <End Role="Store" EntitySet="Stores" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="GetEmployeeListForTeam_Result">
@@ -14741,31 +14742,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="Rate" Type="Decimal" Precision="19" Scale="6" />
           <NavigationProperty Name="RentProduction" Relationship="ERPModel.FK_RentProductionDetail_RentProduction" FromRole="RentProductionDetail" ToRole="RentProduction" />
         </EntityType>
-        <EntityType Name="Requisition">
-          <Key>
-            <PropertyRef Name="RequisitionId" />
-          </Key>
-          <Property Name="RequisitionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RequisitionNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="RequisitionBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RequisitionDate" Type="DateTime" Precision="0" />
-          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="RequisitionStatus" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="DeliveredBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DeliveredDate" Type="DateTime" Precision="0" />
-          <Property Name="DeliveryNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CompanyId" Type="Int32" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="RequisitionType" Type="Int32" />
-          <Property Name="FromRequisitionId" Type="Int32" />
-          <Property Name="ToRequisitionId" Type="Int32" />
-          <Property Name="OrderDetailsId" Type="Int32" Nullable="false" />
-          <Property Name="IsSubmitted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="RequisitionItems" Relationship="ERPModel.FK_RequisitionItem_Requisition" FromRole="Requisition" ToRole="RequisitionItem" />
-          <NavigationProperty Name="Stores" Relationship="ERPModel.FK_Store_Requisition" FromRole="Requisition" ToRole="Store" />
-        </EntityType>
         <EntityType Name="RequisitionItem">
           <Key>
             <PropertyRef Name="RequisitionItemId" />
@@ -14965,10 +14941,10 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="OtherCharge" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="IsSubmited" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Company" Relationship="ERPModel.FK_Store_Company1" FromRole="Store" ToRole="Company" />
-          <NavigationProperty Name="Requisition" Relationship="ERPModel.FK_Store_Requisition" FromRole="Store" ToRole="Requisition" />
           <NavigationProperty Name="StockInfo" Relationship="ERPModel.FK_Store_StockInfo" FromRole="Store" ToRole="StockInfo" />
           <NavigationProperty Name="StoreDetails" Relationship="ERPModel.FK_StoreDetail_Store" FromRole="Store" ToRole="StoreDetail" />
           <NavigationProperty Name="Vendor" Relationship="ERPModel.FK_Store_Vendor" FromRole="Store" ToRole="Vendor" />
+          <NavigationProperty Name="Requisition" Relationship="ERPModel.FK_Store_Requisition" FromRole="Store" ToRole="Requisition" />
         </EntityType>
         <EntityType Name="StoreDetail">
           <Key>
@@ -16290,30 +16266,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             </Principal>
             <Dependent Role="RentProductionDetail">
               <PropertyRef Name="RentProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RequisitionItem_Requisition">
-          <End Type="ERPModel.Requisition" Role="Requisition" Multiplicity="1" />
-          <End Type="ERPModel.RequisitionItem" Role="RequisitionItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Requisition">
-              <PropertyRef Name="RequisitionId" />
-            </Principal>
-            <Dependent Role="RequisitionItem">
-              <PropertyRef Name="RequisitionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Store_Requisition">
-          <End Type="ERPModel.Requisition" Role="Requisition" Multiplicity="0..1" />
-          <End Type="ERPModel.Store" Role="Store" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Requisition">
-              <PropertyRef Name="RequisitionId" />
-            </Principal>
-            <Dependent Role="Store">
-              <PropertyRef Name="RequisitionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -20123,6 +20075,56 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             </Principal>
             <Dependent Role="PurchaseOrderDetail">
               <PropertyRef Name="PurchaseOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Requisition">
+          <Key>
+            <PropertyRef Name="RequisitionId" />
+          </Key>
+          <Property Name="RequisitionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RequisitionNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RequisitionBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RequisitionDate" Type="DateTime" Precision="0" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FromRequisitionId" Type="Int32" />
+          <Property Name="ToRequisitionId" Type="Int32" />
+          <Property Name="IsSubmitted" Type="Boolean" Nullable="false" />
+          <Property Name="OrderDetailsId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="RequisitionStatus" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="DeliveredBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DeliveredDate" Type="DateTime" Precision="0" />
+          <Property Name="DeliveryNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CompanyId" Type="Int32" />
+          <Property Name="RequisitionType" Type="Int32" />
+          <Property Name="ApprovalStatus" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="RequisitionItems" Relationship="ERPModel.FK_RequisitionItem_Requisition" FromRole="Requisition" ToRole="RequisitionItem" />
+          <NavigationProperty Name="Stores" Relationship="ERPModel.FK_Store_Requisition" FromRole="Requisition" ToRole="Store" />
+        </EntityType>
+        <Association Name="FK_RequisitionItem_Requisition">
+          <End Type="ERPModel.Requisition" Role="Requisition" Multiplicity="1" />
+          <End Type="ERPModel.RequisitionItem" Role="RequisitionItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Requisition">
+              <PropertyRef Name="RequisitionId" />
+            </Principal>
+            <Dependent Role="RequisitionItem">
+              <PropertyRef Name="RequisitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Store_Requisition">
+          <End Type="ERPModel.Requisition" Role="Requisition" Multiplicity="0..1" />
+          <End Type="ERPModel.Store" Role="Store" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Requisition">
+              <PropertyRef Name="RequisitionId" />
+            </Principal>
+            <Dependent Role="Store">
+              <PropertyRef Name="RequisitionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -23943,30 +23945,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Requisitions">
-            <EntityTypeMapping TypeName="ERPModel.Requisition">
-              <MappingFragment StoreEntitySet="Requisition">
-                <ScalarProperty Name="IsSubmitted" ColumnName="IsSubmitted" />
-                <ScalarProperty Name="OrderDetailsId" ColumnName="OrderDetailsId" />
-                <ScalarProperty Name="ToRequisitionId" ColumnName="ToRequisitionId" />
-                <ScalarProperty Name="FromRequisitionId" ColumnName="FromRequisitionId" />
-                <ScalarProperty Name="RequisitionType" ColumnName="RequisitionType" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="DeliveryNo" ColumnName="DeliveryNo" />
-                <ScalarProperty Name="DeliveredDate" ColumnName="DeliveredDate" />
-                <ScalarProperty Name="DeliveredBy" ColumnName="DeliveredBy" />
-                <ScalarProperty Name="RequisitionStatus" ColumnName="RequisitionStatus" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="RequisitionDate" ColumnName="RequisitionDate" />
-                <ScalarProperty Name="RequisitionBy" ColumnName="RequisitionBy" />
-                <ScalarProperty Name="RequisitionNo" ColumnName="RequisitionNo" />
-                <ScalarProperty Name="RequisitionId" ColumnName="RequisitionId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="RequisitionItems">
             <EntityTypeMapping TypeName="ERPModel.RequisitionItem">
               <MappingFragment StoreEntitySet="RequisitionItem">
@@ -27106,6 +27084,31 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
                 <ScalarProperty Name="PurchaseOrderDetailId" ColumnName="PurchaseOrderDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requisitions">
+            <EntityTypeMapping TypeName="ERPModel.Requisition">
+              <MappingFragment StoreEntitySet="Requisition">
+                <ScalarProperty Name="ApprovalStatus" ColumnName="ApprovalStatus" />
+                <ScalarProperty Name="RequisitionType" ColumnName="RequisitionType" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="DeliveryNo" ColumnName="DeliveryNo" />
+                <ScalarProperty Name="DeliveredDate" ColumnName="DeliveredDate" />
+                <ScalarProperty Name="DeliveredBy" ColumnName="DeliveredBy" />
+                <ScalarProperty Name="RequisitionStatus" ColumnName="RequisitionStatus" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="OrderDetailsId" ColumnName="OrderDetailsId" />
+                <ScalarProperty Name="IsSubmitted" ColumnName="IsSubmitted" />
+                <ScalarProperty Name="ToRequisitionId" ColumnName="ToRequisitionId" />
+                <ScalarProperty Name="FromRequisitionId" ColumnName="FromRequisitionId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="RequisitionDate" ColumnName="RequisitionDate" />
+                <ScalarProperty Name="RequisitionBy" ColumnName="RequisitionBy" />
+                <ScalarProperty Name="RequisitionNo" ColumnName="RequisitionNo" />
+                <ScalarProperty Name="RequisitionId" ColumnName="RequisitionId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -6841,6 +6841,70 @@ namespace KGERP.Services.Procurement
         }
 
 
+        public SystemApprovalVM GetRequisitionsSignatureList(int companyId, DateTime? fromDate, DateTime? toDate, long? userId, SignatoryStatusEnum? approvalStatus)
+        {
+            SystemApprovalVM approvalVM = new SystemApprovalVM();
+            approvalVM.DataList = (from a in _db.SignatoryApprovalMaps
+                                   join emp in _db.Employees on a.EmployeeId equals emp.Id
+                                   join des in _db.Designations on emp.DesignationId equals des.DesignationId
+                                   join com in _db.Requisitions on a.IntregratedFromId equals com.RequisitionId
+                                   //join Pro in _db.Products on com.ProductID equals Pro.ProductId
+                                   where a.EmployeeId == userId && a.TableName == "Requisition"
+                                  && a.IsActive
+                                && (
+                                (approvalStatus == null && a.Status == (int)SignatoryStatusEnum.Pending)
+                                || (approvalStatus != null && approvalStatus.HasValue && (SignatoryStatusEnum)a.Status == approvalStatus)
+                                )
+                                && ((fromDate == null || toDate == null) || com.RequisitionDate >= fromDate && com.RequisitionDate <= toDate)
+                                   select new SystemApprovalVM
+                                   {
+                                       SignatoryApprovalMapId = a.SignatoryApprovalMapId,
+                                       IntregratedFromId = a.IntregratedFromId,
+                                       CSNO = com.RequisitionNo,
+                                       CSDate = com.RequisitionDate,
+                                       EmployeeId = emp.Id,
+                                       EmployeeIdString = emp.EmployeeId,
+                                       EmployeeName = emp.Name,
+                                       DesignationName = des.Name,
+                                       OrderBy = a.OrderBy,
+                                       Comment = a.Comment,
+                                       CompanyId = com.CompanyId.Value,
+                                       Status = a.Status,
+                                       StatusString = ((SignatoryStatusEnum)a.Status).ToString(),
+                                       ApprovedTime = a.ModifiedDate.HasValue ? a.ModifiedDate.Value.ToString() : "...."
+                                   }).AsEnumerable();
+
+
+
+            return approvalVM;
+        }
+
+        public IEnumerable<RequisitionApprovalVM> GetAllRequisitionApproval(int RequisitionId)
+        {
+            var obj = (from a in _db.SignatoryApprovalMaps
+                       join emp in _db.Employees on a.EmployeeId equals emp.Id
+                       join des in _db.Designations on emp.DesignationId equals des.DesignationId
+                       where a.IntregratedFromId == RequisitionId && a.TableName == "Requisition"
+                       select new RequisitionApprovalVM
+                       {
+                           EmployeeId = emp.Id,
+                           EmployeeIdString = emp.EmployeeId,
+                           EmployeeName = emp.Name,
+                           DesignationName = des.Name,
+                           OrderBy = a.OrderBy,
+                           Comment = a.Comment,
+                           Status = (SignatoryStatusEnum)a.Status,
+                           StatusString = ((SignatoryStatusEnum)a.Status).ToString(),
+                           ApprovedTime = a.ModifiedDate.HasValue ? a.ModifiedDate.Value.ToString() : "...."
+                       }).AsEnumerable();
+
+
+            return obj;
+
+
+        }
+
+
 
     }
 }

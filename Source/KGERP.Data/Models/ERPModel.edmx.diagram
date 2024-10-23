@@ -204,7 +204,6 @@
         <EntityTypeShape EntityType="ERPModel.RealStateMessage" Width="1.5" PointX="43.75" PointY="13.75" />
         <EntityTypeShape EntityType="ERPModel.RentProduction" Width="1.5" PointX="12.75" PointY="13" />
         <EntityTypeShape EntityType="ERPModel.RentProductionDetail" Width="1.5" PointX="15" PointY="13.625" />
-        <EntityTypeShape EntityType="ERPModel.Requisition" Width="1.5" PointX="3.75" PointY="104.25" />
         <EntityTypeShape EntityType="ERPModel.RequisitionItem" Width="1.5" PointX="7.5" PointY="191.125" />
         <EntityTypeShape EntityType="ERPModel.RequisitionSignatoryApproval" Width="1.5" PointX="43.75" PointY="34.75" />
         <EntityTypeShape EntityType="ERPModel.SaleReturn" Width="1.5" PointX="20.25" PointY="91.75" />
@@ -309,8 +308,6 @@
         <AssociationConnector Association="ERPModel.FK_ProductDetails_StoreDetail" />
         <AssociationConnector Association="ERPModel.FK_PurchaseReturn_StockInfo" />
         <AssociationConnector Association="ERPModel.FK_RentProductionDetail_RentProduction" />
-        <AssociationConnector Association="ERPModel.FK_RequisitionItem_Requisition" />
-        <AssociationConnector Association="ERPModel.FK_Store_Requisition" />
         <AssociationConnector Association="ERPModel.FK_StockTransfer_StockInfo" />
         <AssociationConnector Association="ERPModel.FK_StockTransfer_StockInfo1" />
         <AssociationConnector Association="ERPModel.FK_Store_StockInfo" />
@@ -521,6 +518,9 @@
         <EntityTypeShape EntityType="ERPModel.RequisitionItemDetail" Width="1.5" PointX="0.75" PointY="45.75" />
         <EntityTypeShape EntityType="ERPModel.PurchaseOrderDetail" Width="1.5" PointX="26.25" PointY="98.875" />
         <AssociationConnector Association="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" />
+        <EntityTypeShape EntityType="ERPModel.Requisition" Width="1.5" PointX="47.375" PointY="56.125" />
+        <AssociationConnector Association="ERPModel.FK_RequisitionItem_Requisition" />
+        <AssociationConnector Association="ERPModel.FK_Store_Requisition" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

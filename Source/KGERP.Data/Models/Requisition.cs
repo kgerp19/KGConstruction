@@ -26,19 +26,20 @@ namespace KGERP.Data.Models
         public string RequisitionBy { get; set; }
         public Nullable<System.DateTime> RequisitionDate { get; set; }
         public string Description { get; set; }
+        public Nullable<int> FromRequisitionId { get; set; }
+        public Nullable<int> ToRequisitionId { get; set; }
+        public bool IsSubmitted { get; set; }
+        public int OrderDetailsId { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
+        public bool IsActive { get; set; }
         public string RequisitionStatus { get; set; }
         public string DeliveredBy { get; set; }
         public Nullable<System.DateTime> DeliveredDate { get; set; }
         public string DeliveryNo { get; set; }
         public Nullable<int> CompanyId { get; set; }
-        public bool IsActive { get; set; }
         public Nullable<int> RequisitionType { get; set; }
-        public Nullable<int> FromRequisitionId { get; set; }
-        public Nullable<int> ToRequisitionId { get; set; }
-        public int OrderDetailsId { get; set; }
-        public bool IsSubmitted { get; set; }
+        public int ApprovalStatus { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RequisitionItem> RequisitionItems { get; set; }
