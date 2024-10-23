@@ -29,6 +29,7 @@ namespace KGERP.Data.Models
         public decimal VATAddition { get; set; }
         public decimal ProductDiscount { get; set; }
         public Nullable<int> CompanyId { get; set; }
+        public Nullable<long> RequisitionItemDetailId { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public bool IsActive { get; set; }

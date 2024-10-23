@@ -471,8 +471,6 @@
         <AssociationConnector Association="ERPModel.FK_ProductBookingInfo_CustomerGroupInfo" />
         <EntityTypeShape EntityType="ERPModel.PurchaseReturnDetail" Width="1.5" PointX="20.25" PointY="70.625" />
         <AssociationConnector Association="ERPModel.FK_PurchaseReturnDetail_PurchaseReturn" />
-        <EntityTypeShape EntityType="ERPModel.PurchaseOrderDetail" Width="1.5" PointX="26.25" PointY="99" />
-        <AssociationConnector Association="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" />
         <EntityTypeShape EntityType="ERPModel.ProductCategory" Width="1.5" PointX="0.75" PointY="194.5" />
         <AssociationConnector Association="ERPModel.FK_Product_ProductCategory" />
         <AssociationConnector Association="ERPModel.FK_ProductSubCategory_ProductCategory" />
@@ -521,6 +519,8 @@
         <EntityTypeShape EntityType="ERPModel.ChequeRegister" Width="1.5" PointX="54.375" PointY="53.75" />
         <EntityTypeShape EntityType="ERPModel.ComparativeStatement" Width="1.5" PointX="5.375" PointY="49.75" />
         <EntityTypeShape EntityType="ERPModel.RequisitionItemDetail" Width="1.5" PointX="0.75" PointY="45.75" />
+        <EntityTypeShape EntityType="ERPModel.PurchaseOrderDetail" Width="1.5" PointX="26.25" PointY="98.875" />
+        <AssociationConnector Association="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
