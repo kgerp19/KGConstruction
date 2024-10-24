@@ -334,7 +334,32 @@ namespace KGERP.Service.Implementation
             return vmUserMenu;
         }
 
-
+        //public async Task<VMUserMenu> AccountingCostCenterTCL(int companyId)
+        //{
+        //    VMUserMenu vmUserMenu = new VMUserMenu();
+        //    vmUserMenu.CompanyFK = companyId;
+        //    vmUserMenu.DataList = (from t1 in _db.Accounting_CostCenter
+        //                           join t3 in _db.Accounting_CostCenterType on t1.CostCenterTypeId equals t3.CostCenterTypeId
+        //                           join t2 in _db.Companies on t1.CompanyId equals t2.CompanyId
+        //                           where t1.CompanyId == companyId && t1.IsActive
+                                
+        //                           select new VMUserMenu
+        //                           {
+        //                               CostCenterId = t1.CostCenterId,
+        //                               CostCenterTypeId = t3.CostCenterTypeId,
+        //                               Name = t1.Name,
+        //                               ProjectType = t3.Name,
+        //                               CompanyName = t2.Name,
+        //                               CompanyFK = t1.CompanyId,
+        //                               PrjectValue = (from a in _db.OrderDetails
+        //                                              join b in _db.OrderMasters on a.OrderMasterId equals b.OrderMasterId
+        //                                              where a.IsActive && b.IsActive && a.Status == (int)EnumPOStatus.Submitted
+        //                                              && b.CostCenterId == t1.CostCenterId
+        //                                              select (a.Qty * ((a.IsVATInclude == true ? a.UnitPrice / (((double)a.VATPercent + 100) / 100) : a.UnitPrice)))
+        //                                              ).DefaultIfEmpty(0).Sum()
+        //                           }).OrderByDescending(x => x.CostCenterId).AsEnumerable();
+        //    return vmUserMenu;
+        //}
 
 
         public async Task<long> AccountingCostCenterAdd(VMUserMenu vmUserMenu)
@@ -2498,6 +2523,50 @@ namespace KGERP.Service.Implementation
             }
             return list;
         }
+
+
+
+
+        public async Task<List<object>> Requisitionist(long projectId)
+        {
+            var list = await (from r in _db.Requisitions
+                              join od in _db.OrderDetails on r.OrderDetailsId equals od.OrderDetailId
+                              join om in _db.OrderMasters on od.OrderMasterId equals om.OrderMasterId
+                              where om.CostCenterId == projectId
+                              select new
+                              {
+                                  Text = r.RequisitionNo,
+                                  Value = r.RequisitionId,
+                                  OrderDetailId = od.OrderDetailId,
+                                  OrderMasterId = om.OrderMasterId
+                              }).ToListAsync();
+
+            return list.Cast<object>().ToList();
+        }
+
+
+        public async Task<List<object>> TotalRequisitionAmount(long requisitionId)
+        {
+            var result = await (from r in _db.Requisitions
+                                join rid in _db.RequisitionItemDetails on r.RequisitionId equals rid.RequisitionId
+                                join od in _db.OrderDetails on r.OrderDetailsId equals od.OrderDetailId
+                                join om in _db.OrderMasters on od.OrderMasterId equals om.OrderMasterId
+                                join v in _db.Vendors on om.CustomerId equals v.VendorId
+                                where r.RequisitionId == requisitionId
+                                group new { rid, v } by new { r.RequisitionId, v.Name } into g
+                                select new
+                                {
+                                    RequisitionId = g.Key.RequisitionId,
+                                    TotalAmount = g.Sum(x => x.rid.RUnitPrice), // Sum RUnitPrice
+                                    Value = g.Key.Name
+                                }).ToListAsync();
+
+            return result.Cast<object>().ToList();
+        }
+
+
+
+
         public List<object> CommonDistrictsDropDownList()
         {
             var list = new List<object>();
@@ -5583,6 +5652,18 @@ namespace KGERP.Service.Implementation
             return list;
         }
 
+
+        public List<object> AccountingCostCenterTCL(int companyId)
+        {
+            var list = new List<object>();
+            var v = _db.Accounting_CostCenter.Where(x => x.CompanyId == companyId && x.IsActive == true).ToList();
+            foreach (var x in v)
+            {
+                list.Add(new { Text = x.Name, Value = x.CostCenterId });
+            }
+            return list;
+        }
+
         public List<object> GetBankBranchesById(int bankId)
         {
             var data = (from t1 in _db.Banks.Where(x => x.IsActive)
@@ -5612,8 +5693,27 @@ namespace KGERP.Service.Implementation
                         }).ToList();
             return data.Cast<object>().ToList();
         }
+        public List<object> GetChequeBookListByAccountInfo(int bankId, int bankBranchId)
+        {
+            var data = (from t1 in _db.BankBranches.Where(x => x.BankBranchId == bankBranchId && x.IsActive)
+                        select new
+                        {
+                            BankBranchId = t1.BankBranchId,
+                            AccountNo = t1.AccountNumber,
+                        }).ToList();
+            return data.Cast<object>().ToList();
+        }
 
-
+        public List<object> GetChequeBookListByAccountInfotcl(int bankId)
+        {
+            var data = (from t1 in _db.BankBranches.Where(x => x.BankBranchId == bankId && x.IsActive)
+                        select new
+                        {
+                            BankBranchId = t1.BankBranchId,
+                            AccountNo = t1.AccountNumber,
+                        }).ToList();
+            return data.Cast<object>().ToList();
+        }
         public async Task<VMCommonBank> GetBanks(int companyId)
         {
             VMCommonBank vMCommonBank = new VMCommonBank();

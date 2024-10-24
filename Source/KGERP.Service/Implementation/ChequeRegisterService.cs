@@ -890,6 +890,10 @@ namespace KGERP.Service.Implementation
             return sendData;
         }
 
+
+
+
+
         //public async Task<List<BankAccountInfoModel>> GetBankAccountInfoList(int companyId)
         //{
         //    List<BankAccountInfoModel> sendData = await (from t1 in _context.BankAccountInfoes.Where(x => x.CompanyId == companyId && x.IsActive)

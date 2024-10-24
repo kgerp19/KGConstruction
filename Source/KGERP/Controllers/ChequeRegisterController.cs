@@ -128,19 +128,31 @@ namespace KGERP.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        //[HttpGet]
-        //public async Task<JsonResult> GetChequeBookListByAccountInfo(int bankAccountInfoId)
-        //{
-        //    var data = await _Service.GetChequeBookListByAccountInfo(bankAccountInfoId);
-        //    return Json(data, JsonRequestBehavior.AllowGet);
-        //}
+        [HttpGet]
+        public async Task<JsonResult> GetChequeBookListByAccountInfo(int bankAccountInfoId)
+        {
+            var data =  _ConfigurationService.GetChequeBookListByAccountInfotcl(bankAccountInfoId);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
 
-        //[HttpGet]
-        //public async Task<JsonResult> GetChequeBookInfoById(long chequeBookId)
-        //{
-        //    var data = await _Service.GetChequeBookInfo(chequeBookId);
-        //    return Json(data, JsonRequestBehavior.AllowGet);
-        //}
+        [HttpGet]
+        public async Task<JsonResult> GetChequeBookInfoById(long chequeBookId)
+        {
+            var data = await _Service.GetBankAccountInfoById(chequeBookId);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public async Task<JsonResult> RequisitionListWithFilter(long projectId)
+        {
+        
+            var data = await _ConfigurationService.Requisitionist(projectId);
+
+      
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+
 
         #endregion
 
@@ -152,12 +164,29 @@ namespace KGERP.Controllers
             ChequeRegisterModel viewData = new ChequeRegisterModel();
             viewData.CompanyFK = companyId;
             viewData.BankList = new SelectList(_ConfigurationService.CommonBanksDropDownList(companyId), "Value", "Text");
+            viewData.AccCostCenter = new SelectList(_ConfigurationService.AccountingCostCenterTCL(companyId), "Value", "Text");
            // viewData.ProjectList = new SelectList(await _RequisitionService.GetProjectList(companyId), "CostCenterId", "Name");
             viewData.ChequeRegisterList = await _Service.GetChequeRegisterList(companyId);
             return View(viewData);
         }
 
-        [HttpPost]
+        public async Task<JsonResult> GetTotalAmountByRequisitionId(long requisitionId)
+        {
+
+            var data = await _ConfigurationService.TotalRequisitionAmount(requisitionId);
+
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        
+
+
+
+
+
+
+               [HttpPost]
         public ActionResult NewChequeRegister(ChequeRegisterModel model)
         {
             if (model.ActionEum == ActionEnum.Add)
@@ -361,12 +390,12 @@ namespace KGERP.Controllers
 
         #region Other Json
 
-        //[HttpGet]
-        //public JsonResult RequisitionListWithFilter(int projectId)
-        //{
-        //    var data = _RequisitionService.FilteredApprovedRequisitionList(projectId);
-        //    return Json(data, JsonRequestBehavior.AllowGet);
-        //}
+        [HttpGet]
+        public JsonResult ProjecttWithFilter(int companyId)
+        {
+            //var data = _RequisitionService.FilteredApprovedRequisitionList(projectId);
+            return Json(0, JsonRequestBehavior.AllowGet);
+        }
 
         //[HttpGet]
         //public JsonResult RegisteredRequisitionListByProjectId(int projectId)
