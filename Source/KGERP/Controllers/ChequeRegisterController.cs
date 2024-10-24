@@ -143,11 +143,15 @@ namespace KGERP.Controllers
         }
 
 
-        //public async Task<JsonResult> RequisitionListWithFilter(long ProjectId)
-        //{
-        //    var data = await _Service.GetBankAccountInfoById(chequeBookId);
-        //    return Json(data, JsonRequestBehavior.AllowGet);
-        //}
+        public async Task<JsonResult> RequisitionListWithFilter(long projectId)
+        {
+        
+            var data = await _ConfigurationService.Requisitionist(projectId);
+
+      
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
 
 
         #endregion
@@ -166,7 +170,23 @@ namespace KGERP.Controllers
             return View(viewData);
         }
 
-        [HttpPost]
+        public async Task<JsonResult> GetTotalAmountByRequisitionId(long requisitionId)
+        {
+
+            var data = await _ConfigurationService.TotalRequisitionAmount(requisitionId);
+
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        
+
+
+
+
+
+
+               [HttpPost]
         public ActionResult NewChequeRegister(ChequeRegisterModel model)
         {
             if (model.ActionEum == ActionEnum.Add)

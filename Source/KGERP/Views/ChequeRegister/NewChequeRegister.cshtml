@@ -576,15 +576,27 @@
             var requisitionId = $("#ddlRequisitionId option:selected").val();
             $.ajax({
                 type: "GET",
-                url: "/BillRequisition/GetTotalAmountByRequisitionId",
+                url: "/ChequeRegister/GetTotalAmountByRequisitionId",
                 dataType: "json",
                 data: { requisitionId: requisitionId },
                 success: function (data) {
-                    $('#txtAmount').val(data.toFixed(2));
+                    console.log(data)
+                    if (data.length > 0) {
+                        var totalAmount = data[0].TotalAmount; // Access TotalAmount from the first object
+                        var txtPayTo = data[0].Value; // Access TotalAmount from the first object
+                        $('#txtAmount').val(totalAmount.toFixed(2)); // Set the value to txtAmount
+                        $('#txtPayTo').val(txtPayTo); // Set the value to txtAmount
+                    } else {
+                        $('#txtAmount').val('0.00');
+                        $('#txtPayTo').val(txtPayTo);// Set to 0 if no data found
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching total amount: ", error);
+                    $('#txtAmount').val('0.00'); // Optionally set to 0 on error
                 }
             });
         });
-
         $('#ddlRegisterFor').on('change', function (event) {
             var registerFor = $("#ddlRegisterFor option:selected").val();
             if (registerFor == @((int)KGERP.Utility.EnumChequeRegisterFor.Requisition)) {

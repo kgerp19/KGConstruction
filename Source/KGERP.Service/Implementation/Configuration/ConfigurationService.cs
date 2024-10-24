@@ -2527,15 +2527,41 @@ namespace KGERP.Service.Implementation
 
 
 
-        public List<object> Requisitionist(int ProjectId)
+        public async Task<List<object>> Requisitionist(long projectId)
         {
-            var list = new List<object>();
-            var v = _db.Countries.ToList();
-            foreach (var x in v)
-            {
-                list.Add(new { Text = x.CountryName, Value = x.CountryId });
-            }
-            return list;
+            var list = await (from r in _db.Requisitions
+                              join od in _db.OrderDetails on r.OrderDetailsId equals od.OrderDetailId
+                              join om in _db.OrderMasters on od.OrderMasterId equals om.OrderMasterId
+                              where om.CostCenterId == projectId
+                              select new
+                              {
+                                  Text = r.RequisitionNo,
+                                  Value = r.RequisitionId,
+                                  OrderDetailId = od.OrderDetailId,
+                                  OrderMasterId = om.OrderMasterId
+                              }).ToListAsync();
+
+            return list.Cast<object>().ToList();
+        }
+
+
+        public async Task<List<object>> TotalRequisitionAmount(long requisitionId)
+        {
+            var result = await (from r in _db.Requisitions
+                                join rid in _db.RequisitionItemDetails on r.RequisitionId equals rid.RequisitionId
+                                join od in _db.OrderDetails on r.OrderDetailsId equals od.OrderDetailId
+                                join om in _db.OrderMasters on od.OrderMasterId equals om.OrderMasterId
+                                join v in _db.Vendors on om.CustomerId equals v.VendorId
+                                where r.RequisitionId == requisitionId
+                                group new { rid, v } by new { r.RequisitionId, v.Name } into g
+                                select new
+                                {
+                                    RequisitionId = g.Key.RequisitionId,
+                                    TotalAmount = g.Sum(x => x.rid.RUnitPrice), // Sum RUnitPrice
+                                    Value = g.Key.Name
+                                }).ToListAsync();
+
+            return result.Cast<object>().ToList();
         }
 
 
@@ -5633,7 +5659,7 @@ namespace KGERP.Service.Implementation
             var v = _db.Accounting_CostCenter.Where(x => x.CompanyId == companyId && x.IsActive == true).ToList();
             foreach (var x in v)
             {
-                list.Add(new { Text = x.Name, Value = x.CompanyId });
+                list.Add(new { Text = x.Name, Value = x.CostCenterId });
             }
             return list;
         }
