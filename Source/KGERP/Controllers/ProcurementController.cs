@@ -1698,9 +1698,10 @@ namespace KG.App.Controllers
         [HttpPost]
         public async Task<ActionResult> GeneralRMRequisitionSubmit(VMPackagingPurchaseRequisition vmRequisition)
         {
-            // vmRequisition.CreatedBy = Common.GetUserId();
+            long EmployeeId = Common.GetIntUserId();
+            string EmployeeStrId = Common.GetUserId();
 
-            vmRequisition.RequisitionId = await Task.Run(() => _requisitionService.PackagingGeneralRequisitionSubmit(vmRequisition.RequisitionId, vmRequisition.IsSubmited));
+            vmRequisition.RequisitionId = await Task.Run(() => _requisitionService.PackagingGeneralRequisitionSubmit(vmRequisition.RequisitionId, EmployeeId, EmployeeStrId, vmRequisition.IsSubmited));
 
             return RedirectToAction(nameof(GeneralRMRequisition), new { companyId = vmRequisition.CompanyFK, requisitionId = vmRequisition.RequisitionId });
         }
@@ -1826,8 +1827,8 @@ namespace KG.App.Controllers
         [HttpPost]
         public async Task<ActionResult> RequisitionSubmitied(PackagingProductionRequisitionDetailsRM vmProductionRequisition)
         {
-           
-            await _requisitionService.RequisitionSubmitied(vmProductionRequisition.RequisitionId);
+            vmProductionRequisition.EmployeeId = Common.GetIntUserId();
+            await _requisitionService.RequisitionSubmitied(vmProductionRequisition.RequisitionId, vmProductionRequisition.EmployeeId);
             return RedirectToAction(nameof(PackagingProductionRequisitionDetails), new { companyId = vmProductionRequisition.CompanyId, requisitionId = vmProductionRequisition.RequisitionId });
 
         }
@@ -3069,6 +3070,28 @@ namespace KG.App.Controllers
             }
 
             return RedirectToAction(nameof(PackagingFGPurchaseOrderSlave), new { companyId = vmPurchaseOrderSlave.CompanyFK, purchaseOrderId = vmPurchaseOrderSlave.PurchaseOrderId });
+        }
+
+        [HttpGet]
+        public ActionResult RequisitionsApproval(int companyId, DateTime? fromDate, DateTime? toDate, SignatoryStatusEnum? Status)
+        {
+            var userId = Common.GetIntUserId();
+            ViewBag.CompanyId = companyId;
+            //userId = 1028;
+            //if (fromDate == null) fromDate = DateTime.Today.AddMonths(-2);
+            //if (toDate == null) toDate = DateTime.Today;
+            var obj = _service.GetRequisitionsSignatureList(companyId, fromDate, toDate, userId, Status);
+            return View(obj);
+
+
+
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetRequisitionApprovalList(int RequisitionId)
+        {
+            var approvalList = _service.GetAllRequisitionApproval(RequisitionId);
+            return Json(approvalList.ToList(), JsonRequestBehavior.AllowGet);
         }
     }
 }

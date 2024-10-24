@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KGERP.Service.Implementation.General_Requisition.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,7 @@ namespace KGERP.Service.Contracts.KGERP.Requisitions.Queries.RequestModel
         public int OrderDetailsId { get; set; }
         public int CompanyId { get; set; }
         public int ProductId { get; set; }
+        public long EmployeeId { get; set; }
         public bool IsSubmited { get; set; }
         //For View
         public decimal? Qty { get; set; }
@@ -39,6 +41,7 @@ namespace KGERP.Service.Contracts.KGERP.Requisitions.Queries.RequestModel
         public DateTime OrderDate { get; set; }
 
         public List<RequisitionItemDetailListRM> RequisitionItemDetail { get; set; }
+        public IEnumerable<RequisitionApprovalVM> RADataList { get; set; }
 
         public List<SelectListItem> DDLProductList { get; set; }
         public string CustomerName { get;  set; }

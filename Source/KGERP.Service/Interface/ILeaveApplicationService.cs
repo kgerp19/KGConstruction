@@ -54,6 +54,7 @@ namespace KGERP.Service.Interface
         Task<LeaveAllDetailVM> GetLeaveApprovalRelatedAllInfo(long SigId, DateTime? fromDate, DateTime? toDate);
         Task<SignatoryApprovalDetails> GetSignatoriesApprovalInfo(long applicationId, long sigId);
         int DoLeaveApproval(LeaveAllDetailVM vm);
+        int DoRequisitionApproval(SystemApprovalVM vm);
         int DoCSApproval(SystemApprovalVM vm);
         Task<LeaveApplicationVm> GetLeaveListByEmployee(long EmpID, DateTime? fromDate, DateTime? toDate);
         #endregion

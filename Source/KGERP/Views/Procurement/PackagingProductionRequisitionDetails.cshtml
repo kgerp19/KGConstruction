@@ -139,7 +139,7 @@
 
                             @foreach (var item in Model.RequisitionItemDetail)
                             {
-                                
+
                                 total1 += item.UnitPrice;
                                 <tr>
                                     <td>@(++sl)</td>
@@ -149,12 +149,12 @@
                                     <td>@item.RQty</td>
                                     <td>@(item.AllocatedQty - item.RQty  )</td>
                                     <td>@item.UnitPrice</td>
-                               
+
                                     @if (!Model.IsSubmited)
                                     {
                                         <td style="text-align:center">
                                             @*<a onclick="makeEditble('@item.RequistionItemDetailId','@item.RQty','@item.RProductId','@item.ProductName')" class="linkPointer" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                &nbsp;*@
+                                    &nbsp;*@
                                             <a onclick="makeDeletale('@item.RequistionItemDetailId')" class="linkPointer" title="Delete" data-placement="top"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
                                         </td>
                                     }
@@ -163,13 +163,13 @@
 
                             }
 
-                        <tr>
-                            <td colspan="4" class="text-right"></td>
-                            <td ><b>Total</b> </td>
-                            <td colspan="5"><b>@total1</b> </td> <!-- Display total here -->
-                        </tr>
+                            <tr>
+                                <td colspan="4" class="text-right"></td>
+                                <td><b>Total</b> </td>
+                                <td colspan="5"><b>@total1</b> </td> <!-- Display total here -->
+                            </tr>
                         </tbody>
-                        </table>
+                    </table>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
@@ -200,6 +200,52 @@
                     }
 
                 </div>
+
+
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Employee Id</th>
+                            <th scope="col">Signatory</th>
+                            <th scope="col">Designation</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Approved Time</th>
+                            <th scope="col">Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RADataList != null)
+                        {
+                            int ii = 1;
+                            foreach (var item in Model.RADataList)
+                            {
+                                <tr>
+                                    <td>@(ii++)</td>
+                                    <td>@item.EmployeeIdString</td>
+                                    <td>@item.EmployeeName</td>
+                                    <td>@item.DesignationName</td>
+                                    <td>
+                                        @if (item.Status < 0)
+                                        {
+                                            <span class="badge badge-warning">
+                                                ---
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-success">
+                                                @item.StatusString
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>@item.ApprovedTime</td>
+                                    <td>@item.Comment</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

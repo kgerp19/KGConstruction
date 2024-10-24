@@ -54,6 +54,7 @@ namespace KGERP.Data.Models
         public bool IsVATInclude { get; set; }
         public string PouchDerection { get; set; }
         public Nullable<int> UnitId { get; set; }
+        public string BOQReference { get; set; }
     
         public virtual OrderMaster OrderMaster { get; set; }
         public virtual Product Product { get; set; }

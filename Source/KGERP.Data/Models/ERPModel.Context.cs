@@ -224,7 +224,6 @@ namespace KGERP.Data.Models
         public virtual DbSet<RealStateMessage> RealStateMessages { get; set; }
         public virtual DbSet<RentProduction> RentProductions { get; set; }
         public virtual DbSet<RentProductionDetail> RentProductionDetails { get; set; }
-        public virtual DbSet<Requisition> Requisitions { get; set; }
         public virtual DbSet<RequisitionItem> RequisitionItems { get; set; }
         public virtual DbSet<RequisitionSignatoryApproval> RequisitionSignatoryApprovals { get; set; }
         public virtual DbSet<SaleReturn> SaleReturns { get; set; }
@@ -304,7 +303,6 @@ namespace KGERP.Data.Models
         public virtual DbSet<LeaveApplicationDetail> LeaveApplicationDetails { get; set; }
         public virtual DbSet<MaterialReceive> MaterialReceives { get; set; }
         public virtual DbSet<RequisitionSignatory> RequisitionSignatories { get; set; }
-        public virtual DbSet<RequisitionItemDetail> RequisitionItemDetails { get; set; }
         public virtual DbSet<IssueMasterInfo> IssueMasterInfoes { get; set; }
         public virtual DbSet<StockAdjust> StockAdjusts { get; set; }
         public virtual DbSet<Prod_ReferenceSlaveConsumption> Prod_ReferenceSlaveConsumption { get; set; }
@@ -344,7 +342,6 @@ namespace KGERP.Data.Models
         public virtual DbSet<IssueDetailInfo> IssueDetailInfoes { get; set; }
         public virtual DbSet<ProductBookingInfo> ProductBookingInfoes { get; set; }
         public virtual DbSet<PurchaseReturnDetail> PurchaseReturnDetails { get; set; }
-        public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
         public virtual DbSet<SeedProcessingDetail> SeedProcessingDetails { get; set; }
         public virtual DbSet<Prod_Reference> Prod_Reference { get; set; }
@@ -360,10 +357,13 @@ namespace KGERP.Data.Models
         public virtual DbSet<OrderMaster> OrderMasters { get; set; }
         public virtual DbSet<Accounting_CostCenter> Accounting_CostCenter { get; set; }
         public virtual DbSet<OrderDeliverDetail> OrderDeliverDetails { get; set; }
-        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<ChequeBook> ChequeBooks { get; set; }
         public virtual DbSet<ChequeRegister> ChequeRegisters { get; set; }
         public virtual DbSet<ComparativeStatement> ComparativeStatements { get; set; }
+        public virtual DbSet<RequisitionItemDetail> RequisitionItemDetails { get; set; }
+        public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
+        public virtual DbSet<Requisition> Requisitions { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
     
         public virtual ObjectResult<GetEmployeeListForTeam_Result> GetEmployeeListForTeam(Nullable<int> companyId)
         {

@@ -38,7 +38,7 @@ namespace KGERP.Service.Interface
 
        // Task<RResult> RequisitionSaveForPKL(RequisitionMasterDetailsRM model);
         Task<int> PackagingGeneralRequisition(VMPackagingPurchaseRequisition model);
-        Task<int> PackagingGeneralRequisitionSubmit(int requisitionId,bool isSubmited=false);
+        Task<int> PackagingGeneralRequisitionSubmit(int requisitionId,long EmployeeId,string EmployeeStrId, bool isSubmited=false);
         Task<int> RequisitionItemDetailDeleteConfirm(int RequisitionId,Guid? RequistionItemDetailId);
         Task<int> RequisitionItemDetailUpdate(int requisitionId, decimal RQuantity,int RproductionId, Guid? RequistionItemDetailId);
         int RequisitionItemDetailSave(int requisitionId, decimal RQuantity, int RProductId, int FinishProductBOMId);
@@ -48,7 +48,7 @@ namespace KGERP.Service.Interface
         Task<PackagingProductionRequisitionDetailsRM> PackagingProductionRequisitionDetails(int RequisitionId,int CompanyId,CancellationToken cancellationToken=default);
 
         Task<RResult> RequisitionItemDetailDelete(Guid? RequistionItemDetailId);
-        Task<int> RequisitionSubmitied(int requisitionId,  CancellationToken cancellationToken=default);
+        Task<int> RequisitionSubmitied(int requisitionId, long EmployeeId, CancellationToken cancellationToken=default);
 
         Task<RResult> UpdateProductAndQuantityInRequisitionItemDetail(int ProductId,decimal Quentity, Guid? RequistionItemDetailId);
 

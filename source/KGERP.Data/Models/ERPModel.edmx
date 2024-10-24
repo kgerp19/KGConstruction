@@ -5334,7 +5334,7 @@ warning 6002: The table/view 'KGConstructionDB.Erp.FormulaHistory' does not have
           <Property Name="UnitPrice" Type="float" Nullable="false" />
           <Property Name="Amount" Type="float" Nullable="false" />
           <Property Name="SpecialBaseCommission" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="Remarks" Type="nvarchar" MaxLength="100" />
+          <Property Name="Remarks" Type="nvarchar(max)" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedBy" Type="nvarchar" MaxLength="128" />
@@ -5361,6 +5361,7 @@ warning 6002: The table/view 'KGConstructionDB.Erp.FormulaHistory' does not have
           <Property Name="IsVATInclude" Type="bit" Nullable="false" />
           <Property Name="PouchDerection" Type="nvarchar" MaxLength="100" />
           <Property Name="UnitId" Type="int" />
+          <Property Name="BOQReference" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="OrderMaster">
           <Key>
@@ -5820,6 +5821,7 @@ warning 6002: The table/view 'KGConstructionDB.Erp.FormulaHistory' does not have
           <Property Name="VATAddition" Type="decimal" Precision="18" Scale="9" Nullable="false" />
           <Property Name="ProductDiscount" Type="decimal" Precision="18" Scale="9" Nullable="false" />
           <Property Name="CompanyId" Type="int" />
+          <Property Name="RequisitionItemDetailId" Type="bigint" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -5992,6 +5994,7 @@ warning 6002: The table/view 'KGConstructionDB.Erp.FormulaHistory' does not have
           <Property Name="DeliveryNo" Type="varchar" MaxLength="50" />
           <Property Name="CompanyId" Type="int" />
           <Property Name="RequisitionType" Type="int" />
+          <Property Name="ApprovalStatus" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="RequisitionItem">
           <Key>
@@ -6020,17 +6023,11 @@ warning 6002: The table/view 'KGConstructionDB.Erp.FormulaHistory' does not have
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="TPPrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'KGConstructionDB.Erp.RequisitionItemDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="RequisitionItemDetail">
           <Key>
-            <PropertyRef Name="RequistionItemDetailId" />
-            <PropertyRef Name="RequisitionItemId" />
-            <PropertyRef Name="RequisitionId" />
-            <PropertyRef Name="RUnitPrice" />
-            <PropertyRef Name="IsActive" />
-            <PropertyRef Name="FinishProductBOMId" />
+            <PropertyRef Name="ReqItemDetailId" />
           </Key>
+          <Property Name="ReqItemDetailId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RequistionItemDetailId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RequisitionItemId" Type="int" Nullable="false" />
           <Property Name="RequisitionId" Type="int" Nullable="false" />
@@ -8943,6 +8940,7 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <EntitySet Name="RentProductionDetail" EntityType="Self.RentProductionDetail" Schema="Erp" store:Type="Tables" />
           <EntitySet Name="Requisition" EntityType="Self.Requisition" Schema="Erp" store:Type="Tables" />
           <EntitySet Name="RequisitionItem" EntityType="Self.RequisitionItem" Schema="Erp" store:Type="Tables" />
+          <EntitySet Name="RequisitionItemDetail" EntityType="Self.RequisitionItemDetail" Schema="Erp" store:Type="Tables" />
           <EntitySet Name="RequisitionSignatory" EntityType="Self.RequisitionSignatory" Schema="Erp" store:Type="Tables" />
           <EntitySet Name="RequisitionSignatoryApproval" EntityType="Self.RequisitionSignatoryApproval" Schema="Erp" store:Type="Tables" />
           <EntitySet Name="SaleReturn" EntityType="Self.SaleReturn" Schema="Erp" store:Type="Tables" />
@@ -9126,23 +9124,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
     [FormulaHistory].[CreatedBy] AS [CreatedBy], 
     [FormulaHistory].[CompanyId] AS [CompanyId]
     FROM [Erp].[FormulaHistory] AS [FormulaHistory]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="RequisitionItemDetail" EntityType="Self.RequisitionItemDetail" store:Type="Tables" store:Schema="Erp">
-            <DefiningQuery>SELECT 
-    [RequisitionItemDetail].[RequistionItemDetailId] AS [RequistionItemDetailId], 
-    [RequisitionItemDetail].[RequisitionItemId] AS [RequisitionItemId], 
-    [RequisitionItemDetail].[RequisitionId] AS [RequisitionId], 
-    [RequisitionItemDetail].[RProductId] AS [RProductId], 
-    [RequisitionItemDetail].[RProcessLoss] AS [RProcessLoss], 
-    [RequisitionItemDetail].[RQty] AS [RQty], 
-    [RequisitionItemDetail].[RExtraQty] AS [RExtraQty], 
-    [RequisitionItemDetail].[RTotalQty] AS [RTotalQty], 
-    [RequisitionItemDetail].[FProductId] AS [FProductId], 
-    [RequisitionItemDetail].[FQty] AS [FQty], 
-    [RequisitionItemDetail].[RUnitPrice] AS [RUnitPrice], 
-    [RequisitionItemDetail].[IsActive] AS [IsActive], 
-    [RequisitionItemDetail].[FinishProductBOMId] AS [FinishProductBOMId]
-    FROM [Erp].[RequisitionItemDetail] AS [RequisitionItemDetail]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="ShereMember" EntityType="Self.ShereMember" store:Type="Tables" store:Schema="Kmcsl">
             <DefiningQuery>SELECT 
@@ -10094,7 +10075,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <EntitySet Name="RealStateMessages" EntityType="ERPModel.RealStateMessage" />
           <EntitySet Name="RentProductions" EntityType="ERPModel.RentProduction" />
           <EntitySet Name="RentProductionDetails" EntityType="ERPModel.RentProductionDetail" />
-          <EntitySet Name="Requisitions" EntityType="ERPModel.Requisition" />
           <EntitySet Name="RequisitionItems" EntityType="ERPModel.RequisitionItem" />
           <EntitySet Name="RequisitionSignatoryApprovals" EntityType="ERPModel.RequisitionSignatoryApproval" />
           <EntitySet Name="SaleReturns" EntityType="ERPModel.SaleReturn" />
@@ -10439,14 +10419,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             <End Role="RentProduction" EntitySet="RentProductions" />
             <End Role="RentProductionDetail" EntitySet="RentProductionDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK_RequisitionItem_Requisition" Association="ERPModel.FK_RequisitionItem_Requisition">
-            <End Role="Requisition" EntitySet="Requisitions" />
-            <End Role="RequisitionItem" EntitySet="RequisitionItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Store_Requisition" Association="ERPModel.FK_Store_Requisition">
-            <End Role="Requisition" EntitySet="Requisitions" />
-            <End Role="Store" EntitySet="Stores" />
-          </AssociationSet>
           <AssociationSet Name="FK_StockTransfer_StockInfo" Association="ERPModel.FK_StockTransfer_StockInfo">
             <End Role="StockInfo" EntitySet="StockInfoes" />
             <End Role="StockTransfer" EntitySet="StockTransfers" />
@@ -10694,7 +10666,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           </AssociationSet>
           <EntitySet Name="MaterialReceives" EntityType="ERPModel.MaterialReceive" />
           <EntitySet Name="RequisitionSignatories" EntityType="ERPModel.RequisitionSignatory" />
-          <EntitySet Name="RequisitionItemDetails" EntityType="ERPModel.RequisitionItemDetail" />
           <EntitySet Name="IssueMasterInfoes" EntityType="ERPModel.IssueMasterInfo" />
           <EntitySet Name="StockAdjusts" EntityType="ERPModel.StockAdjust" />
           <AssociationSet Name="FK_StockAdjustDetail_StockAdjust" Association="ERPModel.FK_StockAdjustDetail_StockAdjust">
@@ -10805,11 +10776,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <AssociationSet Name="FK_PurchaseReturnDetail_PurchaseReturn" Association="ERPModel.FK_PurchaseReturnDetail_PurchaseReturn">
             <End Role="PurchaseReturn" EntitySet="PurchaseReturns" />
             <End Role="PurchaseReturnDetail" EntitySet="PurchaseReturnDetails" />
-          </AssociationSet>
-          <EntitySet Name="PurchaseOrderDetails" EntityType="ERPModel.PurchaseOrderDetail" />
-          <AssociationSet Name="FK_PurchaseOrderDetail_PurchaseOrder" Association="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder">
-            <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
-            <End Role="PurchaseOrderDetail" EntitySet="PurchaseOrderDetails" />
           </AssociationSet>
           <EntitySet Name="ProductCategories" EntityType="ERPModel.ProductCategory" />
           <AssociationSet Name="FK_Product_ProductCategory" Association="ERPModel.FK_Product_ProductCategory">
@@ -10930,6 +10896,24 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             <End Role="OrderDeliver" EntitySet="OrderDelivers" />
             <End Role="OrderDeliverDetail" EntitySet="OrderDeliverDetails" />
           </AssociationSet>
+          <EntitySet Name="ChequeBooks" EntityType="ERPModel.ChequeBook" />
+          <EntitySet Name="ChequeRegisters" EntityType="ERPModel.ChequeRegister" />
+          <EntitySet Name="ComparativeStatements" EntityType="ERPModel.ComparativeStatement" />
+          <EntitySet Name="RequisitionItemDetails" EntityType="ERPModel.RequisitionItemDetail" />
+          <EntitySet Name="PurchaseOrderDetails" EntityType="ERPModel.PurchaseOrderDetail" />
+          <AssociationSet Name="FK_PurchaseOrderDetail_PurchaseOrder" Association="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder">
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrders" />
+            <End Role="PurchaseOrderDetail" EntitySet="PurchaseOrderDetails" />
+          </AssociationSet>
+          <EntitySet Name="Requisitions" EntityType="ERPModel.Requisition" />
+          <AssociationSet Name="FK_RequisitionItem_Requisition" Association="ERPModel.FK_RequisitionItem_Requisition">
+            <End Role="Requisition" EntitySet="Requisitions" />
+            <End Role="RequisitionItem" EntitySet="RequisitionItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Store_Requisition" Association="ERPModel.FK_Store_Requisition">
+            <End Role="Requisition" EntitySet="Requisitions" />
+            <End Role="Store" EntitySet="Stores" />
+          </AssociationSet>
           <EntitySet Name="OrderDetails" EntityType="ERPModel.OrderDetail" />
           <AssociationSet Name="FK_OrderDetail_OrderMaster" Association="ERPModel.FK_OrderDetail_OrderMaster">
             <End Role="OrderMaster" EntitySet="OrderMasters" />
@@ -10939,9 +10923,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             <End Role="Product" EntitySet="Products" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
-          <EntitySet Name="ChequeBooks" EntityType="ERPModel.ChequeBook" />
-          <EntitySet Name="ChequeRegisters" EntityType="ERPModel.ChequeRegister" />
-          <EntitySet Name="ComparativeStatements" EntityType="ERPModel.ComparativeStatement" />
           </EntityContainer>
         <ComplexType Name="GetEmployeeListForTeam_Result">
           <Property Type="Int64" Name="Id" Nullable="false" />
@@ -14762,31 +14743,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="Rate" Type="Decimal" Precision="19" Scale="6" />
           <NavigationProperty Name="RentProduction" Relationship="ERPModel.FK_RentProductionDetail_RentProduction" FromRole="RentProductionDetail" ToRole="RentProduction" />
         </EntityType>
-        <EntityType Name="Requisition">
-          <Key>
-            <PropertyRef Name="RequisitionId" />
-          </Key>
-          <Property Name="RequisitionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RequisitionNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="RequisitionBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RequisitionDate" Type="DateTime" Precision="0" />
-          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="RequisitionStatus" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="DeliveredBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DeliveredDate" Type="DateTime" Precision="0" />
-          <Property Name="DeliveryNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CompanyId" Type="Int32" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="RequisitionType" Type="Int32" />
-          <Property Name="FromRequisitionId" Type="Int32" />
-          <Property Name="ToRequisitionId" Type="Int32" />
-          <Property Name="OrderDetailsId" Type="Int32" Nullable="false" />
-          <Property Name="IsSubmitted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="RequisitionItems" Relationship="ERPModel.FK_RequisitionItem_Requisition" FromRole="Requisition" ToRole="RequisitionItem" />
-          <NavigationProperty Name="Stores" Relationship="ERPModel.FK_Store_Requisition" FromRole="Requisition" ToRole="Store" />
-        </EntityType>
         <EntityType Name="RequisitionItem">
           <Key>
             <PropertyRef Name="RequisitionItemId" />
@@ -14986,10 +14942,10 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="OtherCharge" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="IsSubmited" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Company" Relationship="ERPModel.FK_Store_Company1" FromRole="Store" ToRole="Company" />
-          <NavigationProperty Name="Requisition" Relationship="ERPModel.FK_Store_Requisition" FromRole="Store" ToRole="Requisition" />
           <NavigationProperty Name="StockInfo" Relationship="ERPModel.FK_Store_StockInfo" FromRole="Store" ToRole="StockInfo" />
           <NavigationProperty Name="StoreDetails" Relationship="ERPModel.FK_StoreDetail_Store" FromRole="Store" ToRole="StoreDetail" />
           <NavigationProperty Name="Vendor" Relationship="ERPModel.FK_Store_Vendor" FromRole="Store" ToRole="Vendor" />
+          <NavigationProperty Name="Requisition" Relationship="ERPModel.FK_Store_Requisition" FromRole="Store" ToRole="Requisition" />
         </EntityType>
         <EntityType Name="StoreDetail">
           <Key>
@@ -16311,30 +16267,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             </Principal>
             <Dependent Role="RentProductionDetail">
               <PropertyRef Name="RentProductionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RequisitionItem_Requisition">
-          <End Type="ERPModel.Requisition" Role="Requisition" Multiplicity="1" />
-          <End Type="ERPModel.RequisitionItem" Role="RequisitionItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Requisition">
-              <PropertyRef Name="RequisitionId" />
-            </Principal>
-            <Dependent Role="RequisitionItem">
-              <PropertyRef Name="RequisitionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Store_Requisition">
-          <End Type="ERPModel.Requisition" Role="Requisition" Multiplicity="0..1" />
-          <End Type="ERPModel.Store" Role="Store" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Requisition">
-              <PropertyRef Name="RequisitionId" />
-            </Principal>
-            <Dependent Role="Store">
-              <PropertyRef Name="RequisitionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -18151,29 +18083,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityType Name="RequisitionItemDetail">
-          <Key>
-            <PropertyRef Name="RequistionItemDetailId" />
-            <PropertyRef Name="RequisitionItemId" />
-            <PropertyRef Name="RequisitionId" />
-            <PropertyRef Name="RUnitPrice" />
-            <PropertyRef Name="IsActive" />
-            <PropertyRef Name="FinishProductBOMId" />
-          </Key>
-          <Property Name="RequistionItemDetailId" Type="Guid" Nullable="false" />
-          <Property Name="RequisitionItemId" Type="Int32" Nullable="false" />
-          <Property Name="RequisitionId" Type="Int32" Nullable="false" />
-          <Property Name="RProductId" Type="Int32" />
-          <Property Name="RProcessLoss" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="RQty" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="RExtraQty" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="RTotalQty" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="FProductId" Type="Int32" />
-          <Property Name="FQty" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="RUnitPrice" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="FinishProductBOMId" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="IssueMasterInfo">
           <Key>
             <PropertyRef Name="IssueMasterId" />
@@ -19001,8 +18910,8 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <NavigationProperty Name="DropDownItem1" Relationship="ERPModel.FK_PurchaseOrder_ProductOrigin" FromRole="PurchaseOrder" ToRole="DropDownItem" />
           <NavigationProperty Name="Demand" Relationship="ERPModel.FK_PurchaseOrder_Demand" FromRole="PurchaseOrder" ToRole="Demand" />
           <NavigationProperty Name="MaterialReceives" Relationship="ERPModel.FK_MaterialReceive_PurchaseOrder" FromRole="PurchaseOrder" ToRole="MaterialReceive" />
-          <NavigationProperty Name="PurchaseOrderDetails" Relationship="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" FromRole="PurchaseOrder" ToRole="PurchaseOrderDetail" />
           <NavigationProperty Name="Vendor" Relationship="ERPModel.FK_PurchaseOrder_Vendor" FromRole="PurchaseOrder" ToRole="Vendor" />
+          <NavigationProperty Name="PurchaseOrderDetails" Relationship="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" FromRole="PurchaseOrder" ToRole="PurchaseOrderDetail" />
         </EntityType>
         <Association Name="FK_PurchaseOrder_ModeOfPurchase">
           <End Type="ERPModel.DropDownItem" Role="DropDownItem" Multiplicity="0..1" />
@@ -19206,44 +19115,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             </Principal>
             <Dependent Role="PurchaseReturnDetail">
               <PropertyRef Name="PurchaseReturnId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="PurchaseOrderDetail">
-          <Key>
-            <PropertyRef Name="PurchaseOrderDetailId" />
-          </Key>
-          <Property Name="PurchaseOrderDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PurchaseOrderId" Type="Int64" />
-          <Property Name="ProductId" Type="Int32" Nullable="false" />
-          <Property Name="UnitId" Type="Int32" />
-          <Property Name="PurchaseQty" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="DemandRate" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="PurchaseRate" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="QCRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="PurchaseAmount" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="PackSize" Type="Int32" Nullable="false" />
-          <Property Name="FinishProductBOMId" Type="Int32" />
-          <Property Name="IsVATIncluded" Type="Boolean" Nullable="false" />
-          <Property Name="VATAddition" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="ProductDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
-          <Property Name="CompanyId" Type="Int32" />
-          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="PurchaseOrder" Relationship="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" FromRole="PurchaseOrderDetail" ToRole="PurchaseOrder" />
-        </EntityType>
-        <Association Name="FK_PurchaseOrderDetail_PurchaseOrder">
-          <End Type="ERPModel.PurchaseOrder" Role="PurchaseOrder" Multiplicity="0..1" />
-          <End Type="ERPModel.PurchaseOrderDetail" Role="PurchaseOrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PurchaseOrder">
-              <PropertyRef Name="PurchaseOrderId" />
-            </Principal>
-            <Dependent Role="PurchaseOrderDetail">
-              <PropertyRef Name="PurchaseOrderId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -20007,77 +19878,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="OrderDetail">
-          <Key>
-            <PropertyRef Name="OrderDetailId" />
-          </Key>
-          <Property Name="OrderDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="JobOrderNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="BOQItemName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="OrderMasterId" Type="Int64" />
-          <Property Name="DemandItemId" Type="Int32" Nullable="false" />
-          <Property Name="CustomerId" Type="Int32" />
-          <Property Name="OrderDate" Type="DateTime" Precision="3" />
-          <Property Name="ProductSerial" Type="Int32" />
-          <Property Name="ProductId" Type="Int32" />
-          <Property Name="Qty" Type="Double" Nullable="false" />
-          <Property Name="UnitPrice" Type="Double" Nullable="false" />
-          <Property Name="Amount" Type="Double" Nullable="false" />
-          <Property Name="SpecialBaseCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Remarks" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="ModifedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="Status" Type="Int32" />
-          <Property Name="AvgParchaseRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="CompanyId" Type="Int32" />
-          <Property Name="Comsumption" Type="Double" />
-          <Property Name="PackQuantity" Type="Double" />
-          <Property Name="DiscountRate" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
-          <Property Name="DiscountUnit" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
-          <Property Name="DiscountAmount" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
-          <Property Name="PromotionalOfferId" Type="Int32" />
-          <Property Name="EBaseCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ECarryingCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ECashCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SpecialDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="AdditionPrice" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="MonthlyIncentive" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="YearlyIncentive" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="VATPercent" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TDSPercent" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="IsVATInclude" Type="Boolean" Nullable="false" />
-          <Property Name="PouchDerection" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="UnitId" Type="Int32" />
-          <NavigationProperty Name="OrderMaster" Relationship="ERPModel.FK_OrderDetail_OrderMaster" FromRole="OrderDetail" ToRole="OrderMaster" />
-          <NavigationProperty Name="Product" Relationship="ERPModel.FK_OrderDetail_Product" FromRole="OrderDetail" ToRole="Product" />
-        </EntityType>
-        <Association Name="FK_OrderDetail_OrderMaster">
-          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="0..1" />
-          <End Type="ERPModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderMaster">
-              <PropertyRef Name="OrderMasterId" />
-            </Principal>
-            <Dependent Role="OrderDetail">
-              <PropertyRef Name="OrderMasterId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OrderDetail_Product">
-          <End Type="ERPModel.Product" Role="Product" Multiplicity="0..1" />
-          <End Type="ERPModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ProductId" />
-            </Principal>
-            <Dependent Role="OrderDetail">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ChequeBook">
           <Key>
             <PropertyRef Name="ChequeBookId" />
@@ -20150,6 +19950,186 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
           <Property Name="CompanyId" Type="Int32" Nullable="false" />
           <Property Name="ApprovalStatus" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="RequisitionItemDetail">
+          <Key>
+            <PropertyRef Name="ReqItemDetailId" />
+          </Key>
+          <Property Name="ReqItemDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RequistionItemDetailId" Type="Guid" Nullable="false" />
+          <Property Name="RequisitionItemId" Type="Int32" Nullable="false" />
+          <Property Name="RequisitionId" Type="Int32" Nullable="false" />
+          <Property Name="RProductId" Type="Int32" />
+          <Property Name="RProcessLoss" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="RQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="RExtraQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="RTotalQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="FProductId" Type="Int32" />
+          <Property Name="FQty" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="RUnitPrice" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="FinishProductBOMId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PurchaseOrderDetail">
+          <Key>
+            <PropertyRef Name="PurchaseOrderDetailId" />
+          </Key>
+          <Property Name="PurchaseOrderDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PurchaseOrderId" Type="Int64" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="UnitId" Type="Int32" />
+          <Property Name="PurchaseQty" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="DemandRate" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="PurchaseRate" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="QCRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PurchaseAmount" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="PackSize" Type="Int32" Nullable="false" />
+          <Property Name="FinishProductBOMId" Type="Int32" />
+          <Property Name="IsVATIncluded" Type="Boolean" Nullable="false" />
+          <Property Name="VATAddition" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="ProductDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="9" />
+          <Property Name="CompanyId" Type="Int32" />
+          <Property Name="RequisitionItemDetailId" Type="Int64" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="PurchaseOrder" Relationship="ERPModel.FK_PurchaseOrderDetail_PurchaseOrder" FromRole="PurchaseOrderDetail" ToRole="PurchaseOrder" />
+        </EntityType>
+        <Association Name="FK_PurchaseOrderDetail_PurchaseOrder">
+          <End Type="ERPModel.PurchaseOrder" Role="PurchaseOrder" Multiplicity="0..1" />
+          <End Type="ERPModel.PurchaseOrderDetail" Role="PurchaseOrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrder">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Principal>
+            <Dependent Role="PurchaseOrderDetail">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Requisition">
+          <Key>
+            <PropertyRef Name="RequisitionId" />
+          </Key>
+          <Property Name="RequisitionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RequisitionNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RequisitionBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RequisitionDate" Type="DateTime" Precision="0" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FromRequisitionId" Type="Int32" />
+          <Property Name="ToRequisitionId" Type="Int32" />
+          <Property Name="IsSubmitted" Type="Boolean" Nullable="false" />
+          <Property Name="OrderDetailsId" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="RequisitionStatus" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="DeliveredBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DeliveredDate" Type="DateTime" Precision="0" />
+          <Property Name="DeliveryNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CompanyId" Type="Int32" />
+          <Property Name="RequisitionType" Type="Int32" />
+          <Property Name="ApprovalStatus" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="RequisitionItems" Relationship="ERPModel.FK_RequisitionItem_Requisition" FromRole="Requisition" ToRole="RequisitionItem" />
+          <NavigationProperty Name="Stores" Relationship="ERPModel.FK_Store_Requisition" FromRole="Requisition" ToRole="Store" />
+        </EntityType>
+        <Association Name="FK_RequisitionItem_Requisition">
+          <End Type="ERPModel.Requisition" Role="Requisition" Multiplicity="1" />
+          <End Type="ERPModel.RequisitionItem" Role="RequisitionItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Requisition">
+              <PropertyRef Name="RequisitionId" />
+            </Principal>
+            <Dependent Role="RequisitionItem">
+              <PropertyRef Name="RequisitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Store_Requisition">
+          <End Type="ERPModel.Requisition" Role="Requisition" Multiplicity="0..1" />
+          <End Type="ERPModel.Store" Role="Store" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Requisition">
+              <PropertyRef Name="RequisitionId" />
+            </Principal>
+            <Dependent Role="Store">
+              <PropertyRef Name="RequisitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="OrderDetailId" />
+          </Key>
+          <Property Name="OrderDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="JobOrderNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BOQItemName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OrderMasterId" Type="Int64" />
+          <Property Name="DemandItemId" Type="Int32" Nullable="false" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="OrderDate" Type="DateTime" Precision="3" />
+          <Property Name="ProductSerial" Type="Int32" />
+          <Property Name="ProductId" Type="Int32" />
+          <Property Name="Qty" Type="Double" Nullable="false" />
+          <Property Name="UnitPrice" Type="Double" Nullable="false" />
+          <Property Name="Amount" Type="Double" Nullable="false" />
+          <Property Name="SpecialBaseCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ModifedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="AvgParchaseRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CompanyId" Type="Int32" />
+          <Property Name="Comsumption" Type="Double" />
+          <Property Name="PackQuantity" Type="Double" />
+          <Property Name="DiscountRate" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <Property Name="DiscountUnit" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <Property Name="DiscountAmount" Type="Decimal" Nullable="false" Precision="18" Scale="3" />
+          <Property Name="PromotionalOfferId" Type="Int32" />
+          <Property Name="EBaseCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ECarryingCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ECashCommission" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SpecialDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="AdditionPrice" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="MonthlyIncentive" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="YearlyIncentive" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="VATPercent" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TDSPercent" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="IsVATInclude" Type="Boolean" Nullable="false" />
+          <Property Name="PouchDerection" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UnitId" Type="Int32" />
+          <Property Name="BOQReference" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="OrderMaster" Relationship="ERPModel.FK_OrderDetail_OrderMaster" FromRole="OrderDetail" ToRole="OrderMaster" />
+          <NavigationProperty Name="Product" Relationship="ERPModel.FK_OrderDetail_Product" FromRole="OrderDetail" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_OrderDetail_OrderMaster">
+          <End Type="ERPModel.OrderMaster" Role="OrderMaster" Multiplicity="0..1" />
+          <End Type="ERPModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderMaster">
+              <PropertyRef Name="OrderMasterId" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderMasterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_Product">
+          <End Type="ERPModel.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="ERPModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -23967,30 +23947,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Requisitions">
-            <EntityTypeMapping TypeName="ERPModel.Requisition">
-              <MappingFragment StoreEntitySet="Requisition">
-                <ScalarProperty Name="IsSubmitted" ColumnName="IsSubmitted" />
-                <ScalarProperty Name="OrderDetailsId" ColumnName="OrderDetailsId" />
-                <ScalarProperty Name="ToRequisitionId" ColumnName="ToRequisitionId" />
-                <ScalarProperty Name="FromRequisitionId" ColumnName="FromRequisitionId" />
-                <ScalarProperty Name="RequisitionType" ColumnName="RequisitionType" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="DeliveryNo" ColumnName="DeliveryNo" />
-                <ScalarProperty Name="DeliveredDate" ColumnName="DeliveredDate" />
-                <ScalarProperty Name="DeliveredBy" ColumnName="DeliveredBy" />
-                <ScalarProperty Name="RequisitionStatus" ColumnName="RequisitionStatus" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="RequisitionDate" ColumnName="RequisitionDate" />
-                <ScalarProperty Name="RequisitionBy" ColumnName="RequisitionBy" />
-                <ScalarProperty Name="RequisitionNo" ColumnName="RequisitionNo" />
-                <ScalarProperty Name="RequisitionId" ColumnName="RequisitionId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="RequisitionItems">
             <EntityTypeMapping TypeName="ERPModel.RequisitionItem">
               <MappingFragment StoreEntitySet="RequisitionItem">
@@ -25699,25 +25655,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="RequisitionItemDetails">
-            <EntityTypeMapping TypeName="ERPModel.RequisitionItemDetail">
-              <MappingFragment StoreEntitySet="RequisitionItemDetail">
-                <ScalarProperty Name="FinishProductBOMId" ColumnName="FinishProductBOMId" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="RUnitPrice" ColumnName="RUnitPrice" />
-                <ScalarProperty Name="FQty" ColumnName="FQty" />
-                <ScalarProperty Name="FProductId" ColumnName="FProductId" />
-                <ScalarProperty Name="RTotalQty" ColumnName="RTotalQty" />
-                <ScalarProperty Name="RExtraQty" ColumnName="RExtraQty" />
-                <ScalarProperty Name="RQty" ColumnName="RQty" />
-                <ScalarProperty Name="RProcessLoss" ColumnName="RProcessLoss" />
-                <ScalarProperty Name="RProductId" ColumnName="RProductId" />
-                <ScalarProperty Name="RequisitionId" ColumnName="RequisitionId" />
-                <ScalarProperty Name="RequisitionItemId" ColumnName="RequisitionItemId" />
-                <ScalarProperty Name="RequistionItemDetailId" ColumnName="RequistionItemDetailId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="IssueMasterInfoes">
             <EntityTypeMapping TypeName="ERPModel.IssueMasterInfo">
               <MappingFragment StoreEntitySet="IssueMasterInfo">
@@ -26551,32 +26488,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PurchaseOrderDetails">
-            <EntityTypeMapping TypeName="ERPModel.PurchaseOrderDetail">
-              <MappingFragment StoreEntitySet="PurchaseOrderDetail">
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="ProductDiscount" ColumnName="ProductDiscount" />
-                <ScalarProperty Name="VATAddition" ColumnName="VATAddition" />
-                <ScalarProperty Name="IsVATIncluded" ColumnName="IsVATIncluded" />
-                <ScalarProperty Name="FinishProductBOMId" ColumnName="FinishProductBOMId" />
-                <ScalarProperty Name="PackSize" ColumnName="PackSize" />
-                <ScalarProperty Name="PurchaseAmount" ColumnName="PurchaseAmount" />
-                <ScalarProperty Name="QCRate" ColumnName="QCRate" />
-                <ScalarProperty Name="PurchaseRate" ColumnName="PurchaseRate" />
-                <ScalarProperty Name="DemandRate" ColumnName="DemandRate" />
-                <ScalarProperty Name="PurchaseQty" ColumnName="PurchaseQty" />
-                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
-                <ScalarProperty Name="PurchaseOrderDetailId" ColumnName="PurchaseOrderDetailId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ProductCategories">
             <EntityTypeMapping TypeName="ERPModel.ProductCategory">
               <MappingFragment StoreEntitySet="ProductCategory">
@@ -27010,52 +26921,6 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OrderDetails">
-            <EntityTypeMapping TypeName="ERPModel.OrderDetail">
-              <MappingFragment StoreEntitySet="OrderDetail">
-                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
-                <ScalarProperty Name="PouchDerection" ColumnName="PouchDerection" />
-                <ScalarProperty Name="IsVATInclude" ColumnName="IsVATInclude" />
-                <ScalarProperty Name="TDSPercent" ColumnName="TDSPercent" />
-                <ScalarProperty Name="VATPercent" ColumnName="VATPercent" />
-                <ScalarProperty Name="YearlyIncentive" ColumnName="YearlyIncentive" />
-                <ScalarProperty Name="MonthlyIncentive" ColumnName="MonthlyIncentive" />
-                <ScalarProperty Name="AdditionPrice" ColumnName="AdditionPrice" />
-                <ScalarProperty Name="SpecialDiscount" ColumnName="SpecialDiscount" />
-                <ScalarProperty Name="ECashCommission" ColumnName="ECashCommission" />
-                <ScalarProperty Name="ECarryingCommission" ColumnName="ECarryingCommission" />
-                <ScalarProperty Name="EBaseCommission" ColumnName="EBaseCommission" />
-                <ScalarProperty Name="PromotionalOfferId" ColumnName="PromotionalOfferId" />
-                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
-                <ScalarProperty Name="DiscountUnit" ColumnName="DiscountUnit" />
-                <ScalarProperty Name="DiscountRate" ColumnName="DiscountRate" />
-                <ScalarProperty Name="PackQuantity" ColumnName="PackQuantity" />
-                <ScalarProperty Name="Comsumption" ColumnName="Comsumption" />
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="AvgParchaseRate" ColumnName="AvgParchaseRate" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="ModifedDate" ColumnName="ModifedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="SpecialBaseCommission" ColumnName="SpecialBaseCommission" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
-                <ScalarProperty Name="Qty" ColumnName="Qty" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="ProductSerial" ColumnName="ProductSerial" />
-                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="DemandItemId" ColumnName="DemandItemId" />
-                <ScalarProperty Name="OrderMasterId" ColumnName="OrderMasterId" />
-                <ScalarProperty Name="BOQItemName" ColumnName="BOQItemName" />
-                <ScalarProperty Name="JobOrderNo" ColumnName="JobOrderNo" />
-                <ScalarProperty Name="OrderDetailId" ColumnName="OrderDetailId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ChequeBooks">
             <EntityTypeMapping TypeName="ERPModel.ChequeBook">
               <MappingFragment StoreEntitySet="ChequeBook">
@@ -27128,6 +26993,125 @@ warning 6002: The table/view 'KGConstructionDB.dbo.vwTeamLeaderList' does not ha
                 <ScalarProperty Name="CSDate" ColumnName="CSDate" />
                 <ScalarProperty Name="CSNO" ColumnName="CSNO" />
                 <ScalarProperty Name="CSID" ColumnName="CSID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RequisitionItemDetails">
+            <EntityTypeMapping TypeName="ERPModel.RequisitionItemDetail">
+              <MappingFragment StoreEntitySet="RequisitionItemDetail">
+                <ScalarProperty Name="FinishProductBOMId" ColumnName="FinishProductBOMId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="RUnitPrice" ColumnName="RUnitPrice" />
+                <ScalarProperty Name="FQty" ColumnName="FQty" />
+                <ScalarProperty Name="FProductId" ColumnName="FProductId" />
+                <ScalarProperty Name="RTotalQty" ColumnName="RTotalQty" />
+                <ScalarProperty Name="RExtraQty" ColumnName="RExtraQty" />
+                <ScalarProperty Name="RQty" ColumnName="RQty" />
+                <ScalarProperty Name="RProcessLoss" ColumnName="RProcessLoss" />
+                <ScalarProperty Name="RProductId" ColumnName="RProductId" />
+                <ScalarProperty Name="RequisitionId" ColumnName="RequisitionId" />
+                <ScalarProperty Name="RequisitionItemId" ColumnName="RequisitionItemId" />
+                <ScalarProperty Name="RequistionItemDetailId" ColumnName="RequistionItemDetailId" />
+                <ScalarProperty Name="ReqItemDetailId" ColumnName="ReqItemDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseOrderDetails">
+            <EntityTypeMapping TypeName="ERPModel.PurchaseOrderDetail">
+              <MappingFragment StoreEntitySet="PurchaseOrderDetail">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="RequisitionItemDetailId" ColumnName="RequisitionItemDetailId" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="ProductDiscount" ColumnName="ProductDiscount" />
+                <ScalarProperty Name="VATAddition" ColumnName="VATAddition" />
+                <ScalarProperty Name="IsVATIncluded" ColumnName="IsVATIncluded" />
+                <ScalarProperty Name="FinishProductBOMId" ColumnName="FinishProductBOMId" />
+                <ScalarProperty Name="PackSize" ColumnName="PackSize" />
+                <ScalarProperty Name="PurchaseAmount" ColumnName="PurchaseAmount" />
+                <ScalarProperty Name="QCRate" ColumnName="QCRate" />
+                <ScalarProperty Name="PurchaseRate" ColumnName="PurchaseRate" />
+                <ScalarProperty Name="DemandRate" ColumnName="DemandRate" />
+                <ScalarProperty Name="PurchaseQty" ColumnName="PurchaseQty" />
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
+                <ScalarProperty Name="PurchaseOrderDetailId" ColumnName="PurchaseOrderDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requisitions">
+            <EntityTypeMapping TypeName="ERPModel.Requisition">
+              <MappingFragment StoreEntitySet="Requisition">
+                <ScalarProperty Name="ApprovalStatus" ColumnName="ApprovalStatus" />
+                <ScalarProperty Name="RequisitionType" ColumnName="RequisitionType" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="DeliveryNo" ColumnName="DeliveryNo" />
+                <ScalarProperty Name="DeliveredDate" ColumnName="DeliveredDate" />
+                <ScalarProperty Name="DeliveredBy" ColumnName="DeliveredBy" />
+                <ScalarProperty Name="RequisitionStatus" ColumnName="RequisitionStatus" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="OrderDetailsId" ColumnName="OrderDetailsId" />
+                <ScalarProperty Name="IsSubmitted" ColumnName="IsSubmitted" />
+                <ScalarProperty Name="ToRequisitionId" ColumnName="ToRequisitionId" />
+                <ScalarProperty Name="FromRequisitionId" ColumnName="FromRequisitionId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="RequisitionDate" ColumnName="RequisitionDate" />
+                <ScalarProperty Name="RequisitionBy" ColumnName="RequisitionBy" />
+                <ScalarProperty Name="RequisitionNo" ColumnName="RequisitionNo" />
+                <ScalarProperty Name="RequisitionId" ColumnName="RequisitionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderDetails">
+            <EntityTypeMapping TypeName="ERPModel.OrderDetail">
+              <MappingFragment StoreEntitySet="OrderDetail">
+                <ScalarProperty Name="BOQReference" ColumnName="BOQReference" />
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="PouchDerection" ColumnName="PouchDerection" />
+                <ScalarProperty Name="IsVATInclude" ColumnName="IsVATInclude" />
+                <ScalarProperty Name="TDSPercent" ColumnName="TDSPercent" />
+                <ScalarProperty Name="VATPercent" ColumnName="VATPercent" />
+                <ScalarProperty Name="YearlyIncentive" ColumnName="YearlyIncentive" />
+                <ScalarProperty Name="MonthlyIncentive" ColumnName="MonthlyIncentive" />
+                <ScalarProperty Name="AdditionPrice" ColumnName="AdditionPrice" />
+                <ScalarProperty Name="SpecialDiscount" ColumnName="SpecialDiscount" />
+                <ScalarProperty Name="ECashCommission" ColumnName="ECashCommission" />
+                <ScalarProperty Name="ECarryingCommission" ColumnName="ECarryingCommission" />
+                <ScalarProperty Name="EBaseCommission" ColumnName="EBaseCommission" />
+                <ScalarProperty Name="PromotionalOfferId" ColumnName="PromotionalOfferId" />
+                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+                <ScalarProperty Name="DiscountUnit" ColumnName="DiscountUnit" />
+                <ScalarProperty Name="DiscountRate" ColumnName="DiscountRate" />
+                <ScalarProperty Name="PackQuantity" ColumnName="PackQuantity" />
+                <ScalarProperty Name="Comsumption" ColumnName="Comsumption" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="AvgParchaseRate" ColumnName="AvgParchaseRate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ModifedDate" ColumnName="ModifedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="SpecialBaseCommission" ColumnName="SpecialBaseCommission" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductSerial" ColumnName="ProductSerial" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="DemandItemId" ColumnName="DemandItemId" />
+                <ScalarProperty Name="OrderMasterId" ColumnName="OrderMasterId" />
+                <ScalarProperty Name="BOQItemName" ColumnName="BOQItemName" />
+                <ScalarProperty Name="JobOrderNo" ColumnName="JobOrderNo" />
+                <ScalarProperty Name="OrderDetailId" ColumnName="OrderDetailId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

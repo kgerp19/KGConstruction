@@ -1,5 +1,6 @@
 ﻿using KGERP.Data.CustomModel;
 using KGERP.Data.Models;
+using KGERP.Service.Implementation.General_Requisition.ViewModels;
 using KGERP.Service.ServiceModel;
 using KGERP.Service.ServiceModel.RealState;
 using KGERP.Utility;
@@ -960,6 +961,7 @@ namespace KGERP.Service.Configuration
         public SelectList PoList { get; set; } = new SelectList(new List<object>());
         public IEnumerable<VMPackagingPurchaseRequisition> DataList { get; set; }
         public List<VMPackagingPurchaseRequisition> DataListPro { get; set; }
+        public IEnumerable<RequisitionApprovalVM> RADataList { get; set; }
 
         public List<SelectListItem> DDLStockDepartmetn { get; set; }
 

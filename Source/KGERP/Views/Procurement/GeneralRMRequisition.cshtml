@@ -7,6 +7,8 @@
     ViewData["Title"] = "Bill Of Metarials";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int sl = 0;
+    decimal totalPrice = 0;
+    decimal GrossPrice = 0;
 }
 
 <style type="text/css">
@@ -134,146 +136,217 @@
                         </div>
 
                     }
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group" style="padding:0px">
-                        <label for="message-text" class="col-form-label">Raw Item:</label>
+                    if (!Model.IsSubmited)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group" style="padding:0px">
+                                    <label for="message-text" class="col-form-label">Raw Item:</label>
 
-                        @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Product Name", @id = "txtProductName" } })
+                                    @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @name = "Product Name", @id = "txtProductName" } })
 
-                        @Html.HiddenFor(model => model.RProductId, new { id = "ddlRProductId" })
-                        @Html.ValidationMessageFor(model => model.RProductId, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-
-
-
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>Purchasing Qty</label>
-                        <div class="input-group">
-                            @Html.EditorFor(model => model.Qty, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @id = "txtQty", type = "number" } })
-                            @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
-                            <div class="input-group-addon">
-                                <span class="txtUnitName"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>Purchase Rate</label>
-                        <div class="">
-                            @Html.EditorFor(model => model.UnitePrice, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control", @id = "txtUnitPrice", type = "number" } })
-                            @Html.ValidationMessageFor(model => model.UnitePrice, "", new { @class = "text-danger" })
-                          
-                        </div>
-                    </div>
-                </div>
-
-
-
-            </div>
-
-                    <div class="row">
-                        <div class="col-md-8">
-
-                        </div>
-                        <div class="col-lg-4 col-md-4">
-                            <div>
-                                <button id="btnDivUpdate" type="submit" class="btn btn-primary btn-block">
-                                    <i class="fa fa-plus"></i>
-
-                                    @if (Model.RequisitionId == 0)
-                                    {
-                                        <span>Create New </span>
-                                    }
-                                    else
-                                    {
-                                        <span>Add Item </span>
-                                    }
-
-                                </button>
+                                    @Html.HiddenFor(model => model.RProductId, new { id = "ddlRProductId" })
+                                    @Html.ValidationMessageFor(model => model.RProductId, "", new { @class = "text-danger" })
+                                </div>
                             </div>
 
-                            @*<div class="hidden"  id="btnDivUpdate">
 
-                        <button id="btnUpdate" class="btn btn-danger btn-block">Update</button>
-                    </div>*@
+
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Requisition Qty</label>
+                                    <div class="input-group">
+                                        @Html.EditorFor(model => model.Qty, new { htmlAttributes = new { @autocomplete = "on", @class = "form-control", @id = "txtQty", type = "number" } })
+                                        @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
+                                        <div class="input-group-addon">
+                                            <span class="txtUnitName"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Unit Price</label>
+                                    <div class="">
+                                        @Html.EditorFor(model => model.UnitePrice, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control", @id = "txtUnitPrice", type = "number" } })
+                                        @Html.ValidationMessageFor(model => model.UnitePrice, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
                         </div>
-                    </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+
+                            </div>
+                            <div class="col-lg-4 col-md-4">
+                                <div>
+                                    <button id="btnDivUpdate" type="submit" class="btn btn-primary btn-block">
+                                        <i class="fa fa-plus"></i>
+
+                                        @if (Model.RequisitionId == 0)
+                                        {
+                                            <span>Create New </span>
+                                        }
+                                        else
+                                        {
+                                            <span>Add Item </span>
+                                        }
+
+                                    </button>
+                                </div>
+
+                                @*<div class="hidden"  id="btnDivUpdate">
+
+                            <button id="btnUpdate" class="btn btn-danger btn-block">Update</button>
+                        </div>*@
+                            </div>
+                        </div>
+                    }
+
 
 
                 }
             </div>
+
+
+            @if (Model.RequisitionId > 0 && Model.DataListPro != null)
+            {
+                <div class="box-body">
+                    <div class="table-responsive col-md-12  text-nowrap">
+                        <table id="KgErpDataTable" class="table table-responsive-md table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Product Name</th>
+
+                                    <th>Requisition Qty</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Price</th>
+                                    <th style="text-align:center">Action</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in Model.DataListPro)
+                                {
+                                    totalPrice = item.RQty * item.UnitePrice ?? 0;
+                                    GrossPrice += item.RQty * item.UnitePrice ?? 0;
+
+                                    <tr>
+                                        <td>@(++sl)</td>
+
+                                        <td>@item.ProductName</td>
+
+                                        <td>@item.RQty</td>
+                                        <td>@item.UnitePrice</td>
+                                        <td>@totalPrice</td>
+
+                                        <td style="text-align:center">
+                                            <a onclick="makeEditble('@item.ProductName','@item.RequistionItemDetailId','@item.RQty','@Model.RequisitionId','@Model.CompanyFK','@item.RProductId','@item.UnitePrice')" class="linkPointer" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                                            &nbsp;
+                                            <a onclick="makeDeletale('@item.RequistionItemDetailId','@Model.RequisitionId')" data-toggle="modal" style="width:100%" data-target="#RequisitionItemDetailDeleteModal" data-placement="top" class="linkPointer" title="Delete" data-placement="top"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+
+                                    <th colspan="3">Total Amount</th>
+
+                                    <th>@GrossPrice</th>
+
+                                    <td style="text-align:center">
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6" style="margin-top:2%">
+                            <a href="~/Report/PackagingProductionRequisitionRep?requisitionId=@Model.RequisitionId&companyId=@Model.CompanyId" target="_blank" class="btn btn-block btn-info"> Print Report </a>
+                        </div>
+
+                        <div class="col-md-6" style="margin-top:2%">
+                            @if (!Model.IsSubmited)
+                            {
+                                <a id="@Model.RequisitionId" onclick="makeSubmitble(@Model.RequisitionId)" class="linkPointer btn btn-success" data-toggle="modal" style="width:100%" data-target="#submitProductRequisitionModal" data-placement="top">
+                                    Submit
+                                </a>
+
+                            }
+                            else
+                            {
+                                <button class="btn btn-success btn-block" data-toggle="modal" style="width:100%">Submitted Successfully</button>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Employee Id</th>
+                        <th scope="col">Signatory</th>
+                        <th scope="col">Designation</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Approved Time</th>
+                        <th scope="col">Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.RADataList != null)
+                    {
+                        int ii = 1;
+                        foreach (var item in Model.RADataList)
+                        {
+                            <tr>
+                                <td>@(ii++)</td>
+                                <td>@item.EmployeeIdString</td>
+                                <td>@item.EmployeeName</td>
+                                <td>@item.DesignationName</td>
+                                <td>
+                                    @if (item.Status < 0)
+                                    {
+                                        <span class="badge badge-warning">
+                                            ---
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-success">
+                                            @item.StatusString
+                                        </span>
+                                    }
+                                </td>
+                                <td>@item.ApprovedTime</td>
+                                <td>@item.Comment</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
         </div>
 
     </div>
 
 
-    @if (Model.RequisitionId > 0 && Model.DataListPro != null)
-    {
-        <div class="box-body">
-            <div class="table-responsive col-md-12  text-nowrap">
-                <table id="KgErpDataTable" class="table table-responsive-md table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>SL</th>
-                            <th>Product Name</th>
-
-                            <th>Requisition Qty</th>
-                            <th>Purchase Rate</th>
-                            <th style="text-align:center">Action</th>
-
-
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @foreach (var item in Model.DataListPro)
-                        {
-
-                            <tr>
-                                <td>@(++sl)</td>
-
-                                <td>@item.ProductName</td>
-
-                                <td>@item.RQty</td>
-                                <td>@item.UnitePrice</td>
-                                <td style="text-align:center">
-                                    <a onclick="makeEditble('@item.ProductName','@item.RequistionItemDetailId','@item.RQty','@Model.RequisitionId','@Model.CompanyFK','@item.RProductId','@item.UnitePrice')" class="linkPointer" title="Edit"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                                    &nbsp;
-                                    <a onclick="makeDeletale('@item.RequistionItemDetailId','@Model.RequisitionId')" data-toggle="modal" style="width:100%" data-target="#RequisitionItemDetailDeleteModal" data-placement="top" class="linkPointer" title="Delete" data-placement="top"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col-md-6" style="margin-top:2%">
-                    <a href="~/Report/PackagingProductionRequisitionRep?requisitionId=@Model.RequisitionId&companyId=@Model.CompanyId" target="_blank" class="btn btn-block btn-info"> Print Report </a>
-                </div>
-
-                <div class="col-md-6" style="margin-top:2%">
-                    @if (!Model.IsSubmited)
-                    {
-                        <a id="@Model.RequisitionId" onclick="makeSubmitble(@Model.RequisitionId)" class="linkPointer btn btn-success" data-toggle="modal" style="width:100%" data-target="#submitProductRequisitionModal" data-placement="top">
-                            Submit
-                        </a>
-
-                    }
-                    else
-                    {
-                        <button class="btn btn-success btn-block" data-toggle="modal" style="width:100%" data-target="#submitProductRequisitionModal" data-placement="top" id="btnSubmitted">Undo Submit</button>
-                    }
-
-                </div>
-            </div>
-        </div>
-    }
+  
 
 
     @using (Html.BeginForm("GeneralRMRequisitionSubmit", "Procurement", FormMethod.Post, new { id = "SubmitProcurementPurchaseOrderFromSlaveFormId", @class = "formValidator" }))
