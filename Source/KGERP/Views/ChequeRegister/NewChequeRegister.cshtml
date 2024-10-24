@@ -58,7 +58,7 @@
                             <div class="col-md-4" id="inputProject">
                                 <div class="form-group">
                                     <label class="form-label">Select Project<sup class="text-danger" title="Required"><b>*</b></sup></label>
-                                    @Html.DropDownListFor(model => model.ProjectId, new SelectList(Model.ProjectList.OrderBy(order => order.Text), "Value", "Text"), "==Select Project==", new { id = "ddlProjectId", @class = "form-control searchingDropdown", style = "width:100%" })
+                                    @Html.DropDownListFor(model => model.ProjectId, new SelectList(Model.AccCostCenter.OrderBy(order => order.Text), "Value", "Text"), "==Select Project==", new { id = "ddlProjectId", @class = "form-control searchingDropdown", style = "width:100%" })
                                     @Html.ValidationMessageFor(model => model.ProjectId, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">Select Bank<sup class="text-danger" title="Required"><b>*</b></sup></label>
                                     @Html.DropDownListFor(model => model.BankId, new SelectList(Model.BankList.OrderBy(order => order.Text), "Value", "Text"), "==Select Bank==", new { id = "ddlBankId", @class = "form-control searchingDropdown", style = "width:100%" })
@@ -96,7 +96,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">Select Branch<sup class="text-danger" title="Required"><b>*</b></sup></label>
                                     @Html.DropDownListFor(model => model.BankBranchId, new SelectList(Model.BankBranchList.OrderBy(order => order.Text), "Value", "Text"), "==Select Branch==", new { id = "ddlBankBranchId", @class = "form-control searchingDropdown", style = "width:100%" })
@@ -104,7 +104,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">Account Number<sup class="text-danger" title="Required"><b>*</b></sup></label>
                                     @Html.DropDownListFor(model => model.BankAccountInfoId, new SelectList(Model.AccountNoList.OrderBy(order => order.Text), "Value", "Text"), "==Select Account No==", new { id = "ddlBankAccountInfoId", @class = "form-control searchingDropdown", style = "width:100%" })
@@ -112,13 +112,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Cheque Book<sup class="text-danger" title="Required"><b>*</b></sup></label>
-                                    @Html.DropDownListFor(model => model.ChequeBookId, Model.ChequeBookList as SelectList, "==Select Cheque Book==", new { id = "ddlCheqeBookId", @class = "form-control searchingDropdown", style = "width:100%", required = "required" })
-                                    @Html.ValidationMessageFor(model => model.ChequeBookId, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
+                          
 
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -148,14 +142,14 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            @*<div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">Cheque No<sup class="text-danger" title="Required">*</sup></label>
                                     @Html.TextBoxFor(model => model.ChequeNo, new { id = "txtChequeNo", @class = "form-control", @placeholder = "Cheque no", required = "true", @readonly = "true" })
                                     @Html.ValidationMessageFor(model => model.ChequeNo, "", new { id = "nameExist", @class = "text-danger" })
                                     <small class="text-danger" id="message"></small>
                                 </div>
-                            </div>
+                            </div>*@
 
                             <div class="col-md-4">
                                 <div class="form-group">

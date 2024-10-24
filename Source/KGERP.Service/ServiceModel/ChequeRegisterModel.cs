@@ -91,6 +91,7 @@ namespace KGERP.Service.ServiceModel
         public SelectList ProjectList { get; set; } = new SelectList(new List<object>());
         public SelectList SupplierList { get; set; } = new SelectList(new List<object>());
         public SelectList BankList { get; set; } = new SelectList(new List<object>());
+        public SelectList AccCostCenter { get; set; } = new SelectList(new List<object>());
         public SelectList BankBranchList { get; set; } = new SelectList(new List<object>());
         public SelectList AccountNoList { get; set; } = new SelectList(new List<object>());
         public SelectList ChequeBookList { get; set; } = new SelectList(new List<object>());
